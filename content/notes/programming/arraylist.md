@@ -1,7 +1,7 @@
 ---
 title: "Array Lists"
 date: 2022-01-26T09:39:46-07:00
-draft: true
+draft: false
 ---
 
 ## What is an ArrayList

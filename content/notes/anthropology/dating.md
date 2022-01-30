@@ -1,7 +1,7 @@
 ---
 title: "Dating Techniques"
 date: 2022-01-25T11:31:44-07:00
-draft: true
+draft: false
 ---
 
 ## Alphabet Soup (some abbreviations commonly used in archaeology)

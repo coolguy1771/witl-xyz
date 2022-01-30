@@ -1,7 +1,7 @@
 ---
 title: "Arrays"
 date: 2022-01-26T08:59:03-07:00
-draft: true
+draft: false
 ---
 
 ## What is an Array?
