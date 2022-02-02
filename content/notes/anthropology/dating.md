@@ -25,12 +25,12 @@ Relative dating techniques do not tell us **WHEN** an event occurred, but the **
 
 Absolute dating techniques vary in:
 
-  1. The material they can date
-  2. The event that they date
-  3. The time range over which they work
-  4. Their accuracy and their precision
+1. The material they can date
+2. The event that they date
+3. The time range over which they work
+4. Their accuracy and their precision
 
-- Accuracy: How close, *on average*, the age estimate you get from a dating technique is from the true age
+- Accuracy: How close, _on average_, the age estimate you get from a dating technique is from the true age
 
 - Precision:
   How much random error there is in the age estimate. If you were to re-date the same object, with the same technique,

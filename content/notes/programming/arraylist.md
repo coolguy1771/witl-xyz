@@ -66,7 +66,7 @@ ArrayList<Double> highTemps = new ArrayList<Double>();
 ```java
 import java.util.ArrayList;
 
-Class Main{
+class Main{
 
     public static void main(String [] args){
 
@@ -84,7 +84,7 @@ Class Main{
                 sum += value;
             }
 
-            average = sum / list.Size();
+            average = sum / list.size();
         }
         return average;
 }
@@ -94,30 +94,26 @@ Class Main{
 
 ```java
 import java.util.ArrayList;
-Class Main {
-  public static void main(String[] args) {
 
+class Main {
+
+  public static void main(String[] args) {
     ArrayList<Integer> myList = getArrayList();
     System.out.println("Hello world!");
   }
 
   static int oddMinusEven(ArrayList<Integer> list) {
-
     int sumPfOdd = 0;
     int sumOfEven = 0;
 
     for (int value : list) {
-      if (value % 2 == 0)
-        sumOfEven += value;
-      else
-        sumOfOdd += value;
+      if (value % 2 == 0) sumOfEven += value; else sumOfOdd += value;
     }
 
     return sumOfOdd - sumOfEven;
-
   }
-
 }
+
 ```
 
 ### Pairwise Sums
@@ -137,7 +133,7 @@ Class Main {
     ArrayList<Integer> sums = new ArrayList<Integer>();
 
     for (int i = 0; i < list1.size(); i++) {
-      
+
       int sum = list1.get(i)  + list2.get(i);
 
       sums.add(sum);
@@ -165,7 +161,7 @@ Class Main {
 ```java
 import java.util.ArrayList;
 
-Class Main {
+class Main {
   public static void main(String[] args) {
 
     ArrayList<Integer> myList = getArrayList();
@@ -176,8 +172,8 @@ Class Main {
 
     ArrayList<Integer> result = new ArrayList<Integer>();
 
-    for (values : list1) {
-      
+    for (value : list1) {
+
       if(list2.contains(value))
         result.add(value);
     }

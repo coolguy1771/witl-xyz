@@ -75,14 +75,10 @@ removePathAccents = true
         name = "About"
         url = "/about"
         [[languages.en.menu.main]]
-        identifier = "programming"
-        name = "Programming"
-        url = "/notes/programming"
+        identifier = "blog"
+        name = "Blog Posts"
+        url = "/blog"
         [[languages.en.menu.main]]
-        identifier = "psychology"
-        name = "Psycology"
-        url = "/notes/psycology"
-        [[languages.en.menu.main]]
-        identifier = "anthropology"
-        name = "Anthropology"
-        url = "/notes/anthropology"
+        identifier = "notes"
+        name = "Notes"
+        url = "/notes"
