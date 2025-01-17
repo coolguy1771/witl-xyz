@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { fadeIn, staggerContainer, slideInFromLeft, slideInFromRight, scaleUp, navAnimation } from './lib/animations';
+import { fadeIn, staggerContainer, slideInFromLeft, slideInFromRight, scaleUp } from './lib/animations';
 
 import { FaExternalLinkAlt, FaGithub} from "react-icons/fa";
 interface Project {
@@ -30,40 +30,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Navigation Bar */}
-      <motion.nav 
-        className="fixed w-full bg-background/50 backdrop-blur-sm border-b border-foreground/10 z-10"
-        initial="initial"
-        animate="animate"
-        variants={navAnimation}
-      >
-        <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-          <motion.span 
-            className="text-lg font-mono"
-            variants={fadeIn}
-          >
-            john.doe
-          </motion.span>
-          <motion.div 
-            className="flex gap-6"
-            variants={staggerContainer}
-          >
-            {["work", "blog", "about", "contact"].map((item) => (
-              <motion.a
-                key={item}
-                href={item === 'blog' ? '/blog' : `#${item}`}
-                className="hover:text-gray-300 transition-colors relative group"
-                variants={fadeIn}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-300 transition-all group-hover:w-full" />
-              </motion.a>
-            ))}
-          </motion.div>
-        </div>
-      </motion.nav>
 
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center pt-16">

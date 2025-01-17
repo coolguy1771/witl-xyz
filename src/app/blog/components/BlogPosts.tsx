@@ -12,7 +12,7 @@ interface BlogPostsProps {
 export default function BlogPostsClient({ posts }: BlogPostsProps) {
   return (
     <motion.div
-      className="min-h-screen bg-background text-foreground pt-24"
+      className="min-h-screen bg-background text-foreground"
       initial="initial"
       animate="animate"
       variants={fadeIn}
