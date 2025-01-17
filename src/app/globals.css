@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Blog post content styles */
+.prose {
+  @apply text-gray-300;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply text-foreground font-bold mb-4 mt-8;
+}
+
+.prose h1 {
+  @apply text-3xl;
+}
+
+.prose h2 {
+  @apply text-2xl;
+}
+
+.prose h3 {
+  @apply text-xl;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose ul,
+.prose ol {
+  @apply mb-4 ml-4;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose code {
+  @apply px-1.5 py-0.5 rounded bg-gray-800/50 text-gray-300 text-sm;
+}
+
+.prose pre {
+  @apply p-4 rounded-lg mb-4 overflow-x-auto;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose a {
+  @apply text-blue-400 hover:text-blue-300 transition-colors;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-gray-700 pl-4 italic my-4;
+}
+
+.prose img {
+  @apply rounded-lg my-8;
+}

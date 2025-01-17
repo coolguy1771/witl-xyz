@@ -1,6 +1,0 @@
-charts/
-docs/
-.private/
-.terraform/
-.vscode/
-*.sops.*
