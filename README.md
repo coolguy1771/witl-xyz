@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Blog and Portfolio
+
+A modern, responsive blog and portfolio website built with Next.js 15, featuring dark mode, markdown blog posts, dynamic content, and deployed on cloudflare workers
+
+## Features
+
+- ⚡️ Built with Next.js 15 and TypeScript
+- 🎨 Dark theme with custom styling
+- 📝 Markdown blog posts with frontmatter
+- 📑 Table of contents with active section highlighting
+- 💻 Code syntax highlighting with copy functionality
+- 🔗 Previous/Next post navigation
+- 📱 Fully responsive design
+- 🎭 Custom fonts (Geist Sans & Geist Mono)
+- 🚀 Fast page loads with static generation
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/coolguy1771/witl-xyz.git
+cd witl-xyz
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-## Learn More
+## Blog Posts
 
-To learn more about Next.js, take a look at the following resources:
+Blog posts are written in Markdown and stored in the `posts` directory. Each post should include frontmatter with the following fields:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```markdown
+---
+title: Your Post Title
+date: '2025-01-15'
+author: Your Name
+tags: ['nextjs', 'react', 'typescript']
+excerpt: Optional custom excerpt for your post
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Your content here...
+```
 
-## Deploy on Vercel
+### Supported Markdown Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Headers (h1-h6)
+- Lists (ordered and unordered)
+- Code blocks with syntax highlighting
+- Images
+- Links
+- Blockquotes
+- Tables
+- And more...
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+.
+├── app/
+│   ├── blog/
+│   │   ├── [slug]/
+│   │   │   └── page.tsx
+│   │   ├── components/
+│   │   │   ├── CodeBlock.tsx
+│   │   │   └── TableOfContents.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   └── Navbar.tsx
+│   ├── fonts/
+│   ├── lib/
+│   └── types/
+├── posts/
+├── public/
+└── package.json
+```
+
+## Customization
+
+### Adding New Posts
+
+1. Create a new markdown file in the `posts` directory
+2. Include the required frontmatter
+3. Write your content in markdown
+4. The post will be automatically added to the blog listing
+
+### Styling
+
+- Global styles are in `app/globals.css`
+- Components use Tailwind CSS for styling
+- Dark theme colors can be customized in the CSS variables
+
+## Built With
+
+- [Next.js 15](https://nextjs.org/) - The React Framework
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [gray-matter](https://github.com/jonschlinkert/gray-matter) - Frontmatter parsing
+- [remark](https://github.com/remarkjs/remark) - Markdown processing
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
