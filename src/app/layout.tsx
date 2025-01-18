@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "John Doe - Software Engineer & Designer",
+  title: "Tyler Witlin - Software Engineer & Designer",
   description: "Personal portfolio and blog showcasing software engineering projects and design work.",
 };
 

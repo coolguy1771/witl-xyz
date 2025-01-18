@@ -28,7 +28,7 @@ export default function Navbar() {
             href="/" 
             className="text-lg font-mono hover:text-gray-300 transition-colors"
           >
-            john.doe
+            witl.xyz
           </Link>
           
           <div className="flex gap-6">

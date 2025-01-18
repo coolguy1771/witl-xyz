@@ -4,6 +4,7 @@ export interface Project {
   description: string;
   tech: string[];
   link: string;
+  githubUrl?: string;
 }
 
 export interface BlogPost {
