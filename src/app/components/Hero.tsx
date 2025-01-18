@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
-import { fadeIn, slideInFromLeft, slideInFromRight } from "../lib/animations";
+import { fadeIn, slideInFromRight } from "../lib/animations";
 
 export const HeroSection: React.FC = () => {
   const textWave = {
@@ -63,7 +63,7 @@ export const HeroSection: React.FC = () => {
           animate="animate"
         >
           I bring ideas to life with code and a touch of creativity. Whether
-          it's scaling apps or crafting user-friendly designs, I'm here to build
+          it&apos;s scaling apps or crafting user-friendly designs, I&apos;m here to build
           solutions that matter.
         </motion.p>
 

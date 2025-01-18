@@ -24,15 +24,15 @@ export const AboutSection: React.FC = () => (
           About Me
         </motion.h2>
         <motion.p className="text-gray-400 mb-6 leading-relaxed" variants={fadeIn}>
-          I'm experienced in building CI/CD pipelines, deploying Kubernetes clusters, 
+          I&apos;m experienced in building CI/CD pipelines, deploying Kubernetes clusters, 
           and setting up developer-friendly infrastructures to make workflows smoother. 
           I also specialize in network systems, handling everything from planning and troubleshooting 
           to delivering reliable solutions—even in tricky setups like air-gapped networks. 
           My focus is on blending tech know-how with design thinking to create practical, impactful results.
         </motion.p>
         <motion.p className="text-gray-400 leading-relaxed" variants={fadeIn}>
-          Right now, I’m diving into open-source projects and staying up-to-date with the latest 
-          in web development. I’m also a 
+          Right now, I&apos;m diving into open-source projects and staying up-to-date with the latest 
+          in web development. I&apos;m also a 
           <span className="font-bold"> Certified Kubernetes Administrator</span>, 
           always learning and growing to keep up with the fast-paced tech world.
         </motion.p>

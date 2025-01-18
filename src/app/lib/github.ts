@@ -21,7 +21,7 @@ export async function fetchGithubProjects(username: string): Promise<Project[]> 
       tech: [
         repo.language,
         ...(repo.topics || [])
-      ].filter(Boolean),
+      ].filter((item): item is string => Boolean(item)),
       link: repo.homepage || repo.html_url,
       githubUrl: repo.html_url
     }));
