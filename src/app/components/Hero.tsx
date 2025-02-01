@@ -44,7 +44,7 @@ export const HeroSection: React.FC = () => {
             </motion.span>
           ))}
           <br />
-          {"Designer".split("").map((char, index) => (
+          {"Kubernetes Administrator".split("").map((char, index) => (
             <motion.span
               key={index}
               className="text-gray-400"

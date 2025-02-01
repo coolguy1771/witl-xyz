@@ -32,7 +32,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
         {isCopied ? <Check size={16} /> : <Copy size={16} />}
       </button>
       {language && (
-        <div className="absolute right-16 top-2 px-2 py-1 rounded text-xs text-gray-400 bg-gray-800">
+        <div className="absolute right-16 top-2 px-2 py-1 rounded-sm text-xs text-gray-400 bg-gray-800">
           {language}
         </div>
       )}

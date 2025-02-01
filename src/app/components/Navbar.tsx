@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <motion.nav 
-      className="fixed w-full bg-background/50 backdrop-blur-sm border-b border-foreground/10 z-10"
+      className="fixed w-full bg-background/50 backdrop-blur-xs border-b border-foreground/10 z-10"
       initial="initial"
       animate="animate"
       variants={navAnimation}
