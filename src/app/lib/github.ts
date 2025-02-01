@@ -14,7 +14,7 @@ export async function fetchGithubProjects(username: string): Promise<Project[]> 
   });
 
   return response.data
-    .filter(repo => !repo.fork && !repo.private)
+    .filter(repo => !repo.fork && !repo.private && !repo.archived)
     .map(repo => ({
       title: repo.name,
       description: repo.description || 'No description available',
