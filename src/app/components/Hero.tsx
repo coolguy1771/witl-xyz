@@ -63,8 +63,8 @@ export const HeroSection: React.FC = () => {
           animate="animate"
         >
           I bring ideas to life with code and a touch of creativity. Whether
-          it&apos;s scaling apps or crafting user-friendly designs, I&apos;m here to build
-          solutions that matter.
+          it&apos;s scaling apps or crafting user-friendly designs, I&apos;m
+          here to build solutions that matter.
         </motion.p>
 
         {/* Animated Button */}
