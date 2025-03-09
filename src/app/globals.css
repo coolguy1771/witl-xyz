@@ -1,106 +1,223 @@
-@import 'tailwindcss';
+/* === MUI THEME BASED STYLES === */
 
-/* Root theme variables */
-@layer base {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-  }
+/* 
+ * Tailwind CSS styles with MUI theming support 
+ * These CSS variables are used alongside MUI's theme system
+ */
+:root {
+  /* Base colors use MUI theme variables through ThemeProvider */
+  /* UI Surfaces */
+  --surface: var(--mui-palette-background-paper);
+  --overlay: rgba(5, 5, 7, 0.8);
+  
+  /* Tailwind color mapping to MUI theme */
+  --bg-background: var(--mui-palette-background-default);
+  --bg-paper: var(--mui-palette-background-paper);
+  --text-foreground: var(--mui-palette-text-primary);
+  --text-muted: var(--mui-palette-text-secondary);
+  --text-disabled: var(--mui-palette-text-disabled);
+  
+  /* Neutral Grays - using MUI theme */
+  --gray-50: var(--mui-palette-grey-50);
+  --gray-100: var(--mui-palette-grey-100);
+  --gray-200: var(--mui-palette-grey-200);
+  --gray-300: var(--mui-palette-grey-300);
+  --gray-400: var(--mui-palette-grey-400);
+  --gray-500: var(--mui-palette-grey-500);
+  --gray-600: var(--mui-palette-grey-600);
+  --gray-700: var(--mui-palette-grey-700);
+  --gray-800: var(--mui-palette-grey-800);
+  --gray-900: var(--mui-palette-grey-900);
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-    }
-  }
-
-  /* Border color compatibility layer for Tailwind v4 */
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-
-  /* Base body styles */
-  body {
-    color: var(--foreground);
-    background: var(--background);
-  }
+  /* Brand Colors - using MUI theme */
+  --primary: var(--mui-palette-primary-main);
+  --primary-light: var(--mui-palette-primary-light);
+  --primary-dark: var(--mui-palette-primary-dark);
+  --secondary: var(--mui-palette-secondary-main);
+  --secondary-light: var(--mui-palette-secondary-light);
+  --secondary-dark: var(--mui-palette-secondary-dark);
+  
+  /* Semantic Colors */
+  --error: var(--mui-palette-error-main);
+  --warning: var(--mui-palette-warning-main);
+  --success: var(--mui-palette-success-main);
+  --info: var(--mui-palette-primary-light);
 }
 
-/* Custom utilities */
-@layer utilities {
-  /* Text balance utility */
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Tailwind-compatible classes for theme colors */
+.bg-background { background-color: var(--mui-palette-background-default); }
+.bg-paper { background-color: var(--mui-palette-background-paper); }
+.text-foreground { color: var(--mui-palette-text-primary); }
+.text-muted { color: var(--mui-palette-text-secondary); }
+.text-primary { color: var(--mui-palette-primary-main); }
+.text-secondary { color: var(--mui-palette-secondary-main); }
+.border-divider { border-color: var(--mui-palette-divider); }
+
+/* === BASE STYLES === */
+
+html, body {
+  background-color: var(--mui-palette-background-default);
+  color: var(--mui-palette-text-primary);
+  font-family: "Geist Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Prose styles for blog content */
-@layer components {
-  .prose {
-    @apply text-gray-300;
-    
-    /* Headings */
-    h1, h2, h3, h4 {
-      @apply  font-bold mb-4 mt-8;
-    }
+/* Scroll margin for anchor links to account for fixed navbar */
+:target {
+  scroll-margin-top: 104px;
+}
 
-    h1 {
-      @apply text-3xl;
-    }
+/* Anchor sections */
+section[id],
+div[id],
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+  scroll-margin-top: 104px;
+}
 
-    h2 {
-      @apply text-2xl;
-    }
+/* Links */
+a {
+  color: var(--mui-palette-primary-main);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
 
-    h3 {
-      @apply text-xl;
-    }
+a:hover {
+  color: var(--mui-palette-primary-light);
+}
 
-    /* Paragraphs and lists */
-    p {
-      @apply mb-4;
-    }
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--mui-palette-text-primary);
+  font-weight: 600;
+}
 
-    ul, ol {
-      @apply mb-4 ml-4;
-    }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
 
-    li {
-      @apply mb-2;
-    }
+/* Paragraphs */
+p {
+  color: var(--mui-palette-text-secondary);
+  margin-bottom: 1rem;
+}
 
-    /* Code blocks */
-    code {
-      @apply px-1.5 py-0.5 rounded-sm bg-gray-800/50 text-gray-300 text-sm;
-    }
+/* Code Blocks */
+code {
+  font-family: "Fira Code", "Geist Mono", monospace;
+  background-color: rgba(15, 15, 25, 0.6);
+  color: var(--mui-palette-primary-light);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-weight: 500;
+}
 
-    pre {
-      @apply p-4 rounded-lg mb-4 overflow-x-auto;
+pre {
+  background-color: #111118;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 1.5rem 0;
+  position: relative;
+}
 
-      code {
-        @apply bg-transparent p-0;
-      }
-    }
+pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: #E4E4E7;
+  font-weight: 400;
+}
 
-    /* Links */
-    a {
-      @apply text-blue-400 hover:text-blue-300 transition-colors;
-    }
+/* Buttons */
+button {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-text-primary);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
 
-    /* Blockquotes */
-    blockquote {
-      @apply border-l-4 border-gray-700 pl-4 italic my-4;
-    }
+button:hover {
+  background-color: var(--mui-palette-primary-light);
+}
 
-    /* Images */
-    img {
-      @apply rounded-lg my-8;
-    }
-  }
+button:disabled {
+  background-color: var(--mui-palette-action-disabled);
+  cursor: not-allowed;
+}
+
+/* === COMPONENT STYLES === */
+
+/* Navbar */
+.navbar {
+  background-color: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+}
+
+/* Cards */
+.card {
+  background-color: var(--mui-palette-background-paper);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--mui-palette-background-paper);
+  color: var(--mui-palette-text-secondary);
+  padding: 20px;
+  text-align: center;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--mui-palette-grey-700);
+  color: var(--mui-palette-text-primary);
+}
+
+td {
+  background-color: var(--mui-palette-grey-800);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mui-palette-grey-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mui-palette-primary-main);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mui-palette-primary-light);
 }

@@ -1,42 +1,40 @@
-'use client';
-import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
-import Link from 'next/link';
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import MuiButton from "@mui/material/Button";
 
-interface ButtonProps extends Omit<HTMLMotionProps<"button">, "href"> {
-  variant?: 'primary' | 'secondary';
+interface ButtonProps {
+  variant?: "contained" | "outlined" | "text"; // Match MUI button variants
+  color?: "primary" | "secondary";
   children: React.ReactNode;
   href?: string;
+  className?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
+  variant = "contained",
+  color = "primary",
   children,
   href,
-  className,
-  ...props
+  className = "",
 }) => {
-  const baseStyles = "inline-block px-6 py-3 font-medium rounded-full transition-colors";
-  const variants = {
-    primary: "bg-foreground text-background hover:bg-gray-200 dark:hover:bg-gray-700",
-    secondary: "bg-foreground/10 text-foreground hover:bg-foreground/20"
-  };
+  const MotionButton = motion(MuiButton);
 
-  const combinedClassName = `${baseStyles} ${variants[variant]} ${className || ''}`;
-  
   const content = (
-    <motion.button
-      className={combinedClassName}
+    <MotionButton
+      variant={variant}
+      color={color}
+      className={className}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      {...props}
     >
       {children}
-    </motion.button>
+    </MotionButton>
   );
 
   return href ? (
-    <Link href={href} className={combinedClassName}>
+    <Link href={href} passHref>
       {content}
     </Link>
   ) : (

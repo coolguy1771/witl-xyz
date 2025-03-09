@@ -1,7 +1,9 @@
-import Link from "next/link";
+import NextLink from "next/link";
 import { motion } from "framer-motion";
-import { BlogPost } from "../types";
+import { BlogPost } from "../types/blog";
 import { fadeIn } from "../lib/animations";
+import { Card, CardContent, Typography, Link, Box } from "@mui/material";
+import { ArrowRight } from "lucide-react";
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -9,27 +11,118 @@ interface BlogPostCardProps {
 
 export function BlogPostCard({ post }: BlogPostCardProps) {
   return (
-    <motion.article className="group" variants={fadeIn} whileHover={{ y: -5 }}>
-      <Link href={`/blog/${post.slug}`} className="block space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold group-hover:text-gray-300 transition-colors">
-            {post.title}
-          </h2>
-          <div className="flex gap-4 text-sm text-gray-400">
-            <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString()}
-            </time>
-            <span>{post.readingTime}</span>
-          </div>
-        </div>
-        <p className="text-gray-400 line-clamp-2">{post.excerpt}</p>
-        <motion.span
-          className="inline-block text-sm text-gray-400 group-hover:text-gray-300 transition-colors"
-          whileHover={{ x: 5 }}
-        >
-          Read more →
-        </motion.span>
-      </Link>
-    </motion.article>
+    <motion.div variants={fadeIn} whileHover={{ y: -5 }}>
+      <Card
+        elevation={1}
+        sx={theme => ({
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 2,
+          overflow: 'hidden',
+          transition: theme.transitions.create(['transform', 'box-shadow']),
+          position: 'relative',
+          '&:hover': {
+            boxShadow: theme.shadows[4],
+            '& .title': {
+              color: theme.palette.primary.main,
+            },
+            '& .readMore': {
+              color: theme.palette.primary.main,
+            },
+            '&::before': {
+              width: '100%'
+            }
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '30%',
+            height: '3px',
+            backgroundColor: theme.palette.primary.main,
+            transition: 'width 0.3s ease'
+          }
+        })}
+      >
+        <NextLink href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
+          <CardContent sx={{ p: 3 }}>
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="h5"
+                className="title"
+                sx={theme => ({
+                  color: theme.palette.text.primary,
+                  fontWeight: 600,
+                  transition: theme.transitions.create('color'),
+                  mb: 1,
+                })}
+              >
+                {post.title}
+              </Typography>
+
+              <Box
+                sx={theme => ({
+                  display: "flex",
+                  gap: 2,
+                  color: theme.palette.text.secondary,
+                })}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                </Typography>
+                <Typography variant="body2" color="text.secondary">{post.readingTime}</Typography>
+              </Box>
+            </Box>
+
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{
+                mb: 3,
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                lineHeight: 1.6
+              }}
+            >
+              {post.excerpt}
+            </Typography>
+
+            <Box
+              className="readMore"
+              sx={theme => ({
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+                color: theme.palette.text.secondary,
+                transition: theme.transitions.create('color')
+              })}
+            >
+              <Typography 
+                variant="body2" 
+                fontWeight="medium"
+                sx={{ 
+                  transition: theme => theme.transitions.create('all'),
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5
+                }}
+              >
+                Read more
+                <ArrowRight size={16} />
+              </Typography>
+            </Box>
+          </CardContent>
+        </NextLink>
+      </Card>
+    </motion.div>
   );
 }

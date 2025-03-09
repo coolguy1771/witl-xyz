@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { ThemeRegistry } from "./components/ThemeRegistry";
 import Navbar from "./components/Navbar";
 import "./globals.css";
 
@@ -20,18 +21,14 @@ export const metadata: Metadata = {
   description: "Personal portfolio and blog showcasing software engineering projects and design work.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar />
-        <main className="pt-16">
-          {children}
-        </main>
+        <ThemeRegistry>
+          <Navbar />
+          <main className="pt-[96px] md:pt-[104px]">{children}</main>
+        </ThemeRegistry>
       </body>
     </html>
   );

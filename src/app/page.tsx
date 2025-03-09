@@ -1,33 +1,47 @@
 'use client';
 
 import React from 'react';
-import {AboutSection} from './components/About';
-
+import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { AboutSection } from './components/About';
 import { Footer } from './components/Footer';
 import { ContactSection } from './components/Contact';
 import { HeroSection } from './components/Hero';
 import { ProjectsSection } from './components/Projects';
 
-
 export default function Home() {
-
+  const theme = useTheme();
+  
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <Box 
+      sx={{ 
+        minHeight: '100vh',
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary
+      }}
+    >
+      <Box component="main">
+        {/* Hero Section */}
+        <HeroSection />
 
-      {/* Hero Section */}
-      <HeroSection />
+        {/* About Section */}
+        <Box id="about" component="section">
+          <AboutSection />
+        </Box>
 
-      {/* About Section */}
-      <AboutSection />
+        {/* Work Section */}
+        <Box id="projects" component="section">
+          <ProjectsSection />
+        </Box>
 
-      {/* Work Section */}
-      <ProjectsSection />
-
-      {/* Contact Section */}
-      <ContactSection />
+        {/* Contact Section */}
+        <Box id="contact" component="section">
+          <ContactSection />
+        </Box>
+      </Box>
 
       {/* Footer */}
       <Footer />
-    </div>
+    </Box>
   );
 }

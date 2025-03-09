@@ -2,19 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Box, Container, Typography, Grid, useTheme } from '@mui/material';
 import { Project } from '../types';
 import { fetchGithubProjects } from '../lib/github';
 import { ProjectCard } from './ProjectCard';
 import { Loading } from './ui/Loading';
-import { fadeIn, staggerContainer, slideInFromLeft } from '../lib/animations';
+import { fadeIn, staggerContainer, slideInFromLeft, revealFromBottom } from '../lib/animations';
 
 interface ProjectsSectionProps {
   fallbackProjects?: Project[];
 }
 
-export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ 
-  fallbackProjects 
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
+  fallbackProjects
 }) => {
+  const theme = useTheme();
   const [projects, setProjects] = useState<Project[]>(fallbackProjects || []);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,51 +34,119 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
         setIsLoading(false);
       }
     };
-
     loadProjects();
   }, [fallbackProjects]);
 
   if (isLoading && !fallbackProjects?.length) {
     return (
-      <motion.section
-        className="py-24 bg-background/50"
+      <Box
+        component={motion.section}
+        sx={{
+          py: 12,
+          backgroundColor: theme.palette.background.default,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `linear-gradient(180deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
+            opacity: 0.4,
+            zIndex: -1
+          }
+        }}
         initial="initial"
         animate="animate"
         variants={fadeIn}
       >
-        <div className="max-w-5xl mx-auto px-6">
+        <Container maxWidth="lg">
           <Loading />
-        </div>
-      </motion.section>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <motion.section
+    <Box
+      component={motion.section}
       id="work"
-      className="py-24 bg-background/50"
+      sx={{
+        py: 12,
+        backgroundColor: theme.palette.background.default,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `linear-gradient(180deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
+          opacity: 0.4,
+          zIndex: -1
+        }
+      }}
       initial="initial"
       whileInView="animate"
       viewport={{ once: true }}
-      variants={fadeIn}
+      variants={revealFromBottom}
     >
-      <div className="max-w-5xl mx-auto px-6">
-        <motion.h2
-          className="text-2xl font-bold mb-12"
-          variants={slideInFromLeft}
-        >
-          Featured Projects
-          {error && <span className="text-sm text-gray-400 ml-2">({error})</span>}
-        </motion.h2>
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+      <Container maxWidth="lg">
+        <Box component={motion.div} variants={slideInFromLeft} mb={6}>
+          <Typography 
+            variant="h3" 
+            component="h2"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ 
+              mb: 6,
+              color: theme.palette.text.primary,
+              textShadow: `0 1px 2px rgba(0,0,0,0.1)`,
+              position: 'relative',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: 0,
+                width: 60,
+                height: 4,
+                borderRadius: 2,
+                background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`
+              }
+            }}
+          >
+            Featured Projects
+            {error && (
+              <Typography 
+                component="span"
+                variant="caption"
+                sx={{ 
+                  ml: 2, 
+                  color: theme.palette.error.main,
+                  fontWeight: 'normal'
+                }}
+              >
+                ({error})
+              </Typography>
+            )}
+          </Typography>
+        </Box>
+
+        <Grid
+          container
+          spacing={3}
+          component={motion.div}
           variants={staggerContainer}
         >
           {projects.map((project, index) => (
-            <ProjectCard key={index} project={project} />
+            <Grid item xs={12} md={6} key={index} component={motion.div} variants={fadeIn}>
+              <ProjectCard project={project} />
+            </Grid>
           ))}
-        </motion.div>
-      </div>
-    </motion.section>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
