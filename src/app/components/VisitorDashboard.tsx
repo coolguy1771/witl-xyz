@@ -404,7 +404,11 @@ export default function VisitorDashboard({ initialData }: Props) {
         }
         
         const visitorData = await response.json();
-        setData(prev => ({...prev, ...visitorData}));
+        if (typeof visitorData === 'object' && visitorData !== null) {
+          setData(prev => ({...prev, ...visitorData}));
+        } else {
+          console.error('Invalid visitor data:', visitorData);
+        }
         setInitialLoaded(true);
       } catch (err) {
         if ((err as Error).name === 'AbortError') {

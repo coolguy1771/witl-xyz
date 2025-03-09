@@ -19,11 +19,11 @@ export function useBlogTags() {
           throw new Error(`Failed to fetch tags: ${response.status}`);
         }
         
-        const data = await response.json();
+        const data: string[] = await response.json();
         setTags(data);
       } catch (err: Error | unknown) {
         console.error('Error fetching blog tags:', err);
-        setError(err);
+        setError(err as Error);
       } finally {
         setIsLoading(false);
       }

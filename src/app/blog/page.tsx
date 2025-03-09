@@ -17,7 +17,8 @@ async function getPosts(): Promise<Post[]> {
       excerpt: post.excerpt,
       readingTime: post.readingTime,
       tags: post.tags || [],
-      coverImage: post.coverImage
+      coverImage: post.coverImage,
+      content: post.content
     }));
   } catch (error) {
     console.error("Error loading blog posts:", error);

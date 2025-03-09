@@ -83,7 +83,7 @@ export function TableOfContents({ content, isMobile = false }: { content: string
               href={heading.id.startsWith('generated-heading') ? '#' : `#${heading.id}`}
               underline="none"
               component={!heading.id.startsWith('generated-heading') ? 'a' : 'span'}
-              onClick={(e) => {
+              onClick={(e: { preventDefault: () => void; }) => {
                 if (heading.id.startsWith('generated-heading')) {
                   e.preventDefault();
                   return;
@@ -212,7 +212,7 @@ export function TableOfContents({ content, isMobile = false }: { content: string
               href={heading.id.startsWith('generated-heading') ? '#' : `#${heading.id}`}
               underline="none"
               component={!heading.id.startsWith('generated-heading') ? 'a' : 'span'}
-              onClick={(e) => {
+              onClick={(e: { preventDefault: () => void; }) => {
                 if (heading.id.startsWith('generated-heading')) {
                   e.preventDefault();
                   return;

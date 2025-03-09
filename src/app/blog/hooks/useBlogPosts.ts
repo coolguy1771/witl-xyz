@@ -80,11 +80,11 @@ export function useBlogPosts(options: UseBlogPostsOptions = {}) {
         }
         
         // Parse and store the response data
-        const data = await response.json();
+        const data = await response.json() as Post[];
         setPosts(data);
       } catch (err: Error | unknown) {
         console.error('Error fetching blog posts:', err);
-        setError(err);
+        setError(err as Error);
       } finally {
         // Always set loading to false, regardless of success or failure
         setIsLoading(false);

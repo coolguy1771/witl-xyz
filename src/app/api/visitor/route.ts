@@ -4,8 +4,10 @@ import { headers } from 'next/headers';
 // Full list of CF headers we can extract
 // https://developers.cloudflare.com/fundamentals/get-started/reference/http-request-headers/
 
-// Add caching for faster response times
-export const revalidate = 300; // Cache for 5 minutes
+// Mark route as dynamic to support headers() usage
+export const dynamic = 'force-dynamic';
+
+// Remove static revalidation since we're now dynamic
 
 export async function GET(request: NextRequest) {
   try {
