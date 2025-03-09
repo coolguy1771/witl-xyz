@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       ...visitorData,
       isDataComplete,
       // Weather will be null at first
-      weather: null
+      weather: null as null | { temp: number; condition: string; humidity: number }
     };
     
     // Use setTimeout to avoid blocking the response for non-essential data
