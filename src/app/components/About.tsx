@@ -57,7 +57,7 @@ export const AboutSection: React.FC = () => {
               }}
               variants={fadeIn}
             >
-              I'm experienced in building{" "}
+              I&apos;m experienced in building{" "}
               <Box component="span" sx={{ 
                 color: theme.palette.primary.light,
                 fontWeight: 500,
@@ -99,7 +99,7 @@ export const AboutSection: React.FC = () => {
                 transition: "color 0.3s ease"
               }}>
                 practical, impactful results
-              </Box>. Right now, I'm diving into open-source projects and staying up-to-date with the latest
+              </Box>. Right now, I&apos;m diving into open-source projects and staying up-to-date with the latest
               in web development.
             </Typography>
             <Typography
@@ -112,7 +112,7 @@ export const AboutSection: React.FC = () => {
               }}
               variants={fadeIn}
             >
-              I'm also a{" "}
+              I&apos;m also a{" "}
               <Box
                 component="span"
                 sx={{

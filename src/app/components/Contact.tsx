@@ -96,7 +96,7 @@ export const ContactSection: React.FC = () => {
             variants={fadeIn}
           >
             Whether you have a project in mind or just want to chat, feel free to
-            reach out. I'm always open to discussing new opportunities.
+            reach out. I&apos;m always open to discussing new opportunities.
           </Typography>
 
           <motion.div variants={popIn}>

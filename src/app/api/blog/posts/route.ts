@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllPosts, getPostsByTags, getFeaturedPosts } from '@/app/lib/blog';
-import { BlogPost, BlogPostMetadata } from '@/app/types/blog';
+import { BlogPostMetadata } from '@/app/types/blog';
 
 export async function GET(request: NextRequest) {
   try {

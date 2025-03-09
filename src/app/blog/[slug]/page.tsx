@@ -26,7 +26,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
         ...(post.author && { authors: [post.author.name] }),
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'Post Not Found | My Blog',
       description: 'The requested blog post could not be found.',
@@ -54,7 +54,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
         <BlogPostView post={post} relatedPosts={relatedPosts} />
       </Suspense>
     );
-  } catch (error) {
+  } catch {
     notFound();
   }
 }

@@ -4,7 +4,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { Box, Container, Typography, Link, useTheme } from "@mui/material";
-import { fadeIn } from "../lib/animations";
 
 export const Footer: React.FC = () => {
   const theme = useTheme();

@@ -138,7 +138,7 @@ export default function NotFound() {
             mb: 2
           }}
         >
-          The page you're looking for doesn't exist or has been moved.
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
           You might have mistyped the URL or the page may have been relocated.
         </Typography>
         

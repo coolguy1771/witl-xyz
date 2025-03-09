@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button, Container, Typography, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { fadeIn, slideInFromRight, popIn } from "../lib/animations";
+import { slideInFromRight, popIn } from "../lib/animations";
 
 export const HeroSection: React.FC = () => {
   const theme = useTheme();

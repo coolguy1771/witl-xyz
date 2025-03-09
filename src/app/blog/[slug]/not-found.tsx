@@ -135,7 +135,7 @@ export default function NotFound() {
             mb: 2
           }}
         >
-          The blog post you're looking for doesn't exist or may have been moved.
+          The blog post you&apos;re looking for doesn&apos;t exist or may have been moved.
           Please check the URL or return to the blog homepage.
         </Typography>
         

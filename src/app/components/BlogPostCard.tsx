@@ -2,7 +2,7 @@ import NextLink from "next/link";
 import { motion } from "framer-motion";
 import { BlogPost } from "../types/blog";
 import { fadeIn } from "../lib/animations";
-import { Card, CardContent, Typography, Link, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import { ArrowRight } from "lucide-react";
 
 interface BlogPostCardProps {

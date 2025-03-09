@@ -25,7 +25,6 @@ interface PostGridProps {
 
 export function PostGrid({ posts }: PostGridProps) {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
   return (
     <Grid2 container spacing={3}>
@@ -152,7 +151,7 @@ function BlogCard({ post, index }: BlogCardProps) {
             </Box>
           )}
           
-          <CardContent sx={theme => ({ 
+          <CardContent sx={{ 
             flexGrow: 1, 
             display: 'flex', 
             flexDirection: 'column', 
@@ -160,7 +159,7 @@ function BlogCard({ post, index }: BlogCardProps) {
             '&:last-child': {
               paddingBottom: 3 // Override MUI default
             }
-          })}>
+          }}>
             <Typography
               variant={isSmallScreen ? 'h6' : 'h5'}
               component="h2"

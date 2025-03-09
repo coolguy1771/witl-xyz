@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { 
   Card, 
   CardHeader, 
@@ -299,7 +299,7 @@ function LoadingState() {
             color="text.secondary"
             sx={{ maxWidth: 600, mx: 'auto' }}
           >
-            We're gathering information about your location, device, and connection.
+            We&apos;re gathering information about your location, device, and connection.
             This data is not stored and is only used for this demonstration.
           </Typography>
         </Box>
@@ -377,7 +377,7 @@ export default function VisitorDashboard({ initialData }: Props) {
    * 
    * @param {boolean} isRefresh - Whether this is a manual refresh by the user
    */
-  const fetchVisitorData = async (isRefresh = false) => {
+  const fetchVisitorData = useCallback(async (isRefresh = false) => {
     // Only fetch if we haven't loaded enhanced data yet or if user is refreshing
     if (!initialLoaded || isRefresh) {
       setLoading(true);
@@ -418,7 +418,7 @@ export default function VisitorDashboard({ initialData }: Props) {
         setLoading(false);
       }
     }
-  };
+  }, [initialLoaded]);
 
   /**
    * Deferred data fetching using browser idle time
@@ -438,14 +438,14 @@ export default function VisitorDashboard({ initialData }: Props) {
       setTimeout(() => {
         if ('requestIdleCallback' in window) {
           // Use browser's idle time to fetch non-critical data
-          (window as any).requestIdleCallback(() => fetchVisitorData());
+          window.requestIdleCallback(() => fetchVisitorData());
         } else {
           // Fallback for browsers that don't support requestIdleCallback
           setTimeout(() => fetchVisitorData(), 200);
         }
       }, 100);
     }
-  }, []);
+  }, [fetchVisitorData]);
 
   if (loading) return <LoadingState />;
 
@@ -985,7 +985,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             color="text.secondary"
             sx={{ mb: 1 }}
           >
-            This information is derived from Cloudflare's HTTP request headers
+            This information is derived from Cloudflare&apos;s HTTP request headers
           </Typography>
           <Typography 
             variant="caption"

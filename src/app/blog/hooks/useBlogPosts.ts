@@ -82,7 +82,7 @@ export function useBlogPosts(options: UseBlogPostsOptions = {}) {
         // Parse and store the response data
         const data = await response.json();
         setPosts(data);
-      } catch (err: any) {
+      } catch (err: Error | unknown) {
         console.error('Error fetching blog posts:', err);
         setError(err);
       } finally {
@@ -93,12 +93,7 @@ export function useBlogPosts(options: UseBlogPostsOptions = {}) {
 
     // Execute the fetch function
     fetchPosts();
-  }, [
-    // Re-run the effect when any of these dependencies change
-    options.tags?.join(','), // Join tags into a string to avoid reference equality issues
-    options.limit, 
-    options.featured
-  ]);
+  }, [options]);
 
   return {
     posts,

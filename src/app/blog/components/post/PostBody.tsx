@@ -12,7 +12,7 @@ interface PostBodyProps {
   content: string;
 }
 
-export function PostBody({ post, content }: PostBodyProps) {
+export function PostBody({ content }: PostBodyProps) {
   const theme = useTheme();
   // Initialize highlight.js to automatically highlight code blocks in the rendered content
   useEffect(() => {
@@ -129,7 +129,7 @@ export function PostBody({ post, content }: PostBodyProps) {
         pre.style.position = 'relative';
       }
     });
-  }, [content]); // Re-run when content changes
+  }, [content, theme.palette.success.dark]); // Re-run when content changes
   
   return (
     <Grid2 container spacing={4}>

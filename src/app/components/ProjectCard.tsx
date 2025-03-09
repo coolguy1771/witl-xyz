@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
-import { Box, Card, CardContent, Typography, Stack, IconButton, Link, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Typography, Stack, IconButton, useTheme } from '@mui/material';
 import { Project } from '../types';
 import { TechBadge } from './TechBadge';
 import { scaleUp, cardHover } from '../lib/animations';

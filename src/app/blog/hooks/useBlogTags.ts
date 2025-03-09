@@ -21,7 +21,7 @@ export function useBlogTags() {
         
         const data = await response.json();
         setTags(data);
-      } catch (err: any) {
+      } catch (err: Error | unknown) {
         console.error('Error fetching blog tags:', err);
         setError(err);
       } finally {

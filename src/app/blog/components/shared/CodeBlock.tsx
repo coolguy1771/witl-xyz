@@ -14,7 +14,8 @@ interface CodeBlockProps {
 export function CodeBlock({ children, language }: CodeBlockProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState('');
-  const theme = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const theme = useTheme(); // Used in sx props
 
   useEffect(() => {
     // Register languages you want to support
@@ -30,7 +31,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
       if (language) {
         try {
           highlighted = hljs.highlight(children, { language }).value;
-        } catch (e) {
+        } catch {
           // If specific language highlighting fails, try auto detection
           highlighted = hljs.highlightAuto(children).value;
         }

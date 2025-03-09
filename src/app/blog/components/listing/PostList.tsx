@@ -8,7 +8,6 @@ import {
   Typography, 
   Box, 
   Chip, 
-  Divider, 
   useTheme,
   alpha
 } from '@mui/material';
