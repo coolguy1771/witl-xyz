@@ -1,11 +1,8 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getAllPosts, getRelatedPosts, extractHeadingsFromContent } from "../../lib/blog";
-import { promises as fs } from "fs";
-import path from "path";
+import { getPostBySlug, getPostSlugs, getRelatedPosts } from "../../lib/fs-blog";
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
-import { BlogPost } from "../../types/blog";
 
 // Generate metadata for the page
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
@@ -44,12 +41,10 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
   const slug = params?.slug;
 
   try {
-    const post = await getPostBySlug(slug) as BlogPost;
-
-    if (!post.headings) {
-      post.headings = extractHeadingsFromContent(post.content);
-    }
-
+    // Load post from filesystem
+    const post = await getPostBySlug(slug);
+    
+    // Get related posts
     const relatedPosts = await getRelatedPosts(post, 2);
 
     return (
@@ -57,7 +52,8 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
         <BlogPostView post={post} relatedPosts={relatedPosts} />
       </Suspense>
     );
-  } catch {
+  } catch (error) {
+    console.error(`Error loading post ${slug}:`, error);
     notFound();
   }
 }
@@ -66,34 +62,19 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
 // Generate static paths for build time
 export async function generateStaticParams() {
   try {
-    // Directly access the filesystem during build to get slugs
-    const postsDir = path.join(process.cwd(), 'posts');
+    // Get all post slugs from the filesystem
+    const slugs = getPostSlugs();
     
-    try {
-      // Check if directory exists first
-      const stat = await fs.stat(postsDir);
-      if (!stat.isDirectory()) {
-        throw new Error('Posts directory not found');
-      }
-      
-      // Read files from directory
-      const files = await fs.readdir(postsDir);
-      const markdownFiles = files.filter(file => file.endsWith('.md'));
-      
-      // Create slug params from filenames
-      return markdownFiles.map(filename => ({
-        slug: filename.replace(/\.md$/, ''),
-      }));
-    } catch (fsError) {
-      // Fallback to blog API method if filesystem access fails
-      console.error("Filesystem access failed, falling back to API:", fsError);
-      const posts = await getAllPosts();
-      return posts.map((post) => ({
-        slug: post.slug,
-      }));
+    if (slugs.length > 0) {
+      console.log(`Found ${slugs.length} blog posts in filesystem`);
+      return slugs.map(slug => ({ slug }));
     }
+    
+    // Fallback for empty directory
+    console.warn("No blog posts found, using fallback");
+    return [{ slug: 'sample-post' }];
   } catch (error) {
     console.error("Error generating static paths:", error);
-    return [];
+    return [{ slug: 'sample-post' }];
   }
 }

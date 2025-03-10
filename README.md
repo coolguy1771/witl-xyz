@@ -84,12 +84,9 @@ Your content here...
 │   │   └── Navbar.tsx
 │   ├── fonts/
 │   ├── lib/
-│   │   ├── blog.ts          # Filesystem-based blog (for local dev)
-│   │   └── blog-cf.ts       # Cloudflare-compatible blog (for production)
+│   │   └── fs-blog.ts       # Filesystem-based blog implementation
 │   └── types/
 ├── posts/                   # Markdown blog posts
-├── scripts/
-│   └── build-blog-maps.js   # Pre-computes blog metadata maps
 ├── public/
 └── package.json
 ```
@@ -121,11 +118,12 @@ Your content here...
 
 ## Cloudflare Deployment
 
-This project is configured to work with Cloudflare Workers. It uses a build-time process to pre-compute blog metadata maps that:
+This project is configured to work with Cloudflare Workers. Thanks to Next.js static generation, all blog pages are pre-rendered at build time.
 
-1. Are bundled with the application in the `.open-next/assets/blog-maps` directory
-2. Allow API routes to work without filesystem access
-3. Support the static generation of blog pages
+The blog functionality works by:
+1. Reading Markdown files from the `/posts` directory during build
+2. Pre-rendering the content into static HTML
+3. Deploying these static pages to Cloudflare
 
 ### Setup for Cloudflare
 
@@ -134,7 +132,7 @@ Simply build and deploy:
 npm run deploy
 ```
 
-Next.js pre-renders all blog pages at build time, and the metadata maps are used for navigation and API routes. This approach leverages Next.js static generation while ensuring compatibility with Cloudflare Workers.
+The filesystem access only happens during build time, not in production. Next.js ensures that all necessary content is pre-generated and packaged within the static assets.
 
 ## Contributing
 

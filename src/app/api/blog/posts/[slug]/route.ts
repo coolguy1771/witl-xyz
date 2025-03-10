@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostMetadata } from '@/app/lib/blog-static';
+import { getPostBySlug } from '@/app/lib/fs-blog';
 
 export async function GET(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
@@ -11,14 +11,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ slug:
       );
     }
     
-    const post = await getPostMetadata(params.slug);
-    
-    if (!post) {
-      return NextResponse.json(
-        { error: `Post not found: ${params.slug}` },
-        { status: 404 }
-      );
-    }
+    const post = await getPostBySlug(params.slug);
     return NextResponse.json(post);
   } catch (error) {
     console.error(`Error in /api/blog/posts/${params.slug}:`, error);

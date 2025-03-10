@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAllPosts } from "../lib/blog";
+import { getAllPosts } from "../lib/fs-blog";
 import { BlogView } from "./components";
 import { BlogListSkeleton } from "./components/shared/BlogListSkeleton";
 import { Post } from "../types/blog";
@@ -7,7 +7,7 @@ import { Post } from "../types/blog";
 // This async function leverages React Server Components to fetch data
 async function getPosts(): Promise<Post[]> {
   try {
-    // Always use the filesystem approach for simplicity
+    // Use filesystem-based blog implementation
     const posts = await getAllPosts();
     
     return posts.map((post) => ({
@@ -15,10 +15,10 @@ async function getPosts(): Promise<Post[]> {
       title: post.title, 
       date: post.date,
       excerpt: post.excerpt,
-      readingTime: post.readingTime || '',
+      readingTime: post.readingTime,
       tags: post.tags || [],
       coverImage: post.coverImage,
-      content: post.content || '' // Content may not be needed for list view
+      content: post.content
     }));
   } catch (error) {
     console.error("Error loading blog posts:", error);

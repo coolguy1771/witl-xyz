@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllPosts, getPostsByTags, getFeaturedPosts } from '@/app/lib/blog-static';
+import { getAllPosts, getPostsByTags, getFeaturedPosts } from '@/app/lib/fs-blog';
 
 export async function GET(request: NextRequest) {
   try {
