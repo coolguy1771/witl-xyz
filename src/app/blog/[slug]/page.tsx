@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts, getRelatedPosts, extractHeadingsFromContent } from "../../lib/blog";
+import { promises as fs } from "fs";
+import path from "path";
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
 import { BlogPost } from "../../types/blog";
@@ -26,7 +28,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
         ...(post.author && { authors: [post.author.name] }),
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("Error generating metadata", error);
     return {
       title: 'Post Not Found | My Blog',
       description: 'The requested blog post could not be found.',
@@ -63,10 +66,32 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
 // Generate static paths for build time
 export async function generateStaticParams() {
   try {
-    const posts = await getAllPosts();
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
+    // Directly access the filesystem during build to get slugs
+    const postsDir = path.join(process.cwd(), 'posts');
+    
+    try {
+      // Check if directory exists first
+      const stat = await fs.stat(postsDir);
+      if (!stat.isDirectory()) {
+        throw new Error('Posts directory not found');
+      }
+      
+      // Read files from directory
+      const files = await fs.readdir(postsDir);
+      const markdownFiles = files.filter(file => file.endsWith('.md'));
+      
+      // Create slug params from filenames
+      return markdownFiles.map(filename => ({
+        slug: filename.replace(/\.md$/, ''),
+      }));
+    } catch (fsError) {
+      // Fallback to blog API method if filesystem access fails
+      console.error("Filesystem access failed, falling back to API:", fsError);
+      const posts = await getAllPosts();
+      return posts.map((post) => ({
+        slug: post.slug,
+      }));
+    }
   } catch (error) {
     console.error("Error generating static paths:", error);
     return [];

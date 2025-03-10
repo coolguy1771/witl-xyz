@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostBySlug, extractHeadingsFromContent } from '@/app/lib/blog';
+import { getPostMetadata } from '@/app/lib/blog-static';
 
 export async function GET(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
@@ -11,13 +11,14 @@ export async function GET(request: NextRequest, props: { params: Promise<{ slug:
       );
     }
     
-    const post = await getPostBySlug(params.slug);
+    const post = await getPostMetadata(params.slug);
     
-    // Extract headings for table of contents if not already present
-    if (!post.headings) {
-      post.headings = extractHeadingsFromContent(post.content);
+    if (!post) {
+      return NextResponse.json(
+        { error: `Post not found: ${params.slug}` },
+        { status: 404 }
+      );
     }
-    
     return NextResponse.json(post);
   } catch (error) {
     console.error(`Error in /api/blog/posts/${params.slug}:`, error);

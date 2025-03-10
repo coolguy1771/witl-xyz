@@ -7,18 +7,18 @@ import { Post } from "../types/blog";
 // This async function leverages React Server Components to fetch data
 async function getPosts(): Promise<Post[]> {
   try {
+    // Always use the filesystem approach for simplicity
     const posts = await getAllPosts();
     
-    // Return only the metadata needed for the post list
     return posts.map((post) => ({
       slug: post.slug,
       title: post.title, 
       date: post.date,
       excerpt: post.excerpt,
-      readingTime: post.readingTime,
+      readingTime: post.readingTime || '',
       tags: post.tags || [],
       coverImage: post.coverImage,
-      content: post.content
+      content: post.content || '' // Content may not be needed for list view
     }));
   } catch (error) {
     console.error("Error loading blog posts:", error);

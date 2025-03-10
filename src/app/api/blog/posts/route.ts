@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllPosts, getPostsByTags, getFeaturedPosts } from '@/app/lib/blog';
-import { BlogPostMetadata } from '@/app/types/blog';
+import { getAllPosts, getPostsByTags, getFeaturedPosts } from '@/app/lib/blog-static';
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,20 +32,7 @@ export async function GET(request: NextRequest) {
       posts = posts.slice(0, limit);
     }
     
-    // Return only metadata for listings to reduce payload size
-    const postsMetadata: BlogPostMetadata[] = posts.map(post => ({
-      slug: post.slug,
-      title: post.title,
-      date: post.date,
-      excerpt: post.excerpt,
-      readingTime: post.readingTime,
-      tags: post.tags,
-      coverImage: post.coverImage,
-      featured: post.featured,
-      author: post.author
-    }));
-    
-    return NextResponse.json(postsMetadata);
+    return NextResponse.json(posts);
   } catch (error) {
     console.error('Error in /api/blog/posts:', error);
     return NextResponse.json(

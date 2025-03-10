@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAllTags } from '@/app/lib/blog';
+import { getAllTags } from '@/app/lib/blog-static';
 
 export async function GET() {
   try {

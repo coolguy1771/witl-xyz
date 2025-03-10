@@ -84,8 +84,12 @@ Your content here...
 │   │   └── Navbar.tsx
 │   ├── fonts/
 │   ├── lib/
+│   │   ├── blog.ts          # Filesystem-based blog (for local dev)
+│   │   └── blog-cf.ts       # Cloudflare-compatible blog (for production)
 │   └── types/
-├── posts/
+├── posts/                   # Markdown blog posts
+├── scripts/
+│   └── build-blog-maps.js   # Pre-computes blog metadata maps
 ├── public/
 └── package.json
 ```
@@ -112,6 +116,25 @@ Your content here...
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
 - [gray-matter](https://github.com/jonschlinkert/gray-matter) - Frontmatter parsing
 - [remark](https://github.com/remarkjs/remark) - Markdown processing
+- [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless deployment
+- [Cloudflare Assets](https://developers.cloudflare.com/workers/runtime-apis/fetch-event/#assets) - Static file serving
+
+## Cloudflare Deployment
+
+This project is configured to work with Cloudflare Workers. It uses a build-time process to pre-compute blog metadata maps that:
+
+1. Are bundled with the application in the `.open-next/assets/blog-maps` directory
+2. Allow API routes to work without filesystem access
+3. Support the static generation of blog pages
+
+### Setup for Cloudflare
+
+Simply build and deploy:
+```bash
+npm run deploy
+```
+
+Next.js pre-renders all blog pages at build time, and the metadata maps are used for navigation and API routes. This approach leverages Next.js static generation while ensuring compatibility with Cloudflare Workers.
 
 ## Contributing
 
