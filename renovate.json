@@ -5,14 +5,14 @@
     "config:best-practices",
     "security:openssf-scorecard",
     ":dependencyDashboard",
-    ":automergeBranch",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
     ":semanticCommits",
     ":timezone(America/New_York)"
   ],
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "rollbackPrs": true,
   "packageRules": [
     {
       "description": ["Auto-merge GitHub Actions for minor and patch"],
@@ -20,17 +20,20 @@
       "matchDatasources": ["github-tags"],
       "automerge": true,
       "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Automerge non-major updates",
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "minimumReleaseAge": "3 days"
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": true,
+    "schedule": ["before 5:00am on monday"]
   }
 }
