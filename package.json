@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250327.0",
-    "@opennextjs/cloudflare": "0.6.3",
+    "@opennextjs/cloudflare": "0.6.5",
     "@playwright/test": "1.51.1",
     "@tailwindcss/postcss": "4.0.17",
     "@tailwindcss/typography": "0.5.16",
