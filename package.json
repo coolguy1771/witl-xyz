@@ -46,7 +46,7 @@
     "unified": "^11.0.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250402.0",
+    "@cloudflare/workers-types": "4.20250403.0",
     "@opennextjs/cloudflare": "0.6.6",
     "@playwright/test": "1.51.1",
     "@tailwindcss/postcss": "4.1.1",
