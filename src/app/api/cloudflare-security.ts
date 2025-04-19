@@ -255,7 +255,7 @@ export function validateFileUpload(
   if (allowedTypes.length > 0 && file.type) {
     const isAllowedType = allowedTypes.some(
       (type) =>
-        file.type === type || file.type.startsWith(type.replace("*", ""))
+        file.type === type || file.type.startsWith(type.replace(/\*/g, ""))
     );
 
     if (!isAllowedType) {
