@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
                 .replace(/[^a-fA-F0-9]/g, "")
                 .substring(0, 64)
             : Math.random().toString(16).substring(2, 10),
-          version: 3, // Default to 3 as it's the most common
+          version: certInfo.version || null, // Dynamically derive version, fallback to null if unavailable
           signatureAlgorithm: "SHA256withRSA", // Default
           subjectAlternativeName: subjectAltNames.slice(0, 20), // Limit number of SANs
           keyUsage: ["Digital Signature", "Key Encipherment"],
