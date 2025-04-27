@@ -262,7 +262,12 @@ export function extractHeadingsFromContent(content: string): Heading[] {
   while ((match = headingRegex.exec(content)) !== null) {
     // If the heading doesn't have an ID, generate one from the content
     const level = parseInt(match[1]);
-    const text = match[3].replace(/<[^>]*>/g, ''); // Strip HTML tags inside heading
+    let text = match[3];
+    let previous;
+    do {
+      previous = text;
+      text = text.replace(/<[^>]*>/g, ''); // Strip HTML tags inside heading
+    } while (text !== previous);
     let id = match[2];
     
     // If no ID found, generate one from the text content
