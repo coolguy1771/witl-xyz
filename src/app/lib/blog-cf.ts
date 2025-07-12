@@ -580,11 +580,15 @@ async function convertMarkdownToHtml(markdown: string): Promise<string> {
 
   // Add IDs to headings for TOC linking
   html = html.replace(/<h([2-3])>(.*?)<\/h\1>/g, (match, level, content) => {
-    const id = content
+    // First strip all HTML tags completely
+    const textContent = content.replace(/<[^>]*>/g, "");
+    // Then create a safe ID using only alphanumeric characters and hyphens
+    const id = textContent
       .toLowerCase()
-      .replace(/<[^>]*>/g, "")
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-");
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
     return `<h${level} id="${id}">${content}</h${level}>`;
   });
 
