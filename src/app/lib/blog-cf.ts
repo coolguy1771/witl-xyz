@@ -20,20 +20,25 @@ interface KVNamespace {
 
 // Development fallback for KV
 class DevKV implements KVNamespace {
-  private store: Map<string, { value: string; metadata?: any }> = new Map();
+class DevKV implements KVNamespace {
+  private store: Map<string, { value: string; metadata?: Record<string, unknown> }> = new Map();
 
-  async get(key: string, options?: { type: "json" }) {
+  async get<T = string>(key: string, options?: { type: "json" }): Promise<T | null> {
     const item = this.store.get(key);
     if (!item) return null;
-    return options?.type === "json" ? JSON.parse(item.value) : item.value;
+    return options?.type === "json"
+      ? (JSON.parse(item.value) as T)
+      : (item.value as T);
   }
 
   async put(
     key: string,
     value: string,
-    options?: { expirationTtl: number; metadata?: any }
+    options?: { expirationTtl: number; metadata?: Record<string, unknown> }
   ) {
     this.store.set(key, { value, metadata: options?.metadata });
+  }
+}
   }
 
   async list(options?: { prefix: string }) {
