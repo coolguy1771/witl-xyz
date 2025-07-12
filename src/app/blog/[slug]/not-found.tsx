@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  useTheme,
-} from "@mui/material";
+// (Removed unused `useTheme` import from "@mui/material")
 import Link from "next/link";
 
 export default function BlogPostNotFound() {
