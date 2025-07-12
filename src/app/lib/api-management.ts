@@ -318,12 +318,13 @@ export class ApiKeyManager {
   private generateApiKey(): string {
     // Generate a secure API key
     const prefix = "sk_";
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const array = new Uint8Array(48);
+    crypto.getRandomValues(array);
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = prefix;
 
-    for (let i = 0; i < 48; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    for (let i = 0; i < array.length; i++) {
+      result += chars[array[i] % chars.length];
     }
 
     return result;
