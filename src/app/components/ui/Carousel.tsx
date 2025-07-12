@@ -59,7 +59,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   const [itemsToShow, setItemsToShow] = useState(itemsPerView.lg || 2);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const autoPlayRef = useRef<NodeJS.Timeout>();
+  const autoPlayRef = useRef<ReturnType<typeof setInterval>>();
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const totalItems = children.length;
