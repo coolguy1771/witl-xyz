@@ -68,25 +68,32 @@ export class ApiKeyManager {
     error?: string;
   } {
     const apiKey = this.apiKeys.get(key);
+    let error: string | undefined;
+    let valid = true;
 
     if (!apiKey) {
-      return { valid: false, error: "Invalid API key" };
+      error = "Invalid API key";
+      valid = false;
     }
 
-    if (!apiKey.isActive) {
-      return { valid: false, error: "API key is disabled" };
+    if (apiKey && !apiKey.isActive) {
+      error = "API key is disabled";
+      valid = false;
     }
 
-    if (apiKey.expiresAt && new Date() > new Date(apiKey.expiresAt)) {
-      return { valid: false, error: "API key has expired" };
+    if (apiKey && apiKey.expiresAt && new Date() > new Date(apiKey.expiresAt)) {
+      error = "API key has expired";
+      valid = false;
     }
 
     // Update last used timestamp
-    apiKey.lastUsed = new Date().toISOString();
-    this.apiKeys.set(key, apiKey);
-    this.saveToStorage();
+    if (valid && apiKey) {
+      apiKey.lastUsed = new Date().toISOString();
+      this.apiKeys.set(key, apiKey);
+      this.saveToStorage();
+    }
 
-    return { valid: true, apiKey };
+    return { valid, apiKey: valid ? apiKey : undefined, error };
   }
 
   public checkRateLimit(apiKey: ApiKey): {
