@@ -704,7 +704,7 @@ export async function getFeaturedPosts(limit?: number): Promise<BlogPost[]> {
  * @returns Parsed frontmatter object
  */
 function parseFrontMatter(frontMatterStr: string): BlogPostFrontMatter {
-  const frontMatter: Record<string, any> = {};
+  const frontMatter: Record<string, unknown> = {};
 
   // Split into lines and parse each line
   const lines = frontMatterStr.split("\n");
@@ -712,13 +712,20 @@ function parseFrontMatter(frontMatterStr: string): BlogPostFrontMatter {
     const [key, ...valueParts] = line.split(":");
     if (key && valueParts.length > 0) {
       const value = valueParts.join(":").trim();
+      const keyTrimmed = key.trim();
 
       // Try to parse as JSON for arrays and objects
       try {
-        frontMatter[key.trim()] = JSON.parse(value);
+        frontMatter[keyTrimmed] = JSON.parse(value);
       } catch {
-        // If not valid JSON, use as is
-        frontMatter[key.trim()] = value;
+        // Handle special cases
+        if (value === "true" || value === "false") {
+          frontMatter[keyTrimmed] = value === "true";
+        } else if (/^\d+$/.test(value)) {
+          frontMatter[keyTrimmed] = parseInt(value, 10);
+        } else {
+          frontMatter[keyTrimmed] = value;
+        }
       }
     }
   }
