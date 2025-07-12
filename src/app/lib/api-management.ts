@@ -439,6 +439,7 @@ export function authenticateApiRequest(request: Request): {
       remainingRequests: rateLimit.remainingRequests,
     };
   } catch (error) {
+    console.error("Authentication error:", error);
     return { authenticated: false, error: "Authentication failed" };
   }
 }
