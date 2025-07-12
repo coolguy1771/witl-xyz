@@ -7,9 +7,7 @@
   "name": "witl-xyz",
   "main": ".open-next/worker.js",
   "compatibility_date": "2024-09-26",
-  "compatibility_flags": [
-    "nodejs_compat_v2"
-  ],
+  "compatibility_flags": ["nodejs_compat_v2"],
   "minify": true,
   "assets": {
     "binding": "ASSETS",
@@ -39,13 +37,13 @@
     "ENVIRONMENT": "production",
     "API_RATE_LIMIT": "60",
     "SSL_FETCH_TIMEOUT": "10000"
-  },
+  }
 
   /**
    * Note: Use secrets to store sensitive data.
    * https://developers.cloudflare.com/workers/configuration/secrets/
    */
-  
+
   /**
    * Note: Use secrets to store sensitive data.
    * https://developers.cloudflare.com/workers/configuration/secrets/

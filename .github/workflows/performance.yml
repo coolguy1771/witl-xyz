@@ -24,8 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -56,8 +56,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -74,7 +74,7 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
           runs: 3
-          configPath: './.lighthouserc.json'
+          configPath: "./.lighthouserc.json"
 
   build-time:
     name: Build Time Analysis
@@ -91,8 +91,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -115,7 +115,7 @@ jobs:
             const minutes = Math.floor(buildTime / 60);
             const seconds = buildTime % 60;
             const timeString = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

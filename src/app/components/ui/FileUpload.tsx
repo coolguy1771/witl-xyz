@@ -7,7 +7,6 @@ import {
   Typography,
   CircularProgress,
   alpha,
-  Tooltip,
 } from "@mui/material";
 import { Upload, AlertCircle, FileText, CheckCircle } from "lucide-react";
 
@@ -81,7 +80,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       />
 
       <Box
-        sx={(theme) => ({
+        sx={theme => ({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -94,15 +93,15 @@ const FileUpload: React.FC<FileUploadProps> = ({
           backgroundColor: displayError
             ? alpha(theme.palette.error.main, 0.04)
             : success
-            ? alpha(theme.palette.success.main, 0.04)
-            : alpha(theme.palette.primary.main, 0.02),
+              ? alpha(theme.palette.success.main, 0.04)
+              : alpha(theme.palette.primary.main, 0.02),
           transition: "all 0.2s ease-in-out",
           "&:hover": {
             backgroundColor: displayError
               ? alpha(theme.palette.error.main, 0.05)
               : success
-              ? alpha(theme.palette.success.main, 0.05)
-              : alpha(theme.palette.primary.main, 0.05),
+                ? alpha(theme.palette.success.main, 0.05)
+                : alpha(theme.palette.primary.main, 0.05),
             cursor: disabled || isLoading ? "not-allowed" : "pointer",
           },
         })}

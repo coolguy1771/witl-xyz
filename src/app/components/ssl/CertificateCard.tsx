@@ -11,7 +11,6 @@ import {
   Typography,
   useTheme,
   alpha,
-  Grid,
   IconButton,
   Tooltip,
   LinearProgress,
@@ -24,11 +23,11 @@ import {
   Copy,
   CheckCircle,
   XCircle,
-  Info,
   HelpCircle,
   AlertTriangle,
   Lock,
 } from "lucide-react";
+import { Grid } from "../ui/Grid";
 
 // Certificate field explanations for tooltips
 const fieldExplanations = {
@@ -200,10 +199,6 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
 
   // Get certificate strength assessment
   const getCertificateStrength = () => {
-    // Check if it's a wildcard certificate
-    const hasWildcard = certificate.subjectAlternativeName?.some((name) =>
-      name.includes("*.")
-    );
 
     // Check algorithm strength
     const isStrongAlgorithm =
@@ -329,8 +324,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
               daysRemaining <= 0
                 ? "error"
                 : daysRemaining <= 30
-                ? "warning"
-                : "success"
+                  ? "warning"
+                  : "success"
             }
             icon={
               daysRemaining > 0 ? <Clock size={16} /> : <XCircle size={16} />
@@ -668,8 +663,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                       {usage === "Digital Signature"
                         ? "Allows the certificate to be used for authenticating documents or messages."
                         : usage === "Key Encipherment"
-                        ? "Allows the certificate to be used for encrypting symmetric keys."
-                        : `This usage restricts what the certificate can be used for.`}
+                          ? "Allows the certificate to be used for encrypting symmetric keys."
+                          : `This usage restricts what the certificate can be used for.`}
                     </Typography>
                   }
                   arrow
@@ -702,8 +697,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                         {usage === "Server Authentication"
                           ? "This certificate can be used to identify web servers (websites)."
                           : usage === "Client Authentication"
-                          ? "This certificate can be used to identify clients to servers."
-                          : `Specifies a specific purpose for which this certificate can be used.`}
+                            ? "This certificate can be used to identify clients to servers."
+                            : `Specifies a specific purpose for which this certificate can be used.`}
                       </Typography>
                     }
                     arrow
@@ -761,8 +756,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 {daysRemaining <= 0
                   ? "Your certificate has expired. You need to renew it immediately to restore secure connections."
                   : daysRemaining <= 30
-                  ? `Your certificate will expire in ${daysRemaining} days. Begin the renewal process now to ensure uninterrupted service.`
-                  : `Your certificate is valid for another ${daysRemaining} days. Set a reminder to renew it before expiration.`}
+                    ? `Your certificate will expire in ${daysRemaining} days. Begin the renewal process now to ensure uninterrupted service.`
+                    : `Your certificate is valid for another ${daysRemaining} days. Set a reminder to renew it before expiration.`}
               </Typography>
             </Box>
 

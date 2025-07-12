@@ -1,23 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { AboutSection } from './components/About';
-import { Footer } from './components/Footer';
-import { ContactSection } from './components/Contact';
-import { HeroSection } from './components/Hero';
-import { ProjectsSection } from './components/Projects';
+import React, { Suspense } from "react";
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { AboutSection } from "./components/About";
+import { Footer } from "./components/Footer";
+import { ContactSection } from "./components/Contact";
+import { HeroSection } from "./components/Hero";
+import { ProjectsSection } from "./components/Projects";
+import { ProjectsSkeleton } from "./components/skeletons";
 
 export default function Home() {
   const theme = useTheme();
-  
+
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh',
+    <Box
+      sx={{
+        minHeight: "100vh",
         backgroundColor: theme.palette.background.default,
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
       }}
     >
       <Box component="main">
@@ -31,7 +32,9 @@ export default function Home() {
 
         {/* Work Section */}
         <Box id="projects" component="section">
-          <ProjectsSection />
+          <Suspense fallback={<ProjectsSkeleton />}>
+            <ProjectsSection />
+          </Suspense>
         </Box>
 
         {/* Contact Section */}

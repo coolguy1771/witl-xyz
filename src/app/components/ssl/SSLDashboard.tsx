@@ -16,13 +16,22 @@ import {
   CircularProgress,
   Card,
   CardContent,
-  Grid,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { SSLCertificate, SSLCertificateResponse } from "@/app/types/ssl";
 import CertificateCard from "./CertificateCard";
 import FileUpload from "../ui/FileUpload";
-import { Search, Upload, Globe, ShieldCheck, RefreshCw } from "lucide-react";
+import {
+  Search,
+  Upload,
+  Globe,
+  ShieldCheck,
+  Clock,
+  Building2,
+  Lock,
+  Network,
+} from "lucide-react";
+import { Grid } from "../ui/Grid";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -249,7 +258,7 @@ const SSLDashboard: React.FC = () => {
     <Box
       component="section"
       sx={{
-        paddingTop: "120px", // Fixed value to ensure content is below navbar
+        paddingTop: "120px",
         minHeight: "100vh",
         pb: { xs: 8, md: 12 },
         px: { xs: 2, sm: 4 },
@@ -267,7 +276,7 @@ const SSLDashboard: React.FC = () => {
             sx={{
               fontWeight: 800,
               mb: 1,
-              background: (theme) =>
+              background: theme =>
                 `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -284,7 +293,7 @@ const SSLDashboard: React.FC = () => {
             color="text.secondary"
             fontWeight="normal"
           >
-            Check, analyze, and manage SSL certificates
+            Comprehensive SSL certificate analysis and management tools
           </Typography>
 
           <Box
@@ -353,6 +362,12 @@ const SSLDashboard: React.FC = () => {
               label="Upload Certificate"
               iconPosition="start"
               {...a11yProps(1)}
+            />
+            <Tab
+              icon={<Network size={18} />}
+              label="Chain Analysis"
+              iconPosition="start"
+              {...a11yProps(2)}
             />
           </Tabs>
 
@@ -471,7 +486,7 @@ const SSLDashboard: React.FC = () => {
                       Enter a domain to check its SSL certificate
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      We'll analyze the certificate and show you details like
+                      We&aps;ll analyze the certificate and show you details like
                       expiration date, issuer, and security features.
                     </Typography>
 
@@ -493,7 +508,7 @@ const SSLDashboard: React.FC = () => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         An SSL certificate is a digital certificate that
-                        authenticates a website's identity and enables an
+                        authenticates a website&aps;s identity and enables an
                         encrypted connection (HTTPS). When you access a website
                         with a valid SSL certificate, your data is encrypted
                         between your browser and the server, protecting
@@ -681,6 +696,121 @@ const SSLDashboard: React.FC = () => {
                 )}
               </Box>
             </TabPanel>
+
+            <TabPanel value={tabValue} index={2}>
+              <Box sx={{ mb: 4 }}>
+                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                  <Network
+                    size={20}
+                    style={{ verticalAlign: "text-bottom", marginRight: 8 }}
+                  />
+                  Certificate Chain Analysis
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
+                  Analyze the complete certificate chain to verify trust
+                  relationships and identify potential issues.
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: 2,
+                    alignItems: { xs: "stretch", sm: "center" },
+                  }}
+                >
+                  <TextField
+                    label="Domain Name"
+                    placeholder="e.g., example.com"
+                    variant="outlined"
+                    fullWidth
+                    value={domain}
+                    onChange={handleDomainChange}
+                    error={!!domainError}
+                    helperText={domainError}
+                    sx={{ flex: 1 }}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={
+                      isLoading ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : (
+                        <Network size={20} />
+                      )
+                    }
+                    onClick={handleSearchCertificate}
+                    disabled={isLoading}
+                    sx={{
+                      height: { xs: 56, sm: 56 },
+                      width: { xs: "100%", sm: "auto" },
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {isLoading ? "Analyzing..." : "Analyze Chain"}
+                  </Button>
+                </Box>
+              </Box>
+
+              {!certificate && !isLoading && !error && (
+                <Card
+                  variant="outlined"
+                  sx={{
+                    textAlign: "center",
+                    py: 6,
+                    bgcolor: alpha(theme.palette.primary.main, 0.02),
+                    border: `1px dashed ${theme.palette.divider}`,
+                  }}
+                >
+                  <CardContent>
+                    <Network
+                      size={48}
+                      strokeWidth={1.5}
+                      color={theme.palette.text.secondary}
+                    />
+                    <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                      Enter a domain to analyze its certificate chain
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      We&aps;ll analyze the complete certificate chain and show you
+                      the trust relationships
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        mt: 4,
+                        textAlign: "left",
+                        bgcolor: alpha(theme.palette.info.main, 0.05),
+                        p: 2,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle2"
+                        fontWeight="bold"
+                        sx={{ mb: 1 }}
+                      >
+                        What is a Certificate Chain?
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        A certificate chain is a sequence of certificates that
+                        establishes a trust path from the end-entity certificate
+                        to a trusted root certificate. Each certificate in the
+                        chain is signed by the next certificate in the chain,
+                        creating a chain of trust that browsers use to verify
+                        the authenticity of websites.
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              )}
+            </TabPanel>
           </Box>
         </Paper>
 
@@ -708,15 +838,22 @@ const SSLDashboard: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.background.paper, 0.5),
+                  border: `1px solid ${theme.palette.divider}`,
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
-                  Certificate Subject
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Building2 size={20} style={{ marginRight: 8 }} />
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight="bold"
+                    color="primary.main"
+                  >
+                    Certificate Subject
+                  </Typography>
+                </Box>
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -736,15 +873,22 @@ const SSLDashboard: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.background.paper, 0.5),
+                  border: `1px solid ${theme.palette.divider}`,
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
-                  Certificate Authority
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Lock size={20} style={{ marginRight: 8 }} />
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight="bold"
+                    color="primary.main"
+                  >
+                    Certificate Authority
+                  </Typography>
+                </Box>
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -752,7 +896,7 @@ const SSLDashboard: React.FC = () => {
                 >
                   The issuer information identifies the Certificate Authority
                   (CA) that issued and signed the certificate. Trusted CAs like
-                  Let's Encrypt, DigiCert, and Comodo are pre-installed in
+                  Let&aps;s Encrypt, DigiCert, and Comodo are pre-installed in
                   browsers, allowing them to verify certificate authenticity.
                 </Typography>
               </Box>
@@ -764,15 +908,22 @@ const SSLDashboard: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.background.paper, 0.5),
+                  border: `1px solid ${theme.palette.divider}`,
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
-                  Validity Period
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Clock size={20} style={{ marginRight: 8 }} />
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight="bold"
+                    color="primary.main"
+                  >
+                    Validity Period
+                  </Typography>
+                </Box>
                 <Typography
                   variant="body2"
                   color="text.secondary"

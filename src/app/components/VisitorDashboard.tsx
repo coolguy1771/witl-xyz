@@ -18,39 +18,39 @@ import {
   Tooltip,
   Divider,
 } from "@mui/material";
-import { Grid } from "@mui/material";
+import { Grid } from "./ui/Grid";
 import { RefreshCw } from "lucide-react";
 
 // Lazy load all other icons to reduce initial bundle size
 const Globe = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Globe }))
+  import("lucide-react").then(mod => ({ default: mod.Globe }))
 );
 const Cloud = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Cloud }))
+  import("lucide-react").then(mod => ({ default: mod.Cloud }))
 );
 const Thermometer = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Thermometer }))
+  import("lucide-react").then(mod => ({ default: mod.Thermometer }))
 );
 const MapPin = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.MapPin }))
+  import("lucide-react").then(mod => ({ default: mod.MapPin }))
 );
 const Network = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Network }))
+  import("lucide-react").then(mod => ({ default: mod.Network }))
 );
 const AlertTriangle = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.AlertTriangle }))
+  import("lucide-react").then(mod => ({ default: mod.AlertTriangle }))
 );
 const Laptop = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Laptop }))
+  import("lucide-react").then(mod => ({ default: mod.Laptop }))
 );
 const Smartphone = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Smartphone }))
+  import("lucide-react").then(mod => ({ default: mod.Smartphone }))
 );
 const Database = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Database }))
+  import("lucide-react").then(mod => ({ default: mod.Database }))
 );
 const Clock = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Clock }))
+  import("lucide-react").then(mod => ({ default: mod.Clock }))
 );
 
 interface WeatherData {
@@ -122,7 +122,7 @@ function InfoCard({
   return (
     <Card
       elevation={2}
-      sx={(theme) => ({
+      sx={theme => ({
         // Base styling for card appearance
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.divider}`,
@@ -162,7 +162,7 @@ function InfoCard({
       <CardHeader
         avatar={
           <Box
-            sx={(theme) => ({
+            sx={theme => ({
               // Circular container for the icon
               display: "flex",
               alignItems: "center",
@@ -316,11 +316,11 @@ function LoadingState() {
         </Box>
 
         <Grid container spacing={3}>
-          {[1, 2, 3, 4, 5, 6].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map(i => (
             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={i}>
               <Card
                 elevation={1}
-                sx={(theme) => ({
+                sx={theme => ({
                   backgroundColor: theme.palette.background.paper,
                   border: `1px solid ${theme.palette.divider}`,
                   height: "100%",
@@ -433,7 +433,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             }
 
             console.log("Processed visitor data:", updatedData);
-            setData((prev) => ({ ...prev, ...updatedData }));
+            setData(prev => ({ ...prev, ...updatedData }));
           } else {
             console.error("Invalid visitor data:", responseData);
           }
@@ -559,7 +559,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                 sx={{
                   fontWeight: 800,
                   mb: 1,
-                  background: (theme) =>
+                  background: theme =>
                     `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -899,7 +899,7 @@ export default function VisitorDashboard({ initialData }: Props) {
               <InfoCard title="Map Coordinates" icon={<MapPin size={24} />}>
                 <Box>
                   <Box
-                    sx={(theme) => ({
+                    sx={theme => ({
                       backgroundColor:
                         theme.palette.mode === "dark"
                           ? alpha(theme.palette.background.default, 0.5)

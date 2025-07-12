@@ -4,57 +4,32 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button, Container, Typography, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { slideInFromRight, popIn } from "../lib/animations";
+import { heroAnimations, splitTextIntoWords } from "../lib/hero-animations";
 
 export const HeroSection: React.FC = () => {
   const theme = useTheme();
-  
-  // Modern staggered animation for title
-  const titleAnimation = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.04,
-        delayChildren: 0.2
-      }
-    }
-  };
 
-  const letterAnimation = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 100
-      }
-    }
-  };
-
-  const renderAnimatedText = (text: string, color: string) => {
-    return text.split("").map((char, i) => (
+  // Optimized word-level animation
+  const renderAnimatedWords = (text: string, color: string) => {
+    return splitTextIntoWords(text).map((word, i) => (
       <motion.span
-        key={i}
-        variants={letterAnimation}
+        key={`${word}-${i}`}
+        variants={heroAnimations.wordAnimation}
         style={{
           color,
-          display: char === " " ? "inline-block" : "inline-block",
-          width: char === " " ? "0.5em" : "auto",
-          marginRight: char === " " ? "0" : "0"
+          display: "inline-block",
+          marginRight: "0.3em",
         }}
       >
-        {char}
+        {word}
       </motion.span>
     ));
   };
 
   return (
-    <Box 
+    <Box
       component="section"
-      sx={{ 
+      sx={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -75,12 +50,15 @@ export const HeroSection: React.FC = () => {
           background: `radial-gradient(circle at 30% 20%, ${theme.palette.primary.dark}05, transparent 20%), 
                        radial-gradient(circle at 70% 60%, ${theme.palette.secondary.dark}05, transparent 20%)`,
           opacity: 0.4,
-          zIndex: 0
-        }
+          zIndex: 0,
+        },
       }}
     >
-      {/* Decorative elements */}
-      <Box 
+      {/* Decorative elements with floating animation */}
+      <Box
+        component={motion.div}
+        variants={heroAnimations.float}
+        animate="animate"
         sx={{
           position: "absolute",
           top: "10%",
@@ -91,42 +69,53 @@ export const HeroSection: React.FC = () => {
           background: `radial-gradient(circle, ${theme.palette.primary.main}10, transparent 70%)`,
           filter: "blur(60px)",
           opacity: 0.5,
-          zIndex: 0
+          zIndex: 0,
         }}
       />
-      
+
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={4} maxWidth="800px">
-          {/* Main title with animated letters */}
-          <motion.div 
-            variants={titleAnimation}
+          {/* Main title with optimized word animations */}
+          <motion.div
+            variants={heroAnimations.titleContainer}
             initial="hidden"
             animate="visible"
-            style={{ 
+            style={{
               fontWeight: 800,
               lineHeight: 1.2,
               fontSize: "clamp(2.5rem, 7vw, 4rem)",
-              marginBottom: "1rem"
+              marginBottom: "1rem",
             }}
           >
-            <div style={{ display: "block", whiteSpace: "nowrap" }}>
-              {renderAnimatedText("Software Engineer", theme.palette.text.primary)}
+            <div style={{ display: "block", marginBottom: "0.5rem" }}>
+              {renderAnimatedWords(
+                "Software Engineer",
+                theme.palette.text.primary
+              )}
             </div>
-            <div style={{ display: "block", whiteSpace: "nowrap" }}>
-              {renderAnimatedText("& Kubernetes Administrator", theme.palette.text.secondary)}
+            <div style={{ display: "block" }}>
+              {renderAnimatedWords(
+                "& Kubernetes Administrator",
+                theme.palette.text.secondary
+              )}
             </div>
           </motion.div>
 
           {/* Description */}
-          <Box component={motion.div} variants={slideInFromRight} initial="initial" animate="animate">
-            <Typography 
-              variant="h6" 
+          <Box
+            component={motion.div}
+            variants={heroAnimations.slideInFromBottom}
+            initial="hidden"
+            animate="visible"
+          >
+            <Typography
+              variant="h6"
               color="text.secondary"
-              sx={{ 
+              sx={{
                 maxWidth: "600px",
                 fontWeight: 400,
                 lineHeight: 1.7,
-                mb: 4
+                mb: 4,
               }}
             >
               I bring ideas to life with code and a touch of creativity. Whether
@@ -136,12 +125,17 @@ export const HeroSection: React.FC = () => {
           </Box>
 
           {/* CTA Button */}
-          <Box component={motion.div} variants={popIn} initial="initial" animate="animate">
-            <Button 
+          <Box
+            component={motion.div}
+            variants={heroAnimations.buttonPopIn}
+            initial="hidden"
+            animate="visible"
+          >
+            <Button
               href="#projects"
               variant="contained"
               size="large"
-              sx={{ 
+              sx={{
                 backgroundImage: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                 color: theme.palette.common.white,
                 fontWeight: 500,
@@ -153,8 +147,8 @@ export const HeroSection: React.FC = () => {
                 transition: "all 0.3s ease",
                 "&:hover": {
                   boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-                  transform: "translateY(-2px)"
-                }
+                  transform: "translateY(-2px)",
+                },
               }}
             >
               View My Work

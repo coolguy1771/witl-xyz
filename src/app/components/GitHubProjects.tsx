@@ -8,10 +8,10 @@ import {
   Box,
   Link,
   Chip,
-  Grid,
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { Grid } from "./ui/Grid";
 import { getUserRepos } from "../lib/github-api";
 
 // Sample GitHub response interface
@@ -48,7 +48,7 @@ export default function GitHubProjects() {
         });
 
         // Get non-fork repos and limit to 6
-        const filteredRepos = data.filter((repo) => !repo.fork).slice(0, 6);
+        const filteredRepos = data.filter(repo => !repo.fork).slice(0, 6);
 
         setRepos(filteredRepos);
         console.log("GitHub repos loaded successfully:", filteredRepos);
@@ -88,7 +88,7 @@ export default function GitHubProjects() {
 
   return (
     <Grid container spacing={2}>
-      {repos.map((repo) => (
+      {repos.map(repo => (
         <Grid size={{ xs: 12, sm: 6, md: 4 }} key={repo.id}>
           <Card
             sx={{
@@ -136,7 +136,7 @@ export default function GitHubProjects() {
                 {repo.topics &&
                   repo.topics
                     .slice(0, 3)
-                    .map((topic) => (
+                    .map(topic => (
                       <Chip
                         key={topic}
                         label={topic}
