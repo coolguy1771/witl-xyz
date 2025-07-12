@@ -25,6 +25,23 @@ export class ApiKeyManager {
     rateLimit: number = 1000,
     expiresAt?: string
   ): ApiKey {
+    // Validate inputs
+    if (!name || name.trim().length === 0) {
+      throw new Error("API key name is required");
+    }
+
+    if (!permissions || permissions.length === 0) {
+      throw new Error("At least one permission is required");
+    }
+
+    if (rateLimit <= 0) {
+      throw new Error("Rate limit must be positive");
+    }
+
+    if (expiresAt && new Date(expiresAt) <= new Date()) {
+      throw new Error("Expiration date must be in the future");
+    }
+
     const id = this.generateId();
     const key = this.generateApiKey();
 
