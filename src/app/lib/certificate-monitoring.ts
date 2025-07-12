@@ -59,12 +59,16 @@ export class CertificateMonitoringService {
   }
 
   public removeMonitoringRule(id: string): boolean {
+    const rule = this.monitoringRules.get(id);
+    if (!rule) return false;
+
+    const domain = rule.domain;
     const deleted = this.monitoringRules.delete(id);
     if (deleted) {
       this.saveToStorage();
       // Remove related alerts
       this.alerts.forEach((alert, alertId) => {
-        if (alert.domain === this.monitoringRules.get(id)?.domain) {
+        if (alert.domain === domain) {
           this.alerts.delete(alertId);
         }
       });
