@@ -9,14 +9,14 @@
   /* UI Surfaces */
   --surface: var(--mui-palette-background-paper);
   --overlay: rgba(5, 5, 7, 0.8);
-  
+
   /* Tailwind color mapping to MUI theme */
   --bg-background: var(--mui-palette-background-default);
   --bg-paper: var(--mui-palette-background-paper);
   --text-foreground: var(--mui-palette-text-primary);
   --text-muted: var(--mui-palette-text-secondary);
   --text-disabled: var(--mui-palette-text-disabled);
-  
+
   /* Neutral Grays - using MUI theme */
   --gray-50: var(--mui-palette-grey-50);
   --gray-100: var(--mui-palette-grey-100);
@@ -36,7 +36,7 @@
   --secondary: var(--mui-palette-secondary-main);
   --secondary-light: var(--mui-palette-secondary-light);
   --secondary-dark: var(--mui-palette-secondary-dark);
-  
+
   /* Semantic Colors */
   --error: var(--mui-palette-error-main);
   --warning: var(--mui-palette-warning-main);
@@ -45,17 +45,32 @@
 }
 
 /* Tailwind-compatible classes for theme colors */
-.bg-background { background-color: var(--mui-palette-background-default); }
-.bg-paper { background-color: var(--mui-palette-background-paper); }
-.text-foreground { color: var(--mui-palette-text-primary); }
-.text-muted { color: var(--mui-palette-text-secondary); }
-.text-primary { color: var(--mui-palette-primary-main); }
-.text-secondary { color: var(--mui-palette-secondary-main); }
-.border-divider { border-color: var(--mui-palette-divider); }
+.bg-background {
+  background-color: var(--mui-palette-background-default);
+}
+.bg-paper {
+  background-color: var(--mui-palette-background-paper);
+}
+.text-foreground {
+  color: var(--mui-palette-text-primary);
+}
+.text-muted {
+  color: var(--mui-palette-text-secondary);
+}
+.text-primary {
+  color: var(--mui-palette-primary-main);
+}
+.text-secondary {
+  color: var(--mui-palette-secondary-main);
+}
+.border-divider {
+  border-color: var(--mui-palette-divider);
+}
 
 /* === BASE STYLES === */
 
-html, body {
+html,
+body {
   background-color: var(--mui-palette-background-default);
   color: var(--mui-palette-text-primary);
   font-family: "Geist Sans", sans-serif;
@@ -74,7 +89,12 @@ html, body {
 /* Anchor sections */
 section[id],
 div[id],
-h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+h5[id],
+h6[id] {
   scroll-margin-top: 104px;
 }
 
@@ -90,17 +110,34 @@ a:hover {
 }
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--mui-palette-text-primary);
   font-weight: 600;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1rem; }
+h1 {
+  font-size: 2.5rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1rem;
+}
 
 /* Paragraphs */
 p {
@@ -135,7 +172,7 @@ pre code {
   background-color: transparent;
   padding: 0;
   border: none;
-  color: #E4E4E7;
+  color: #e4e4e7;
   font-weight: 400;
 }
 
@@ -190,7 +227,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 10px;
   text-align: left;
 }
@@ -220,4 +258,80 @@ td {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--mui-palette-primary-light);
+}
+
+/* Custom blocks */
+.custom-block {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left-width: 4px;
+}
+
+.custom-block.info {
+  background-color: rgb(239 246 255);
+  border-color: rgb(59 130 246);
+}
+
+.dark .custom-block.info {
+  background-color: rgb(30 58 138 / 0.2);
+}
+
+.custom-block.warning {
+  background-color: rgb(254 252 232);
+  border-color: rgb(234 179 8);
+}
+
+.dark .custom-block.warning {
+  background-color: rgb(133 77 14 / 0.2);
+}
+
+.custom-block.tip {
+  background-color: rgb(240 253 244);
+  border-color: rgb(34 197 94);
+}
+
+.dark .custom-block.tip {
+  background-color: rgb(22 101 52 / 0.2);
+}
+
+.custom-block.note {
+  background-color: rgb(249 250 251);
+  border-color: rgb(107 114 128);
+}
+
+.dark .custom-block.note {
+  background-color: rgb(31 41 55 / 0.2);
+}
+
+/* Diagrams */
+.mermaid {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.plantuml {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+/* Table of Contents */
+.toc {
+  font-size: 0.875rem;
+}
+
+.toc-item {
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Tag Cloud */
+.tag-cloud {
+  font-size: 0.875rem;
+}
+
+.tag-cloud a {
+  text-decoration: none;
 }

@@ -17,8 +17,8 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
       dark: "#059669", // Dark green
       contrastText: "#ffffff", // White text
     },
-    background: 
-      mode === 'dark' 
+    background:
+      mode === "dark"
         ? {
             default: "#050507", // Deeper charcoal for better contrast
             paper: "#18181b", // UI surface (cards, modals)
@@ -27,8 +27,8 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
             default: "#f9fafb", // Light background
             paper: "#ffffff", // White surface
           },
-    text: 
-      mode === 'dark' 
+    text:
+      mode === "dark"
         ? {
             primary: "#f9fafb", // Crisp white (passes AAA contrast)
             secondary: "#d1d5db", // Light gray (increased contrast - passes AA)
@@ -63,14 +63,14 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: mode === 'dark' ? '#050507' : '#f9fafb',
-          color: mode === 'dark' ? '#f9fafb' : '#18181b',
+          backgroundColor: mode === "dark" ? "#050507" : "#f9fafb",
+          color: mode === "dark" ? "#f9fafb" : "#18181b",
           colorScheme: mode,
           scrollBehavior: "smooth",
         },
-        '::selection': {
-          backgroundColor: '#3b82f6',
-          color: '#ffffff',
+        "::selection": {
+          backgroundColor: "#3b82f6",
+          color: "#ffffff",
         },
       },
     },
@@ -83,9 +83,9 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
           fontWeight: 500,
           padding: "10px 16px",
           letterSpacing: "0.01em",
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           },
         },
       },
@@ -94,7 +94,7 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: mode === 'dark' ? "#18181b" : "#ffffff",
+          backgroundColor: mode === "dark" ? "#18181b" : "#ffffff",
           borderRadius: "12px",
         },
       },
@@ -102,20 +102,20 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: mode === 'dark' 
-            ? 'rgba(5, 5, 7, 0.8)' 
-            : 'rgba(249, 250, 251, 0.8)',
+          backgroundColor:
+            mode === "dark" ? "rgba(5, 5, 7, 0.8)" : "rgba(249, 250, 251, 0.8)",
           backdropFilter: "blur(10px)",
           transition: "background-color 0.3s ease",
-          boxShadow: mode === 'dark' 
-            ? '0 4px 20px rgba(0, 0, 0, 0.25)' 
-            : '0 1px 10px rgba(0, 0, 0, 0.1)',
+          boxShadow:
+            mode === "dark"
+              ? "0 4px 20px rgba(0, 0, 0, 0.25)"
+              : "0 1px 10px rgba(0, 0, 0, 0.1)",
           borderRadius: 0, // Explicitly set no border radius
-          width: '100%',
+          width: "100%",
           top: 0,
           left: 0,
           right: 0,
-        }
+        },
       },
     },
     MuiChip: {
@@ -134,7 +134,7 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
           textDecoration: "none",
           transition: "color 0.2s ease",
           position: "relative",
-          '&:hover': {
+          "&:hover": {
             textDecoration: "none",
           },
         },
@@ -149,7 +149,7 @@ export const createAppTheme = (mode: PaletteMode) => {
 };
 
 // Export default themes
-const darkTheme = createAppTheme('dark');
-export const lightTheme = createAppTheme('light');
+const darkTheme = createAppTheme("dark");
+export const lightTheme = createAppTheme("light");
 
 export default darkTheme;

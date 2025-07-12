@@ -11,11 +11,11 @@ import {
   Typography,
   Box,
   Chip,
-  Grid,
   useTheme,
   useMediaQuery,
   alpha,
 } from "@mui/material";
+import { Grid } from "../../../components/ui/Grid";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import { Post } from "@/app/types/blog";
 
@@ -102,7 +102,7 @@ function BlogCard({ post, index }: BlogCardProps) {
       <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
         <Card
           elevation={1}
-          sx={(theme) => ({
+          sx={theme => ({
             height: "100%",
             display: "flex",
             flexDirection: "column",
@@ -246,7 +246,7 @@ function BlogCard({ post, index }: BlogCardProps) {
               <Box
                 sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: "auto" }}
               >
-                {post.tags.slice(0, 3).map((tag) => (
+                {post.tags.slice(0, 3).map(tag => (
                   <Chip
                     key={tag}
                     label={tag}
@@ -254,7 +254,7 @@ function BlogCard({ post, index }: BlogCardProps) {
                     clickable
                     color="primary"
                     variant="outlined"
-                    sx={(theme) => ({
+                    sx={theme => ({
                       fontWeight: 500,
                       borderRadius: "6px",
                       transition: theme.transitions.create([

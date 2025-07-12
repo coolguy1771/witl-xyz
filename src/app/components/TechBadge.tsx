@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import Chip from '@mui/material/Chip';
+import React from "react";
+import { motion } from "framer-motion";
+import Chip from "@mui/material/Chip";
 
 interface TechBadgeProps {
   tech: string;
@@ -20,11 +20,11 @@ export const TechBadge: React.FC<TechBadgeProps> = ({ tech, index }) => (
       label={tech}
       size="small"
       sx={{
-        backgroundColor: (theme) => theme.palette.background.paper,
-        color: (theme) => theme.palette.text.secondary,
-        border: (theme) => `1px solid ${theme.palette.divider}`,
-        '&:hover': {
-          backgroundColor: (theme) => theme.palette.action.hover,
+        backgroundColor: theme => theme.palette.background.paper,
+        color: theme => theme.palette.text.secondary,
+        border: theme => `1px solid ${theme.palette.divider}`,
+        "&:hover": {
+          backgroundColor: theme => theme.palette.action.hover,
         },
       }}
     />

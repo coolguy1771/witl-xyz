@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
 import { ThemeRegistry } from "./components/ThemeRegistry";
-import Navbar from "./components/Navbar";
+import { Navbar } from "./components/Navbar";
+import { NavbarSkeleton } from "./components/skeletons";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -18,17 +21,28 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Tyler Witlin - Software Engineer & Kubernetes Administrator",
-  description: "Personal portfolio and blog showcasing software engineering projects and design work.",
+  description:
+    "Personal portfolio and blog showcasing software engineering projects and design work.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeRegistry>
-          <Navbar />
-          <main className="pt-[96px] md:pt-[104px]">{children}</main>
-        </ThemeRegistry>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ErrorBoundary>
+          <ThemeRegistry>
+            <Suspense fallback={<NavbarSkeleton />}>
+              <Navbar />
+            </Suspense>
+            <main className="pt-[96px] md:pt-[104px]">{children}</main>
+          </ThemeRegistry>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -7,7 +7,7 @@ import { Box, Container, Typography, Link, useTheme } from "@mui/material";
 
 export const Footer: React.FC = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
       component={motion.footer}
@@ -17,27 +17,24 @@ export const Footer: React.FC = () => {
         backgroundColor: theme.palette.background.paper,
       }}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ 
-        opacity: 1, 
+      animate={{
+        opacity: 1,
         y: 0,
-        transition: { 
+        transition: {
           duration: 0.5,
-          ease: "easeOut"
-        }
+          ease: "easeOut",
+        },
       }}
     >
       <Container maxWidth="lg">
-        <Box 
-          sx={{ 
-            display: "flex", 
+        <Box
+          sx={{
+            display: "flex",
             justifyContent: "space-between",
-            alignItems: "center" 
+            alignItems: "center",
           }}
         >
-          <Typography 
-            variant="body2" 
-            color="text.secondary"
-          >
+          <Typography variant="body2" color="text.secondary">
             © {new Date().getFullYear()} Tyler Witlin
           </Typography>
 
@@ -45,14 +42,14 @@ export const Footer: React.FC = () => {
             href="https://github.com/coolguy1771"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ 
+            sx={{
               color: theme.palette.text.secondary,
               transition: "transform 0.2s ease",
               display: "flex",
-              '&:hover': {
+              "&:hover": {
                 color: theme.palette.text.primary,
-                transform: "scale(1.1) rotate(5deg)"
-              }
+                transform: "scale(1.1) rotate(5deg)",
+              },
             }}
           >
             <FaGithub size={24} />

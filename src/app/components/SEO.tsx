@@ -1,5 +1,5 @@
-import Head from 'next/head';
-import { SEOProps } from '../types';
+import Head from "next/head";
+import { SEOProps } from "../types";
 
 export function SEO({ title, description, ogImage, canonical }: SEOProps) {
   return (

@@ -1,14 +1,8 @@
 "use client";
 
 import React from "react";
-import {
-  Box,
-  Container,
-  Skeleton,
-  Card,
-  CardContent,
-  Grid,
-} from "@mui/material";
+import { Box, Container, Skeleton, Card, CardContent } from "@mui/material";
+import { Grid } from "../../../components/ui/Grid";
 
 export function BlogListSkeleton() {
   return (
@@ -26,14 +20,14 @@ export function BlogListSkeleton() {
       <Box sx={{ mb: 4 }}>
         <Skeleton variant="text" width="150px" height={30} />
         <Box sx={{ display: "flex", gap: 1, mt: 2, flexWrap: "wrap" }}>
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5].map(i => (
             <Skeleton key={i} variant="rounded" width={80} height={32} />
           ))}
         </Box>
       </Box>
 
       <Grid container spacing={3}>
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        {[1, 2, 3, 4, 5, 6].map(i => (
           <Grid size={{ xs: 12, md: 6, lg: 4 }} key={i}>
             <Card
               sx={{

@@ -5,19 +5,18 @@
  * Cloudflare Workers, taking advantage of Cloudflare's built-in security features.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Rate limiting using Cloudflare's worker-specific approach
-const RATE_LIMIT_WINDOW = 60; // 1 minute in seconds
 
 /**
  * Securely log with built-in Cloudflare observability
  */
 export const secureLogger = {
   // Redact sensitive information from logs
-  redactSensitiveData(data: any): any {
+  redactSensitiveData(data: unknown): Record<string, unknown> | unknown[] | unknown {
     if (!data) return data;
-    if (typeof data !== "object") return data;
+    if (typeof data !== "object" || data === null) return data;
 
     // List of sensitive fields to redact
     const sensitiveFields = [
@@ -41,18 +40,18 @@ export const secureLogger = {
     ];
 
     // Create a copy to avoid modifying the original
-    const result = Array.isArray(data) ? [...data] : { ...data };
+    const result: { [key: string]: unknown } | unknown[] = Array.isArray(data) ? [...data] : { ...data };
 
     for (const key in result) {
       const lowerKey = key.toLowerCase();
 
       // Check if field name contains sensitive information
-      if (sensitiveFields.some((field) => lowerKey.includes(field))) {
-        result[key] = "[REDACTED]";
+      if (sensitiveFields.some(field => lowerKey.includes(field))) {
+        (result as { [key: string]: unknown })[key] = "[REDACTED]";
       }
       // Recursively sanitize objects
-      else if (typeof result[key] === "object" && result[key] !== null) {
-        result[key] = this.redactSensitiveData(result[key]);
+      else if (typeof (result as { [key: string]: unknown })[key] === "object" && (result as { [key: string]: unknown })[key] !== null) {
+        (result as { [key: string]: unknown })[key] = this.redactSensitiveData((result as { [key: string]: unknown })[key]);
       }
     }
 
@@ -60,15 +59,15 @@ export const secureLogger = {
   },
 
   // Log message with Cloudflare observability
-  info(message: string, data?: any): void {
+  info(message: string, data?: unknown): void {
     console.log(message, data ? this.redactSensitiveData(data) : "");
   },
 
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: unknown): void {
     console.warn(message, data ? this.redactSensitiveData(data) : "");
   },
 
-  error(message: string, error?: any): void {
+  error(message: string, error?: unknown): void {
     const safeError =
       error instanceof Error
         ? { name: error.name, message: error.message }
@@ -78,23 +77,6 @@ export const secureLogger = {
   },
 };
 
-/**
- * Get rate limit key based on request information
- * Uses Cloudflare-specific headers for accurate client identification
- */
-function getRateLimitKey(request: NextRequest, prefix: string = ""): string {
-  // Use CF-Connecting-IP for accurate client IP
-  const ip =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-forwarded-for") ||
-    request.ip ||
-    "unknown";
-
-  // Combine with the path to separate limits for different endpoints
-  const path = request.nextUrl.pathname;
-
-  return `${prefix}:${path}:${ip}`;
-}
 
 /**
  * CORS configuration for GitHub API access
@@ -216,7 +198,7 @@ export function isValidDomain(domain: string): boolean {
 
   if (
     blockedDomains.some(
-      (blocked) =>
+      blocked =>
         normalizedDomain === blocked || normalizedDomain.endsWith("." + blocked)
     )
   ) {
@@ -254,7 +236,7 @@ export function validateFileUpload(
   // Check MIME type if available and specified
   if (allowedTypes.length > 0 && file.type) {
     const isAllowedType = allowedTypes.some(
-      (type) =>
+      type =>
         file.type === type || file.type.startsWith(type.replace(/\*/g, ""))
     );
 

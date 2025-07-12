@@ -27,6 +27,7 @@ export interface SSLCertificate {
   issuedAt?: string;
   expiresAt?: string;
   daysRemaining?: number;
+  validation?: CertificateValidation;
 }
 
 export interface SSLCertificateResponse {
@@ -44,4 +45,47 @@ export interface SSLCertificateUploadRequest {
   certificateContent: string;
   privateKeyContent?: string;
   passphrase?: string;
+}
+
+export interface CertificateValidation {
+  isValid: boolean;
+  issues: string[];
+  warnings: string[];
+  recommendations: string[];
+  securityScore: number;
+}
+
+// PKI.js extension interfaces
+export interface SANExtension {
+  type: number;
+  value: string;
+}
+
+export interface SubjectAlternativeName {
+  names: SANExtension[];
+}
+
+export interface KeyUsageExtension {
+  digitalSignature?: boolean;
+  nonRepudiation?: boolean;
+  keyEncipherment?: boolean;
+  dataEncipherment?: boolean;
+  keyAgreement?: boolean;
+  keyCertSign?: boolean;
+  cRLSign?: boolean;
+  encipherOnly?: boolean;
+  decipherOnly?: boolean;
+}
+
+export interface ExtendedKeyUsageExtension {
+  keyPurposes: string[];
+}
+
+export interface TypeAndValue {
+  type: string;
+  value: {
+    valueBlock: {
+      value: string;
+    };
+  };
 }

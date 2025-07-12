@@ -1,118 +1,189 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
-import { Box, Card, CardContent, Typography, Stack, IconButton, useTheme } from '@mui/material';
-import { Project } from '../types';
-import { TechBadge } from './TechBadge';
-import { scaleUp, cardHover } from '../lib/animations';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Box,
+  CardContent,
+  Typography,
+  Stack,
+  Button,
+  useTheme,
+  Collapse,
+} from "@mui/material";
+import { Project } from "../types";
+import { TechBadge } from "./TechBadge";
+import { AnimatedBorderCard } from "./ui/AnimatedBorderCard";
+import { MagneticButton } from "./ui/MagneticButton";
+import { GlowButton } from "./ui/GlowButton";
+import { scaleUp, cardHover } from "../lib/animations";
 
 interface ProjectCardProps {
   project: Project;
+  maxVisibleTags?: number;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({
+  project,
+  maxVisibleTags = 4,
+}) => {
   const theme = useTheme();
-  
+  const [showAllTags, setShowAllTags] = useState(false);
+
+  const visibleTags = showAllTags
+    ? project.tech
+    : project.tech.slice(0, maxVisibleTags);
+  const hasMoreTags = project.tech.length > maxVisibleTags;
+
   return (
-    <Card
-      component={motion.div}
-      variants={{
-        ...scaleUp,
-        hover: cardHover.hover
-      }}
-      whileHover="hover"
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: 2,
-        border: `1px solid ${theme.palette.divider}`,
-        transition: 'all 0.3s ease',
-        overflow: 'visible',
-        '&:hover': {
-          borderColor: theme.palette.primary.main,
-          boxShadow: `0 10px 30px rgba(0, 0, 0, 0.12)`
-        }
-      }}
-    >
+    <AnimatedBorderCard glowColor={theme.palette.primary.main}>
       <CardContent sx={{ p: 3, flexGrow: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            mb: 2,
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="h3"
+            fontWeight="bold"
+            gutterBottom
+          >
             {project.title}
           </Typography>
-          
+
           <Stack direction="row" spacing={1}>
             {project.githubUrl && (
-              <IconButton 
-                component={motion.a}
+              <MagneticButton
+                component="a"
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 size="small"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                sx={{ 
+                strength={0.5}
+                sx={{
                   color: theme.palette.text.secondary,
-                  '&:hover': { 
+                  "&:hover": {
                     color: theme.palette.text.primary,
-                    backgroundColor: 'transparent' 
-                  }
+                  },
                 }}
               >
                 <FaGithub size={20} />
-              </IconButton>
+              </MagneticButton>
             )}
-            <IconButton 
-              component={motion.a}
+            <MagneticButton
+              component="a"
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
               size="small"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              sx={{ 
+              strength={0.5}
+              sx={{
                 color: theme.palette.text.secondary,
-                '&:hover': { 
+                "&:hover": {
                   color: theme.palette.text.primary,
-                  backgroundColor: 'transparent' 
-                }
+                },
               }}
             >
               <FaExternalLinkAlt size={18} />
-            </IconButton>
+            </MagneticButton>
           </Stack>
         </Box>
 
-        <Typography 
-          variant="body2" 
+        <Typography
+          variant="body2"
           color="text.secondary"
-          sx={{ 
+          sx={{
             mb: 3,
-            minHeight: '2.5rem',
-            display: '-webkit-box',
+            minHeight: "2.5rem",
+            display: "-webkit-box",
             WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden'
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
           }}
         >
           {project.description}
         </Typography>
 
-        <Stack 
-          direction="row" 
-          spacing={1} 
-          flexWrap="wrap" 
-          useFlexGap
-          sx={{ mt: 'auto' }}
-        >
-          {project.tech.map((tech, index) => (
-            <TechBadge key={index} tech={tech} index={index} />
-          ))}
-        </Stack>
+        <Box sx={{ mt: "auto" }}>
+          {/* Visible Tags */}
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            useFlexGap
+            sx={{ mb: hasMoreTags ? 1 : 0 }}
+          >
+            {visibleTags.map((tech, index) => (
+              <TechBadge key={index} tech={tech} index={index} />
+            ))}
+          </Stack>
+
+          {/* Hidden Tags with Collapse Animation */}
+          {hasMoreTags && (
+            <AnimatePresence>
+              <Collapse in={showAllTags}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  flexWrap="wrap"
+                  useFlexGap
+                  sx={{ mb: 1 }}
+                  component={motion.div}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {project.tech.slice(maxVisibleTags).map((tech, index) => (
+                    <TechBadge
+                      key={index + maxVisibleTags}
+                      tech={tech}
+                      index={index + maxVisibleTags}
+                    />
+                  ))}
+                </Stack>
+              </Collapse>
+            </AnimatePresence>
+          )}
+
+          {/* Show More/Less Button */}
+          {hasMoreTags && (
+            <GlowButton
+              size="small"
+              onClick={() => setShowAllTags(!showAllTags)}
+              startIcon={
+                showAllTags ? (
+                  <ChevronUp size={16} />
+                ) : (
+                  <ChevronDown size={16} />
+                )
+              }
+              intensity={0.3}
+              sx={{
+                minHeight: "auto",
+                padding: "4px 12px",
+                fontSize: "0.75rem",
+                background: `linear-gradient(45deg, ${theme.palette.primary.main}22, ${theme.palette.secondary.main}22)`,
+                color: theme.palette.text.primary,
+                border: `1px solid ${theme.palette.primary.main}44`,
+                "&:hover": {
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main}33, ${theme.palette.secondary.main}33)`,
+                },
+              }}
+            >
+              {showAllTags
+                ? "Show Less"
+                : `+${project.tech.length - maxVisibleTags} More`}
+            </GlowButton>
+          )}
+        </Box>
       </CardContent>
-    </Card>
+    </AnimatedBorderCard>
   );
 };

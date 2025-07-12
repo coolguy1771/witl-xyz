@@ -1,0 +1,55 @@
+.circular-gallery {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.circular-gallery:active {
+  cursor: grabbing;
+}
+
+.circular-gallery canvas {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .circular-gallery {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Responsive height adjustments */
+@media (max-width: 768px) {
+  .circular-gallery {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .circular-gallery {
+    height: 350px;
+  }
+}

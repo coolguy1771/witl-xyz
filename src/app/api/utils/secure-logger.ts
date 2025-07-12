@@ -38,7 +38,7 @@ function redactSensitiveData(data: any): any {
   }
 
   if (Array.isArray(data)) {
-    return data.map((item) => redactSensitiveData(item));
+    return data.map(item => redactSensitiveData(item));
   }
 
   // Create a copy to avoid modifying the original
@@ -48,7 +48,7 @@ function redactSensitiveData(data: any): any {
     const lowerKey = key.toLowerCase();
 
     // Redact values for sensitive keys
-    if (SENSITIVE_FIELDS.some((field) => lowerKey.includes(field))) {
+    if (SENSITIVE_FIELDS.some(field => lowerKey.includes(field))) {
       sanitized[key] = "[REDACTED]";
     }
     // Recursively sanitize nested objects

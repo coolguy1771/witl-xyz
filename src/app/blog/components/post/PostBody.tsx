@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
+import { Grid } from "../../../components/ui/Grid";
 import { TableOfContents } from "../shared/TableOfContents";
 import { Post } from "@/app/types/blog";
 import hljs from "highlight.js";
@@ -38,7 +39,7 @@ export function PostBody({ content }: PostBodyProps) {
 
     // Find all code blocks in the rendered content and highlight them
     const codeBlocks = document.querySelectorAll("pre code");
-    codeBlocks.forEach((block) => {
+    codeBlocks.forEach(block => {
       hljs.highlightElement(block as HTMLElement);
 
       // Fix the language display in the parent pre element
@@ -151,7 +152,7 @@ export function PostBody({ content }: PostBodyProps) {
       {/* Main Content */}
       <Grid size={{ xs: 12, lg: 8 }}>
         <Box
-          sx={(theme) => ({
+          sx={theme => ({
             typography: "body1",
             color: theme.palette.text.secondary,
             "& h1, & h2, & h3, & h4, & h5, & h6": {
@@ -343,7 +344,7 @@ export function PostBody({ content }: PostBodyProps) {
         sx={{ display: { xs: "block", lg: "none" }, mt: 4, mb: 2 }}
       >
         <Box
-          sx={(theme) => ({
+          sx={theme => ({
             border: `1px solid ${theme.palette.divider}`,
             borderRadius: 2,
             boxShadow: theme.shadows[1],
