@@ -276,7 +276,7 @@ export class CertificateMonitoringService {
     alert: CertificateAlert
   ): Promise<void> {
     try {
-      if ("Notification" in window && Notification.permission === "granted") {
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
         new Notification(`SSL Certificate Alert - ${alert.domain}`, {
           body: alert.message,
           icon: "/favicon.ico",
