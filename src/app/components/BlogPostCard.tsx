@@ -45,10 +45,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
           },
         })}
       >
-        <NextLink
-          href={`/blog/${post.slug}`}
-          style={{ textDecoration: "none" }}
-        >
+        <CardActionArea component={NextLink} href={`/blog/${post.slug}`} sx={{ textDecoration: "none" }}>
           <CardContent sx={{ p: 3 }}>
             <Box sx={{ mb: 2 }}>
               <Typography
