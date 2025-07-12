@@ -17,14 +17,26 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
             key={post.slug}
             className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
           >
+// at the top of src/app/components/blog/RelatedPosts.tsx
+import Image from "next/image";
+
+// …
+
             {post.coverImage && (
               <div className="relative h-48">
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+-                <img
+-                  src={post.coverImage}
+-                  alt={post.title}
+-                  className="w-full h-full object-cover"
+-                  loading="lazy"
+-                />
++                <Image
++                  src={post.coverImage}
++                  alt={post.title}
++                  fill
++                  className="w-full h-full object-cover"
++                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
++                />
               </div>
             )}
             <div className="p-6 flex-1 flex flex-col">
