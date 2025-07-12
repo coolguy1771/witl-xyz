@@ -21,8 +21,11 @@ export function TagCloud({ tags, className = "" }: TagCloudProps) {
   const minCount = Math.min(...Object.values(tagCounts));
 
   const getTagSize = (count: number) => {
-    const size = ((count - minCount) / (maxCount - minCount)) * 0.5 + 0.8;
-    return `text-${Math.round(size * 4)}xl`;
+    if (maxCount === minCount) return "text-base";
+    const normalized = (count - minCount) / (maxCount - minCount);
+    const sizeClasses = ["text-sm", "text-base", "text-lg", "text-xl", "text-2xl"];
+    const index = Math.floor(normalized * (sizeClasses.length - 1));
+    return sizeClasses[index];
   };
 
   if (tags.length === 0) return null;
