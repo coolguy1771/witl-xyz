@@ -14,47 +14,47 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
     <motion.div variants={fadeIn} whileHover={{ y: -5 }}>
       <Card
         elevation={1}
-        sx={theme => ({
+        sx={(theme) => ({
           backgroundColor: theme.palette.background.paper,
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: 2,
-          overflow: 'hidden',
-          transition: theme.transitions.create(['transform', 'box-shadow']),
-          position: 'relative',
-          '&:hover': {
+          overflow: "hidden",
+          transition: theme.transitions.create(["transform", "box-shadow"]),
+          position: "relative",
+          "&:hover": {
             boxShadow: theme.shadows[4],
-            '& .title': {
+            "& .title": {
               color: theme.palette.primary.main,
             },
-            '& .readMore': {
+            "& .readMore": {
               color: theme.palette.primary.main,
             },
-            '&::before': {
-              width: '100%'
-            }
+            "&::before": {
+              width: "100%",
+            },
           },
-          '&::before': {
+          "&::before": {
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
-            width: '30%',
-            height: '3px',
+            width: "30%",
+            height: "3px",
             backgroundColor: theme.palette.primary.main,
-            transition: 'width 0.3s ease'
-          }
+            transition: "width 0.3s ease",
+          },
         })}
       >
-        <NextLink href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
+        <NextLink href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
           <CardContent sx={{ p: 3 }}>
             <Box sx={{ mb: 2 }}>
               <Typography
                 variant="h5"
                 className="title"
-                sx={theme => ({
+                sx={(theme) => ({
                   color: theme.palette.text.primary,
                   fontWeight: 600,
-                  transition: theme.transitions.create('color'),
+                  transition: theme.transitions.create("color"),
                   mb: 1,
                 })}
               >
@@ -62,7 +62,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
               </Typography>
 
               <Box
-                sx={theme => ({
+                sx={(theme) => ({
                   display: "flex",
                   gap: 2,
                   color: theme.palette.text.secondary,
@@ -71,13 +71,15 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
                 <Typography variant="body2" color="text.secondary">
                   <time dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString(undefined, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </time>
                 </Typography>
-                <Typography variant="body2" color="text.secondary">{post.readingTime}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {post.readingTime}
+                </Typography>
               </Box>
             </Box>
 
@@ -90,7 +92,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
-                lineHeight: 1.6
+                lineHeight: 1.6,
               }}
             >
               {post.excerpt}
@@ -98,22 +100,22 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 
             <Box
               className="readMore"
-              sx={theme => ({
+              sx={(theme) => ({
                 display: "flex",
                 alignItems: "center",
                 gap: 0.5,
                 color: theme.palette.text.secondary,
-                transition: theme.transitions.create('color')
+                transition: theme.transitions.create("color"),
               })}
             >
-              <Typography 
-                variant="body2" 
+              <Typography
+                variant="body2"
                 fontWeight="medium"
-                sx={{ 
-                  transition: theme => theme.transitions.create('all'),
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5
+                sx={{
+                  transition: (theme) => theme.transitions.create("all"),
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
                 }}
               >
                 Read more

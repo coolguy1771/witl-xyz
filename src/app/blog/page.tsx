@@ -9,16 +9,16 @@ async function getPosts(): Promise<Post[]> {
   try {
     // Use filesystem-based blog implementation
     const posts = await getAllPosts();
-    
+
     return posts.map((post) => ({
       slug: post.slug,
-      title: post.title, 
+      title: post.title,
       date: post.date,
       excerpt: post.excerpt,
       readingTime: post.readingTime,
       tags: post.tags || [],
       coverImage: post.coverImage,
-      content: post.content
+      content: post.content,
     }));
   } catch (error) {
     console.error("Error loading blog posts:", error);
@@ -26,11 +26,7 @@ async function getPosts(): Promise<Post[]> {
   }
 }
 
-export default async function BlogPage(
-  props: {
-    searchParams: Promise<{ tag?: string }>
-  }
-) {
+export default async function BlogPage(props: { searchParams: Promise<{ tag?: string }> }) {
   const searchParams = await props.searchParams;
   // Get posts data on the server
   const allPosts = await getPosts();

@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 import { SSLCertificate, SSLCertificateResponse } from "@/app/types/ssl";
 import CertificateCard from "./CertificateCard";
 import FileUpload from "../ui/FileUpload";
-import { Search, Upload, Globe, ShieldCheck, RefreshCw } from "lucide-react";
+import { Search, Upload, Globe, ShieldCheck } from "lucide-react";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -79,8 +79,7 @@ const SSLDashboard: React.FC = () => {
   };
 
   const validateDomain = (value: string) => {
-    const domainRegex =
-      /^(?!-)[A-Za-z0-9-]+(?<!-)(\.[A-Za-z0-9-]+)*(?<!-)\.[A-Za-z]{2,}$/;
+    const domainRegex = /^(?!-)[A-Za-z0-9-]+(?<!-)(\.[A-Za-z0-9-]+)*(?<!-)\.[A-Za-z]{2,}$/;
     return domainRegex.test(value);
   };
 
@@ -133,9 +132,7 @@ const SSLDashboard: React.FC = () => {
 
       if (!response.ok || !data.success) {
         console.error("API error:", data.error || "Unknown API error");
-        throw new Error(
-          data.error || "Failed to fetch certificate information"
-        );
+        throw new Error(data.error || "Failed to fetch certificate information");
       }
 
       // Check if the API returned a note
@@ -158,8 +155,7 @@ const SSLDashboard: React.FC = () => {
 
       setCertificate(data.certificate);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
       console.error("Certificate fetch error:", errorMessage, err);
       setError(errorMessage);
     } finally {
@@ -206,10 +202,7 @@ const SSLDashboard: React.FC = () => {
       console.log("Upload API response data:", data);
 
       if (!response.ok || !data.success) {
-        console.error(
-          "Upload API error:",
-          data.error || "Unknown upload error"
-        );
+        console.error("Upload API error:", data.error || "Unknown upload error");
         throw new Error(data.error || "Failed to process certificate");
       }
 
@@ -235,8 +228,7 @@ const SSLDashboard: React.FC = () => {
       setUploadSuccess(true);
       console.log("Certificate upload successful");
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
       console.error("Certificate upload error:", errorMessage, err);
       setUploadError(errorMessage);
     } finally {
@@ -301,10 +293,9 @@ const SSLDashboard: React.FC = () => {
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              SSL certificates are crucial for website security, ensuring
-              encrypted connections between websites and visitors. They verify
-              website identity, protect data in transit, and build trust with
-              users. Regularly monitoring certificate validity helps prevent
+              SSL certificates are crucial for website security, ensuring encrypted connections
+              between websites and visitors. They verify website identity, protect data in transit,
+              and build trust with users. Regularly monitoring certificate validity helps prevent
               security warnings and downtime.
             </Typography>
           </Box>
@@ -360,20 +351,12 @@ const SSLDashboard: React.FC = () => {
             <TabPanel value={tabValue} index={0}>
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-                  <Globe
-                    size={20}
-                    style={{ verticalAlign: "text-bottom", marginRight: 8 }}
-                  />
+                  <Globe size={20} style={{ verticalAlign: "text-bottom", marginRight: 8 }} />
                   Check SSL Certificate for a Domain
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Enter a domain name to retrieve its SSL certificate
-                  information, including validity period, issuer details, and
-                  security parameters.
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Enter a domain name to retrieve its SSL certificate information, including
+                  validity period, issuer details, and security parameters.
                 </Typography>
                 <Box
                   sx={{
@@ -462,17 +445,13 @@ const SSLDashboard: React.FC = () => {
                   }}
                 >
                   <CardContent>
-                    <ShieldCheck
-                      size={48}
-                      strokeWidth={1.5}
-                      color={theme.palette.text.secondary}
-                    />
+                    <ShieldCheck size={48} strokeWidth={1.5} color={theme.palette.text.secondary} />
                     <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                       Enter a domain to check its SSL certificate
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      We'll analyze the certificate and show you details like
-                      expiration date, issuer, and security features.
+                      We&apos;ll analyze the certificate and show you details like expiration date,
+                      issuer, and security features.
                     </Typography>
 
                     <Box
@@ -484,28 +463,18 @@ const SSLDashboard: React.FC = () => {
                         borderRadius: 2,
                       }}
                     >
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight="bold"
-                        sx={{ mb: 1 }}
-                      >
+                      <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
                         What is an SSL certificate?
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        An SSL certificate is a digital certificate that
-                        authenticates a website's identity and enables an
-                        encrypted connection (HTTPS). When you access a website
-                        with a valid SSL certificate, your data is encrypted
-                        between your browser and the server, protecting
-                        sensitive information like passwords and credit card
-                        details.
+                        An SSL certificate is a digital certificate that authenticates a
+                        website&apos;s identity and enables an encrypted connection (HTTPS). When
+                        you access a website with a valid SSL certificate, your data is encrypted
+                        between your browser and the server, protecting sensitive information like
+                        passwords and credit card details.
                       </Typography>
 
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight="bold"
-                        sx={{ mt: 2, mb: 1 }}
-                      >
+                      <Typography variant="subtitle2" fontWeight="bold" sx={{ mt: 2, mb: 1 }}>
                         Why check SSL certificates?
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -527,19 +496,12 @@ const SSLDashboard: React.FC = () => {
             <TabPanel value={tabValue} index={1}>
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-                  <Upload
-                    size={20}
-                    style={{ verticalAlign: "text-bottom", marginRight: 8 }}
-                  />
+                  <Upload size={20} style={{ verticalAlign: "text-bottom", marginRight: 8 }} />
                   Upload SSL Certificate
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Upload your PEM-encoded certificate (*.crt, *.pem) to analyze
-                  its properties and security features.
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Upload your PEM-encoded certificate (*.crt, *.pem) to analyze its properties and
+                  security features.
                 </Typography>
 
                 <Box sx={{ mb: 4 }}>
@@ -582,10 +544,7 @@ const SSLDashboard: React.FC = () => {
                     transition={{ duration: 0.4 }}
                     sx={{ mt: 3 }}
                   >
-                    <CertificateCard
-                      certificate={certificate}
-                      error={uploadError}
-                    />
+                    <CertificateCard certificate={certificate} error={uploadError} />
                   </Box>
                 )}
 
@@ -600,11 +559,7 @@ const SSLDashboard: React.FC = () => {
                     }}
                   >
                     <CardContent>
-                      <Upload
-                        size={48}
-                        strokeWidth={1.5}
-                        color={theme.palette.text.secondary}
-                      />
+                      <Upload size={48} strokeWidth={1.5} color={theme.palette.text.secondary} />
                       <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                         No certificate uploaded yet
                       </Typography>
@@ -621,18 +576,13 @@ const SSLDashboard: React.FC = () => {
                           borderRadius: 2,
                         }}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          fontWeight="bold"
-                          sx={{ mb: 1 }}
-                        >
+                        <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
                           About Certificate Formats
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          This tool accepts SSL certificates in PEM format,
-                          which is the most common format for certificates. PEM
-                          files are Base64 encoded and have headers and footers
-                          that look like:
+                          This tool accepts SSL certificates in PEM format, which is the most common
+                          format for certificates. PEM files are Base64 encoded and have headers and
+                          footers that look like:
                         </Typography>
 
                         <Box
@@ -640,10 +590,7 @@ const SSLDashboard: React.FC = () => {
                           sx={{
                             mt: 1,
                             p: 1.5,
-                            bgcolor: alpha(
-                              theme.palette.background.default,
-                              0.5
-                            ),
+                            bgcolor: alpha(theme.palette.background.default, 0.5),
                             borderRadius: 1,
                             border: `1px solid ${theme.palette.divider}`,
                             fontSize: "0.75rem",
@@ -660,11 +607,7 @@ const SSLDashboard: React.FC = () => {
                           -----END CERTIFICATE-----
                         </Box>
 
-                        <Typography
-                          variant="subtitle2"
-                          fontWeight="bold"
-                          sx={{ mt: 2, mb: 1 }}
-                        >
+                        <Typography variant="subtitle2" fontWeight="bold" sx={{ mt: 2, mb: 1 }}>
                           Common Certificate File Extensions
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -710,22 +653,13 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
+                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
                   Certificate Subject
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 1, flex: 1 }}
-                >
-                  The subject contains information about the certificate owner,
-                  including the Common Name (CN) which should match the domain
-                  name. Other fields include Organization (O), Organizational
-                  Unit (OU), Country (C), State/Province (ST), and Locality (L).
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>
+                  The subject contains information about the certificate owner, including the Common
+                  Name (CN) which should match the domain name. Other fields include Organization
+                  (O), Organizational Unit (OU), Country (C), State/Province (ST), and Locality (L).
                 </Typography>
               </Box>
             </Grid>
@@ -738,22 +672,13 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
+                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
                   Certificate Authority
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 1, flex: 1 }}
-                >
-                  The issuer information identifies the Certificate Authority
-                  (CA) that issued and signed the certificate. Trusted CAs like
-                  Let's Encrypt, DigiCert, and Comodo are pre-installed in
-                  browsers, allowing them to verify certificate authenticity.
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>
+                  The issuer information identifies the Certificate Authority (CA) that issued and
+                  signed the certificate. Trusted CAs like Let&apos;s Encrypt, DigiCert, and Comodo
+                  are pre-installed in browsers, allowing them to verify certificate authenticity.
                 </Typography>
               </Box>
             </Grid>
@@ -766,38 +691,24 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  color="primary.main"
-                >
+                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
                   Validity Period
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 1, flex: 1 }}
-                >
-                  Every certificate has a limited lifespan defined by its
-                  validity dates. Modern certificates typically last 1-2 years,
-                  with many now limited to 13 months maximum. Expired
-                  certificates trigger security warnings in browsers.
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>
+                  Every certificate has a limited lifespan defined by its validity dates. Modern
+                  certificates typically last 1-2 years, with many now limited to 13 months maximum.
+                  Expired certificates trigger security warnings in browsers.
                 </Typography>
               </Box>
             </Grid>
           </Grid>
 
           <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-              sx={{ mb: 1 }}
-            >
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
               This is a demonstration of SSL certificate analysis capabilities
             </Typography>
             <Typography variant="caption" color="text.secondary" component="p">
-              All certificate data is processed in your browser and is not
-              stored permanently
+              All certificate data is processed in your browser and is not stored permanently
             </Typography>
           </Box>
         </Box>

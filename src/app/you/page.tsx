@@ -1,24 +1,24 @@
 import { headers } from "next/headers";
-import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Metadata } from "next";
+import { Suspense } from "react";
+import { Box, CircularProgress } from "@mui/material";
 import VisitorDashboard from "../components/VisitorDashboard";
 
 export const metadata: Metadata = {
-  title: 'Your Digital Profile | witl.xyz',
-  description: 'View real-time information about your connection, location, and device.',
+  title: "Your Digital Profile | witl.xyz",
+  description: "View real-time information about your connection, location, and device.",
 };
 
 // Create a loading component for the Suspense fallback
 function LoadingIndicator() {
   return (
-    <Box 
-      component="section" 
-      sx={{ 
-        minHeight: '70vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+    <Box
+      component="section"
+      sx={{
+        minHeight: "70vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <CircularProgress />

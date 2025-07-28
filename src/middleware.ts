@@ -5,7 +5,8 @@ import type { NextRequest } from "next/server";
  * Global security middleware for Next.js application
  * Applies security headers and rate limiting to all routes
  */
-export function middleware(request: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function middleware(_request: NextRequest) {
   // Get the response
   const response = NextResponse.next();
 
@@ -31,17 +32,11 @@ export function middleware(request: NextRequest) {
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
   // Restrict browser features
-  headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
-  );
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
 
   // Set HSTS for HTTPS enforcement
   if (process.env.NODE_ENV === "production") {
-    headers.set(
-      "Strict-Transport-Security",
-      "max-age=31536000; includeSubDomains; preload"
-    );
+    headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   }
 
   return response;

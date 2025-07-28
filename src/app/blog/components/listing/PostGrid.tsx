@@ -114,12 +114,9 @@ function BlogCard({ post, index }: BlogCardProps) {
             borderRadius: 2,
             overflow: "hidden",
             position: "relative",
-            transition: theme.transitions.create(
-              ["transform", "box-shadow", "border-color"],
-              {
-                duration: theme.transitions.duration.standard,
-              }
-            ),
+            transition: theme.transitions.create(["transform", "box-shadow", "border-color"], {
+              duration: theme.transitions.duration.standard,
+            }),
             "&:hover": {
               boxShadow: theme.shadows[8],
               borderColor: theme.palette.primary.main,
@@ -149,12 +146,7 @@ function BlogCard({ post, index }: BlogCardProps) {
                 overflow: "hidden",
               }}
             >
-              <Image
-                src={post.coverImage}
-                alt={post.title}
-                fill
-                style={{ objectFit: "cover" }}
-              />
+              <Image src={post.coverImage} alt={post.title} fill style={{ objectFit: "cover" }} />
             </Box>
           )}
 
@@ -243,9 +235,7 @@ function BlogCard({ post, index }: BlogCardProps) {
             </Typography>
 
             {post.tags && post.tags.length > 0 && (
-              <Box
-                sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: "auto" }}
-              >
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: "auto" }}>
                 {post.tags.slice(0, 3).map((tag) => (
                   <Chip
                     key={tag}
@@ -263,21 +253,14 @@ function BlogCard({ post, index }: BlogCardProps) {
                         "transform",
                       ]),
                       "&:hover": {
-                        backgroundColor: alpha(
-                          theme.palette.primary.main,
-                          0.08
-                        ),
+                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
                         transform: "translateY(-1px)",
                       },
                     })}
                   />
                 ))}
                 {post.tags.length > 3 && (
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ ml: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
                     +{post.tags.length - 3} more
                   </Typography>
                 )}

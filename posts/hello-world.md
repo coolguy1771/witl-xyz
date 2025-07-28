@@ -6,7 +6,8 @@ tags: ["blog", "welcome"]
 
 # Hello World
 
-Welcome to my first blog post! This is a simple example to ensure our filesystem-based blog works correctly in Cloudflare.
+Welcome to my first blog post! This is a simple example to ensure our
+filesystem-based blog works correctly in Cloudflare.
 
 ## How it works
 
@@ -30,4 +31,5 @@ sayHello();
 
 ## What's next?
 
-In future posts, we'll explore more topics related to web development and deployment.
+In future posts, we'll explore more topics related to web development and
+deployment.

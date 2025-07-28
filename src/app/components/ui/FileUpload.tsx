@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  CircularProgress,
-  alpha,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button, Typography, CircularProgress, alpha } from "@mui/material";
 import { Upload, AlertCircle, FileText, CheckCircle } from "lucide-react";
 
 interface FileUploadProps {
@@ -88,21 +81,19 @@ const FileUpload: React.FC<FileUploadProps> = ({
           justifyContent: "center",
           padding: 3,
           borderRadius: 2,
-          border: `1px dashed ${
-            displayError ? theme.palette.error.main : theme.palette.divider
-          }`,
+          border: `1px dashed ${displayError ? theme.palette.error.main : theme.palette.divider}`,
           backgroundColor: displayError
             ? alpha(theme.palette.error.main, 0.04)
             : success
-            ? alpha(theme.palette.success.main, 0.04)
-            : alpha(theme.palette.primary.main, 0.02),
+              ? alpha(theme.palette.success.main, 0.04)
+              : alpha(theme.palette.primary.main, 0.02),
           transition: "all 0.2s ease-in-out",
           "&:hover": {
             backgroundColor: displayError
               ? alpha(theme.palette.error.main, 0.05)
               : success
-              ? alpha(theme.palette.success.main, 0.05)
-              : alpha(theme.palette.primary.main, 0.05),
+                ? alpha(theme.palette.success.main, 0.05)
+                : alpha(theme.palette.primary.main, 0.05),
             cursor: disabled || isLoading ? "not-allowed" : "pointer",
           },
         })}

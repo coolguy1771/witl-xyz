@@ -46,7 +46,7 @@ export interface GitHubContent {
   type: string;
   content?: string;
   encoding?: string;
-  _links?: Record<string, any>;
+  _links?: Record<string, unknown>;
 }
 
 // Create an instance of Octokit with default options
@@ -71,10 +71,7 @@ const defaultOctokit = createOctokit();
 /**
  * Get user information from GitHub
  */
-export async function getGitHubUser(
-  username: string,
-  token?: string
-): Promise<GitHubUser> {
+export async function getGitHubUser(username: string, token?: string): Promise<GitHubUser> {
   const octokit = token ? createOctokit(token) : defaultOctokit;
 
   try {
@@ -142,11 +139,7 @@ export async function getUserRepos(
 /**
  * Get repository information
  */
-export async function getRepo(
-  owner: string,
-  repo: string,
-  token?: string
-): Promise<GitHubRepo> {
+export async function getRepo(owner: string, repo: string, token?: string): Promise<GitHubRepo> {
   const octokit = token ? createOctokit(token) : defaultOctokit;
 
   try {
@@ -177,18 +170,15 @@ export async function getFileContent(
   const octokit = token ? createOctokit(token) : defaultOctokit;
 
   try {
-    const response = await octokit.request(
-      "GET /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner,
-        repo,
-        path,
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-          Accept: "application/vnd.github.raw",
-        },
-      }
-    );
+    const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+      owner,
+      repo,
+      path,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+        Accept: "application/vnd.github.raw",
+      },
+    });
 
     // When using Accept: application/vnd.github.raw, the response is the raw file content
     if (typeof response.data === "string") {
@@ -228,27 +218,19 @@ export async function getRepoContents(
   const octokit = token ? createOctokit(token) : defaultOctokit;
 
   try {
-    const response = await octokit.request(
-      "GET /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner,
-        repo,
-        path,
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      }
-    );
+    const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+      owner,
+      repo,
+      path,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
 
     return Array.isArray(response.data) ? response.data : [response.data];
   } catch (error) {
-    console.error(
-      `Error fetching contents from ${owner}/${repo}/${path}:`,
-      error
-    );
-    throw new Error(
-      `Failed to fetch repository contents: ${owner}/${repo}/${path}`
-    );
+    console.error(`Error fetching contents from ${owner}/${repo}/${path}:`, error);
+    throw new Error(`Failed to fetch repository contents: ${owner}/${repo}/${path}`);
   }
 }
 
@@ -267,7 +249,7 @@ export async function validateGitHubToken(token: string): Promise<boolean> {
     const octokit = createOctokit(token);
     const response = await octokit.request("GET /user");
     return response.status === 200;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -324,12 +306,7 @@ export async function getUserStarredRepos(
   token?: string
 ): Promise<GitHubRepo[]> {
   const octokit = token ? createOctokit(token) : defaultOctokit;
-  const {
-    sort = "created",
-    direction = "desc",
-    per_page = 30,
-    page = 1,
-  } = options;
+  const { sort = "created", direction = "desc", per_page = 30, page = 1 } = options;
 
   try {
     const response = await octokit.request("GET /users/{username}/starred", {

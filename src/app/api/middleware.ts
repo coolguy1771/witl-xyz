@@ -6,10 +6,7 @@ import { rateLimiter } from "./rate-limiter";
  */
 export async function apiMiddleware(request: NextRequest) {
   const ip =
-    request.headers.get("x-forwarded-for") ||
-    request.headers.get("cf-connecting-ip") ||
-    request.ip ||
-    "unknown";
+    request.headers.get("x-forwarded-for") || request.headers.get("cf-connecting-ip") || "unknown";
 
   // Rate limiting based on IP
   const rateLimited = await rateLimiter.check(ip);
@@ -41,9 +38,7 @@ export async function apiMiddleware(request: NextRequest) {
   // Set CORS headers for API routes
   headers.set(
     "Access-Control-Allow-Origin",
-    process.env.NODE_ENV === "production"
-      ? "https://witl.xyz"
-      : "http://localhost:3000"
+    process.env.NODE_ENV === "production" ? "https://witl.xyz" : "http://localhost:3000"
   );
   headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");

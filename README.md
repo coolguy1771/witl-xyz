@@ -1,6 +1,8 @@
 # Personal Blog and Portfolio
 
-A modern, responsive blog and portfolio website built with Next.js 15, featuring dark mode, markdown blog posts, dynamic content, and deployed on cloudflare workers
+A modern, responsive blog and portfolio website built with Next.js 15, featuring
+dark mode, markdown blog posts, dynamic content, and deployed on cloudflare
+workers
 
 ## Features
 
@@ -18,23 +20,26 @@ A modern, responsive blog and portfolio website built with Next.js 15, featuring
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/coolguy1771/witl-xyz.git
 cd witl-xyz
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -43,14 +48,15 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 
 ## Blog Posts
 
-Blog posts are written in Markdown and stored in the `posts` directory. Each post should include frontmatter with the following fields:
+Blog posts are written in Markdown and stored in the `posts` directory. Each
+post should include frontmatter with the following fields:
 
 ```markdown
 ---
 title: Your Post Title
-date: '2025-01-15'
+date: "2025-01-15"
 author: Your Name
-tags: ['nextjs', 'react', 'typescript']
+tags: ["nextjs", "react", "typescript"]
 excerpt: Optional custom excerpt for your post
 ---
 
@@ -111,16 +117,20 @@ Your content here...
 - [Next.js 15](https://nextjs.org/) - The React Framework
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [gray-matter](https://github.com/jonschlinkert/gray-matter) - Frontmatter parsing
+- [gray-matter](https://github.com/jonschlinkert/gray-matter) - Frontmatter
+  parsing
 - [remark](https://github.com/remarkjs/remark) - Markdown processing
 - [Cloudflare Workers](https://workers.cloudflare.com/) - Serverless deployment
-- [Cloudflare Assets](https://developers.cloudflare.com/workers/runtime-apis/fetch-event/#assets) - Static file serving
+- [Cloudflare Assets](https://developers.cloudflare.com/workers/runtime-apis/fetch-event/#assets) -
+  Static file serving
 
 ## Cloudflare Deployment
 
-This project is configured to work with Cloudflare Workers. Thanks to Next.js static generation, all blog pages are pre-rendered at build time.
+This project is configured to work with Cloudflare Workers. Thanks to Next.js
+static generation, all blog pages are pre-rendered at build time.
 
 The blog functionality works by:
+
 1. Reading Markdown files from the `/posts` directory during build
 2. Pre-rendering the content into static HTML
 3. Deploying these static pages to Cloudflare
@@ -128,11 +138,14 @@ The blog functionality works by:
 ### Setup for Cloudflare
 
 Simply build and deploy:
+
 ```bash
 npm run deploy
 ```
 
-The filesystem access only happens during build time, not in production. Next.js ensures that all necessary content is pre-generated and packaged within the static assets.
+The filesystem access only happens during build time, not in production. Next.js
+ensures that all necessary content is pre-generated and packaged within the
+static assets.
 
 ## Contributing
 
@@ -144,4 +157,5 @@ The filesystem access only happens during build time, not in production. Next.js
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details

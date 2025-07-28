@@ -22,36 +22,20 @@ import { Grid } from "@mui/material";
 import { RefreshCw } from "lucide-react";
 
 // Lazy load all other icons to reduce initial bundle size
-const Globe = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Globe }))
-);
-const Cloud = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Cloud }))
-);
+const Globe = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Globe })));
+const Cloud = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Cloud })));
 const Thermometer = lazy(() =>
   import("lucide-react").then((mod) => ({ default: mod.Thermometer }))
 );
-const MapPin = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.MapPin }))
-);
-const Network = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Network }))
-);
+const MapPin = lazy(() => import("lucide-react").then((mod) => ({ default: mod.MapPin })));
+const Network = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Network })));
 const AlertTriangle = lazy(() =>
   import("lucide-react").then((mod) => ({ default: mod.AlertTriangle }))
 );
-const Laptop = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Laptop }))
-);
-const Smartphone = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Smartphone }))
-);
-const Database = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Database }))
-);
-const Clock = lazy(() =>
-  import("lucide-react").then((mod) => ({ default: mod.Clock }))
-);
+const Laptop = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Laptop })));
+const Smartphone = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Smartphone })));
+const Database = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Database })));
+const Clock = lazy(() => import("lucide-react").then((mod) => ({ default: mod.Clock })));
 
 interface WeatherData {
   temp: number;
@@ -174,15 +158,11 @@ function InfoCard({
               backgroundColor: noData
                 ? alpha(theme.palette.warning.main, 0.1) // Warning background for no data
                 : alpha(theme.palette.primary.main, 0.1), // Normal background for data
-              color: noData
-                ? theme.palette.warning.main
-                : theme.palette.primary.main,
+              color: noData ? theme.palette.warning.main : theme.palette.primary.main,
             })}
           >
             {/* Lazy-loaded icon with fallback */}
-            <Suspense fallback={<Box sx={{ width: 24, height: 24 }}></Box>}>
-              {icon}
-            </Suspense>
+            <Suspense fallback={<Box sx={{ width: 24, height: 24 }}></Box>}>{icon}</Suspense>
           </Box>
         }
         title={
@@ -250,11 +230,7 @@ function EmptyStateCard({
 }) {
   return (
     <InfoCard
-      icon={
-        <Suspense fallback={<Box sx={{ width: 24, height: 24 }}></Box>}>
-          {icon}
-        </Suspense>
-      }
+      icon={<Suspense fallback={<Box sx={{ width: 24, height: 24 }}></Box>}>{icon}</Suspense>}
       title={title}
       noData
     >
@@ -304,14 +280,9 @@ function LoadingState() {
           >
             Analyzing Your Connection
           </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 600, mx: "auto" }}
-          >
-            We&apos;re gathering information about your location, device, and
-            connection. This data is not stored and is only used for this
-            demonstration.
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: "auto" }}>
+            We&apos;re gathering information about your location, device, and connection. This data
+            is not stored and is only used for this demonstration.
           </Typography>
         </Box>
 
@@ -328,25 +299,13 @@ function LoadingState() {
                 })}
               >
                 <CardHeader
-                  avatar={
-                    <Skeleton variant="circular" width={40} height={40} />
-                  }
+                  avatar={<Skeleton variant="circular" width={40} height={40} />}
                   title={<Skeleton width="60%" />}
                 />
                 <CardContent>
                   <Skeleton variant="text" width="80%" height={30} />
-                  <Skeleton
-                    variant="text"
-                    width="50%"
-                    height={20}
-                    sx={{ mt: 1 }}
-                  />
-                  <Skeleton
-                    variant="text"
-                    width="70%"
-                    height={20}
-                    sx={{ mt: 1 }}
-                  />
+                  <Skeleton variant="text" width="50%" height={20} sx={{ mt: 1 }} />
+                  <Skeleton variant="text" width="70%" height={20} sx={{ mt: 1 }} />
                 </CardContent>
               </Card>
             </Grid>
@@ -411,7 +370,10 @@ export default function VisitorDashboard({ initialData }: Props) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
-          const responseData = await response.json();
+          const responseData = (await response.json()) as {
+            geo?: object;
+            weather?: WeatherData;
+          } | null;
           console.log("Visitor API response:", responseData);
 
           if (typeof responseData === "object" && responseData !== null) {
@@ -425,10 +387,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             }
 
             // Process weather data if available
-            if (
-              responseData.weather &&
-              typeof responseData.weather === "object"
-            ) {
+            if (responseData.weather && typeof responseData.weather === "object") {
               updatedData.weather = responseData.weather;
             }
 
@@ -443,9 +402,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             console.log("Request timed out - using initial data");
           } else {
             console.error("Error fetching visitor data:", err);
-            setError(
-              "Failed to load complete visitor data. Some information may be missing."
-            );
+            setError("Failed to load complete visitor data. Some information may be missing.");
           }
           // Keep initial data if fetch fails
         } finally {
@@ -567,11 +524,7 @@ export default function VisitorDashboard({ initialData }: Props) {
               >
                 Your Digital Profile
               </Typography>
-              <Typography
-                variant="h6"
-                color="text.secondary"
-                fontWeight="normal"
-              >
+              <Typography variant="h6" color="text.secondary" fontWeight="normal">
                 Analyzing your connection data in real-time
               </Typography>
             </Box>
@@ -663,12 +616,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="IP Address" icon={<Globe size={24} />}>
                 <Box>
-                  <Typography
-                    variant="h5"
-                    fontFamily="monospace"
-                    fontWeight="bold"
-                    sx={{ mb: 2 }}
-                  >
+                  <Typography variant="h5" fontFamily="monospace" fontWeight="bold" sx={{ mb: 2 }}>
                     {data.ip}
                   </Typography>
 
@@ -692,10 +640,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                             sx={{
                               height: 20,
                               fontSize: "0.7rem",
-                              backgroundColor: alpha(
-                                theme.palette.primary.main,
-                                0.1
-                              ),
+                              backgroundColor: alpha(theme.palette.primary.main, 0.1),
                             }}
                           />
                         </Tooltip>
@@ -724,13 +669,10 @@ export default function VisitorDashboard({ initialData }: Props) {
                     {data.city}, {data.countryName || data.country}
                   </Typography>
 
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     {data.region && (
                       <Typography variant="body2" color="text.secondary">
-                        Region: {data.region}{" "}
-                        {data.regionCode ? `(${data.regionCode})` : ""}
+                        Region: {data.region} {data.regionCode ? `(${data.regionCode})` : ""}
                       </Typography>
                     )}
 
@@ -772,9 +714,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                     })}
                   </Typography>
 
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Typography variant="body2" color="text.secondary">
                       Timezone: {data.timezone.replace("_", " ")}
                     </Typography>
@@ -856,18 +796,13 @@ export default function VisitorDashboard({ initialData }: Props) {
           {/* Browser/Device Card */}
           {data.userAgent ? (
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <InfoCard
-                title="Browser & Device"
-                icon={getDeviceIcon(data.deviceType)}
-              >
+              <InfoCard title="Browser & Device" icon={getDeviceIcon(data.deviceType)}>
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     {data.userAgent.split(" ").slice(-3).join(" ")}
                   </Typography>
 
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     {data.deviceType && (
                       <Typography variant="body2" color="text.secondary">
                         Device Type: {data.deviceType}
@@ -941,9 +876,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                     }}
                   >
                     <Typography variant="body2" color="text.secondary">
-                      {data.accuracy
-                        ? `Accuracy: ~${data.accuracy} km`
-                        : "Approximate location"}
+                      {data.accuracy ? `Accuracy: ~${data.accuracy} km` : "Approximate location"}
                     </Typography>
 
                     <Button
@@ -981,8 +914,7 @@ export default function VisitorDashboard({ initialData }: Props) {
           }}
         >
           <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-            This information is derived from Cloudflare&apos;s HTTP request
-            headers
+            This information is derived from Cloudflare&apos;s HTTP request headers
           </Typography>
           <Typography variant="caption" color="text.secondary" component="p">
             All data is processed in your browser and is not stored or tracked

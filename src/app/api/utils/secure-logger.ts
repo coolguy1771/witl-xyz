@@ -28,7 +28,7 @@ const SENSITIVE_FIELDS = [
  * @param data The data to sanitize for logging
  * @returns Sanitized data object
  */
-function redactSensitiveData(data: any): any {
+function redactSensitiveData(data: unknown): unknown {
   if (!data) {
     return data;
   }
@@ -44,39 +44,37 @@ function redactSensitiveData(data: any): any {
   // Create a copy to avoid modifying the original
   const sanitized = { ...data };
 
-  for (const key of Object.keys(sanitized)) {
+  const obj = sanitized as Record<string, unknown>;
+  for (const key of Object.keys(obj)) {
     const lowerKey = key.toLowerCase();
 
     // Redact values for sensitive keys
     if (SENSITIVE_FIELDS.some((field) => lowerKey.includes(field))) {
-      sanitized[key] = "[REDACTED]";
+      obj[key] = "[REDACTED]";
     }
     // Recursively sanitize nested objects
-    else if (typeof sanitized[key] === "object" && sanitized[key] !== null) {
-      sanitized[key] = redactSensitiveData(sanitized[key]);
+    else if (typeof obj[key] === "object" && obj[key] !== null) {
+      obj[key] = redactSensitiveData(obj[key]);
     }
   }
 
-  return sanitized;
+  return obj;
 }
 
 /**
  * Securely log information with sensitive data redacted
  */
 export const secureLogger = {
-  info(message: string, data?: any): void {
+  info(message: string, data?: unknown): void {
     console.log(message, data ? redactSensitiveData(data) : "");
   },
 
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: unknown): void {
     console.warn(message, data ? redactSensitiveData(data) : "");
   },
 
-  error(message: string, error?: any, data?: any): void {
-    const errorMsg =
-      error instanceof Error
-        ? { name: error.name, message: error.message }
-        : error;
+  error(message: string, error?: unknown, data?: unknown): void {
+    const errorMsg = error instanceof Error ? { name: error.name, message: error.message } : error;
 
     console.error(
       message,

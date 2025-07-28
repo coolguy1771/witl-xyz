@@ -7,20 +7,13 @@ import { Project } from "../types";
 import { fetchGithubProjects } from "../lib/github";
 import { ProjectCard } from "./ProjectCard";
 import { Loading } from "./ui/Loading";
-import {
-  fadeIn,
-  staggerContainer,
-  slideInFromLeft,
-  revealFromBottom,
-} from "../lib/animations";
+import { fadeIn, staggerContainer, slideInFromLeft, revealFromBottom } from "../lib/animations";
 
 interface ProjectsSectionProps {
   fallbackProjects?: Project[];
 }
 
-export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
-  fallbackProjects,
-}) => {
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjects }) => {
   const theme = useTheme();
   const [projects, setProjects] = useState<Project[]>(fallbackProjects || []);
   const [isLoading, setIsLoading] = useState(true);
@@ -139,19 +132,9 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           </Typography>
         </Box>
 
-        <Grid
-          container
-          spacing={3}
-          component={motion.div}
-          variants={staggerContainer}
-        >
+        <Grid container spacing={3} component={motion.div} variants={staggerContainer}>
           {projects.map((project, index) => (
-            <Grid
-              size={{ xs: 12, md: 6 }}
-              key={index}
-              component={motion.div}
-              variants={fadeIn}
-            >
+            <Grid size={{ xs: 12, md: 6 }} key={index} component={motion.div} variants={fadeIn}>
               <ProjectCard project={project} />
             </Grid>
           ))}

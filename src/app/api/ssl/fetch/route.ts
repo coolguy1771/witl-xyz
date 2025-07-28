@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { get, SSLCertificate } from "../info/route";
+import { get } from "@/app/lib/ssl/certificate-fetcher";
 import { SSLCertificateResponse } from "@/app/types/ssl";
 import {
   isValidDomain,
@@ -48,10 +48,7 @@ export async function POST(request: NextRequest) {
     // Enhanced domain validation using Cloudflare-optimized validator
     if (!isValidDomain(domain)) {
       secureLogger.warn("Invalid domain format detected");
-      return secureErrorResponse(
-        "Invalid domain format or domain not allowed",
-        400
-      );
+      return secureErrorResponse("Invalid domain format or domain not allowed", 400);
     }
 
     // Normalize domain for processing
@@ -74,10 +71,7 @@ export async function POST(request: NextRequest) {
 
       // Add timeout and abort controller for better resource management in Cloudflare Workers
       const controller = new AbortController();
-      const timeoutId = setTimeout(
-        () => controller.abort(),
-        CERTIFICATE_FETCH_TIMEOUT
-      );
+      const timeoutId = setTimeout(() => controller.abort(), CERTIFICATE_FETCH_TIMEOUT);
 
       try {
         // Use Promise.race with AbortController for more efficient timeout handling in CF Workers
@@ -105,8 +99,16 @@ export async function POST(request: NextRequest) {
         );
 
         // Extract subject and issuer details safely
-        const subject = certInfo.subject || {};
-        const issuer = certInfo.issuer || {};
+        interface CertificateSubject {
+          CN?: string;
+          O?: string;
+          OU?: string;
+          C?: string;
+          ST?: string;
+          L?: string;
+        }
+        const subject = (certInfo.subject || {}) as CertificateSubject;
+        const issuer = (certInfo.issuer || {}) as CertificateSubject;
 
         // Process subject alternative names with added security
         const subjectAltNames = [];
@@ -221,10 +223,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        if (
-          error.message.includes("ECONNREFUSED") ||
-          error.message.includes("ENOTFOUND")
-        ) {
+        if (error.message.includes("ECONNREFUSED") || error.message.includes("ENOTFOUND")) {
           return secureErrorResponse(
             "Could not connect to the server to check the SSL certificate.",
             502 // Bad Gateway
@@ -233,10 +232,7 @@ export async function POST(request: NextRequest) {
       }
 
       // For security, don't leak detailed error information
-      return secureErrorResponse(
-        "Unable to retrieve SSL certificate information.",
-        500
-      );
+      return secureErrorResponse("Unable to retrieve SSL certificate information.", 500);
     }
   } catch (error) {
     secureLogger.error("Unhandled error in SSL certificate API", error);
@@ -249,9 +245,6 @@ export async function POST(request: NextRequest) {
     });
 
     // Generic error with security headers
-    return secureErrorResponse(
-      "An error occurred while processing your request.",
-      500
-    );
+    return secureErrorResponse("An error occurred while processing your request.", 500);
   }
 }

@@ -8,7 +8,7 @@ import { slideInFromRight, popIn } from "../lib/animations";
 
 export const HeroSection: React.FC = () => {
   const theme = useTheme();
-  
+
   // Modern staggered animation for title
   const titleAnimation = {
     hidden: { opacity: 0 },
@@ -16,22 +16,22 @@ export const HeroSection: React.FC = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.04,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const letterAnimation = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         type: "spring",
         damping: 12,
-        stiffness: 100
-      }
-    }
+        stiffness: 100,
+      },
+    },
   };
 
   const renderAnimatedText = (text: string, color: string) => {
@@ -43,7 +43,7 @@ export const HeroSection: React.FC = () => {
           color,
           display: char === " " ? "inline-block" : "inline-block",
           width: char === " " ? "0.5em" : "auto",
-          marginRight: char === " " ? "0" : "0"
+          marginRight: char === " " ? "0" : "0",
         }}
       >
         {char}
@@ -52,9 +52,9 @@ export const HeroSection: React.FC = () => {
   };
 
   return (
-    <Box 
+    <Box
       component="section"
-      sx={{ 
+      sx={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -75,12 +75,12 @@ export const HeroSection: React.FC = () => {
           background: `radial-gradient(circle at 30% 20%, ${theme.palette.primary.dark}05, transparent 20%), 
                        radial-gradient(circle at 70% 60%, ${theme.palette.secondary.dark}05, transparent 20%)`,
           opacity: 0.4,
-          zIndex: 0
-        }
+          zIndex: 0,
+        },
       }}
     >
       {/* Decorative elements */}
-      <Box 
+      <Box
         sx={{
           position: "absolute",
           top: "10%",
@@ -91,22 +91,22 @@ export const HeroSection: React.FC = () => {
           background: `radial-gradient(circle, ${theme.palette.primary.main}10, transparent 70%)`,
           filter: "blur(60px)",
           opacity: 0.5,
-          zIndex: 0
+          zIndex: 0,
         }}
       />
-      
+
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <Stack spacing={4} maxWidth="800px">
           {/* Main title with animated letters */}
-          <motion.div 
+          <motion.div
             variants={titleAnimation}
             initial="hidden"
             animate="visible"
-            style={{ 
+            style={{
               fontWeight: 800,
               lineHeight: 1.2,
               fontSize: "clamp(2.5rem, 7vw, 4rem)",
-              marginBottom: "1rem"
+              marginBottom: "1rem",
             }}
           >
             <div style={{ display: "block", whiteSpace: "nowrap" }}>
@@ -118,30 +118,34 @@ export const HeroSection: React.FC = () => {
           </motion.div>
 
           {/* Description */}
-          <Box component={motion.div} variants={slideInFromRight} initial="initial" animate="animate">
-            <Typography 
-              variant="h6" 
+          <Box
+            component={motion.div}
+            variants={slideInFromRight}
+            initial="initial"
+            animate="animate"
+          >
+            <Typography
+              variant="h6"
               color="text.secondary"
-              sx={{ 
+              sx={{
                 maxWidth: "600px",
                 fontWeight: 400,
                 lineHeight: 1.7,
-                mb: 4
+                mb: 4,
               }}
             >
-              I bring ideas to life with code and a touch of creativity. Whether
-              it&apos;s scaling apps or crafting user-friendly designs, I&apos;m
-              here to build solutions that matter.
+              I bring ideas to life with code and a touch of creativity. Whether it&apos;s scaling
+              apps or crafting user-friendly designs, I&apos;m here to build solutions that matter.
             </Typography>
           </Box>
 
           {/* CTA Button */}
           <Box component={motion.div} variants={popIn} initial="initial" animate="animate">
-            <Button 
+            <Button
               href="#projects"
               variant="contained"
               size="large"
-              sx={{ 
+              sx={{
                 backgroundImage: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                 color: theme.palette.common.white,
                 fontWeight: 500,
@@ -153,8 +157,8 @@ export const HeroSection: React.FC = () => {
                 transition: "all 0.3s ease",
                 "&:hover": {
                   boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-                  transform: "translateY(-2px)"
-                }
+                  transform: "translateY(-2px)",
+                },
               }}
             >
               View My Work

@@ -31,7 +31,7 @@ class RateLimiter {
     const record = this.requestMap.get(key) || {
       count: 0,
       firstRequest: now,
-      lastRequest: now
+      lastRequest: now,
     };
 
     // Reset if window has expired
@@ -46,7 +46,7 @@ class RateLimiter {
     this.requestMap.set(key, record);
 
     // API-specific limits
-    if (key.includes('ssl') || key.includes('certificate')) {
+    if (key.includes("ssl") || key.includes("certificate")) {
       // Stricter limits for SSL certificate API
       return record.count > 5;
     }

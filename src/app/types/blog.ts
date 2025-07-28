@@ -4,22 +4,22 @@
 export interface BlogPostFrontMatter {
   /** The title of the blog post */
   title: string;
- 
+
   /** Publication date in ISO format (YYYY-MM-DD) or any parseable date string */
   date: string;
- 
+
   /** Optional short summary of the post - will be auto-generated if not provided */
   excerpt?: string;
- 
+
   /** Optional array of tags/categories for the post */
   tags?: string[];
- 
+
   /** Optional URL to a cover/featured image */
   coverImage?: string;
- 
+
   /** Optional boolean to feature this post */
   featured?: boolean;
- 
+
   /** Optional author information */
   author?: {
     name: string;
@@ -33,10 +33,10 @@ export interface BlogPostFrontMatter {
 export interface Heading {
   /** The unique ID of the heading (typically the slugified text) */
   id: string;
- 
+
   /** The heading text content */
   text: string;
- 
+
   /** The heading level (1 for h1, 2 for h2, etc.) */
   level: number;
 }
@@ -47,37 +47,37 @@ export interface Heading {
 export interface BlogPost {
   /** URL-friendly identifier for the post */
   slug: string;
- 
+
   /** The title of the blog post */
   title: string;
- 
+
   /** Publication date */
   date: string;
- 
+
   /** HTML content of the post */
   content: string;
- 
+
   /** Short summary of the post */
   excerpt: string;
- 
+
   /** Estimated reading time */
   readingTime: string;
- 
+
   /** Array of tags/categories */
   tags: string[];
- 
+
   /** Optional URL to a cover/featured image */
   coverImage?: string;
- 
+
   /** Optional boolean indicating if this is a featured post */
   featured?: boolean;
- 
+
   /** Optional author information */
   author?: {
     name: string;
     avatar?: string;
   };
- 
+
   /** Optional array of headings extracted from the content */
   headings?: Heading[];
 }
@@ -89,28 +89,28 @@ export interface BlogPost {
 export interface BlogPostMetadata {
   /** URL-friendly identifier for the post */
   slug: string;
- 
+
   /** The title of the blog post */
   title: string;
- 
+
   /** Publication date */
   date: string;
- 
+
   /** Short summary of the post */
   excerpt: string;
- 
+
   /** Estimated reading time */
   readingTime: string;
- 
+
   /** Array of tags/categories */
   tags: string[];
- 
+
   /** Optional URL to a cover/featured image */
   coverImage?: string;
- 
+
   /** Optional boolean indicating if this is a featured post */
   featured?: boolean;
- 
+
   /** Optional author information */
   author?: {
     name: string;
@@ -119,4 +119,4 @@ export interface BlogPostMetadata {
 }
 
 // Type alias for compatibility with existing code
-export type Post = BlogPost
+export type Post = BlogPost;

@@ -84,9 +84,7 @@ export default function Navbar() {
         href={item.href}
         sx={{
           position: "relative",
-          color: isActive
-            ? theme.palette.primary.main
-            : theme.palette.text.secondary,
+          color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
           textDecoration: "none",
           fontWeight: isActive ? 700 : 400,
           transition: "color 0.2s ease",
@@ -144,12 +142,10 @@ export default function Navbar() {
                     ? "rgba(24, 24, 27, 0.95)"
                     : "rgba(24, 24, 27, 0.9)"
                   : scrolled
-                  ? "rgba(255, 255, 255, 0.95)"
-                  : "rgba(249, 250, 251, 0.9)",
+                    ? "rgba(255, 255, 255, 0.95)"
+                    : "rgba(249, 250, 251, 0.9)",
               borderBottom: `1px solid ${
-                scrolled
-                  ? theme.palette.divider
-                  : alpha(theme.palette.divider, 0.6)
+                scrolled ? theme.palette.divider : alpha(theme.palette.divider, 0.6)
               }`,
               backdropFilter: "blur(12px)",
               transition: "all 0.3s ease",
@@ -223,22 +219,12 @@ export default function Navbar() {
                   {/* Theme toggle button with animation */}
                   <Tooltip
                     title={
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                      >
-                        <span>
-                          Switch to {mode === "dark" ? "light" : "dark"} mode
-                        </span>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                        <span>Switch to {mode === "dark" ? "light" : "dark"} mode</span>
                         {mode === "dark" ? (
-                          <Sun
-                            size={14}
-                            style={{ animation: "spin 1.5s ease infinite" }}
-                          />
+                          <Sun size={14} style={{ animation: "spin 1.5s ease infinite" }} />
                         ) : (
-                          <Moon
-                            size={14}
-                            style={{ animation: "pulse 1.5s ease infinite" }}
-                          />
+                          <Moon size={14} style={{ animation: "pulse 1.5s ease infinite" }} />
                         )}
                       </Box>
                     }
@@ -248,18 +234,15 @@ export default function Navbar() {
                       onClick={toggleTheme}
                       sx={{
                         ml: 1,
-                        bgcolor: (theme) =>
-                          alpha(theme.palette.primary.main, 0.1),
+                        bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
                         color: "primary.main",
                         "&:hover": {
-                          bgcolor: (theme) =>
-                            alpha(theme.palette.primary.main, 0.2),
+                          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
                           transform: "rotate(12deg)",
                         },
                         height: 36,
                         width: 36,
-                        transition:
-                          "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)", // Bouncy transition
+                        transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)", // Bouncy transition
                         position: "relative",
                         overflow: "hidden",
                         "&::before": {
@@ -267,8 +250,7 @@ export default function Navbar() {
                           position: "absolute",
                           width: "100%",
                           height: "100%",
-                          backgroundColor: (theme) =>
-                            alpha(theme.palette.primary.main, 0.1),
+                          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.1),
                           borderRadius: "50%",
                           top: 0,
                           left: 0,
@@ -402,10 +384,7 @@ export default function Navbar() {
                       "&:hover": {
                         transform: "translateY(-3px)",
                         boxShadow: (theme) =>
-                          `0 4px 8px ${alpha(
-                            theme.palette.primary.main,
-                            0.25
-                          )}`,
+                          `0 4px 8px ${alpha(theme.palette.primary.main, 0.25)}`,
                       },
                       "&::after": {
                         content: '""',

@@ -102,9 +102,7 @@ export default function GitHubProjects() {
               },
             }}
           >
-            <CardContent
-              sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
-            >
+            <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
               <Typography variant="h6" component="div" gutterBottom>
                 <Link
                   href={repo.html_url}
@@ -116,22 +114,12 @@ export default function GitHubProjects() {
                 </Link>
               </Typography>
 
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ mb: 2, flexGrow: 1 }}
-              >
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2, flexGrow: 1 }}>
                 {repo.description || "No description available"}
               </Typography>
 
               <Box sx={{ mt: "auto" }}>
-                {repo.language && (
-                  <Chip
-                    label={repo.language}
-                    size="small"
-                    sx={{ mr: 1, mb: 1 }}
-                  />
-                )}
+                {repo.language && <Chip label={repo.language} size="small" sx={{ mr: 1, mb: 1 }} />}
 
                 {repo.topics &&
                   repo.topics

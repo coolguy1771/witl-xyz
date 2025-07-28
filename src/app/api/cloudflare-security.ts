@@ -5,17 +5,16 @@
  * Cloudflare Workers, taking advantage of Cloudflare's built-in security features.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Rate limiting using Cloudflare's worker-specific approach
-const RATE_LIMIT_WINDOW = 60; // 1 minute in seconds
 
 /**
  * Securely log with built-in Cloudflare observability
  */
 export const secureLogger = {
   // Redact sensitive information from logs
-  redactSensitiveData(data: any): any {
+  redactSensitiveData(data: unknown): unknown {
     if (!data) return data;
     if (typeof data !== "object") return data;
 
@@ -43,58 +42,42 @@ export const secureLogger = {
     // Create a copy to avoid modifying the original
     const result = Array.isArray(data) ? [...data] : { ...data };
 
-    for (const key in result) {
+    if (Array.isArray(result)) {
+      return result.map((item) => this.redactSensitiveData(item));
+    }
+
+    const obj = result as Record<string, unknown>;
+    for (const key in obj) {
       const lowerKey = key.toLowerCase();
 
       // Check if field name contains sensitive information
       if (sensitiveFields.some((field) => lowerKey.includes(field))) {
-        result[key] = "[REDACTED]";
+        obj[key] = "[REDACTED]";
       }
       // Recursively sanitize objects
-      else if (typeof result[key] === "object" && result[key] !== null) {
-        result[key] = this.redactSensitiveData(result[key]);
+      else if (typeof obj[key] === "object" && obj[key] !== null) {
+        obj[key] = this.redactSensitiveData(obj[key]);
       }
     }
 
-    return result;
+    return obj;
   },
 
   // Log message with Cloudflare observability
-  info(message: string, data?: any): void {
+  info(message: string, data?: unknown): void {
     console.log(message, data ? this.redactSensitiveData(data) : "");
   },
 
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: unknown): void {
     console.warn(message, data ? this.redactSensitiveData(data) : "");
   },
 
-  error(message: string, error?: any): void {
-    const safeError =
-      error instanceof Error
-        ? { name: error.name, message: error.message }
-        : error;
+  error(message: string, error?: unknown): void {
+    const safeError = error instanceof Error ? { name: error.name, message: error.message } : error;
 
     console.error(message, this.redactSensitiveData(safeError));
   },
 };
-
-/**
- * Get rate limit key based on request information
- * Uses Cloudflare-specific headers for accurate client identification
- */
-function getRateLimitKey(request: NextRequest, prefix: string = ""): string {
-  // Use CF-Connecting-IP for accurate client IP
-  const ip =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-forwarded-for") ||
-    request.ip ||
-    "unknown";
-
-  // Combine with the path to separate limits for different endpoints
-  const path = request.nextUrl.pathname;
-
-  return `${prefix}:${path}:${ip}`;
-}
 
 /**
  * CORS configuration for GitHub API access
@@ -105,8 +88,7 @@ export const corsConfig = {
   // Default CORS settings
   defaultSettings: {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type, Authorization, X-Requested-With, Accept",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Accept",
     "Access-Control-Max-Age": "86400", // 24 hours
     "Access-Control-Allow-Credentials": "true",
   },
@@ -135,24 +117,17 @@ export function applySecurityHeaders(
   );
 
   // Permissions policy
-  headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
-  );
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
 
   // Apply CORS headers if enabled
   if (enableCors) {
     // Determine if the origin is allowed
     const requestOrigin = origin || "*";
     const isAllowedOrigin =
-      corsConfig.allowedOrigins.includes(requestOrigin) ||
-      requestOrigin === "*";
+      corsConfig.allowedOrigins.includes(requestOrigin) || requestOrigin === "*";
 
     // Set CORS headers
-    headers.set(
-      "Access-Control-Allow-Origin",
-      isAllowedOrigin ? requestOrigin : "*"
-    );
+    headers.set("Access-Control-Allow-Origin", isAllowedOrigin ? requestOrigin : "*");
 
     // Apply default CORS settings
     Object.entries(corsConfig.defaultSettings).forEach(([key, value]) => {
@@ -216,8 +191,7 @@ export function isValidDomain(domain: string): boolean {
 
   if (
     blockedDomains.some(
-      (blocked) =>
-        normalizedDomain === blocked || normalizedDomain.endsWith("." + blocked)
+      (blocked) => normalizedDomain === blocked || normalizedDomain.endsWith("." + blocked)
     )
   ) {
     return false;
@@ -245,17 +219,14 @@ export function validateFileUpload(
   if (file.size > maxSizeBytes) {
     return {
       valid: false,
-      error: `File too large. Maximum size is ${Math.floor(
-        maxSizeBytes / 1024
-      )} KB`,
+      error: `File too large. Maximum size is ${Math.floor(maxSizeBytes / 1024)} KB`,
     };
   }
 
   // Check MIME type if available and specified
   if (allowedTypes.length > 0 && file.type) {
     const isAllowedType = allowedTypes.some(
-      (type) =>
-        file.type === type || file.type.startsWith(type.replace(/\*/g, ""))
+      (type) => file.type === type || file.type.startsWith(type.replace(/\*/g, ""))
     );
 
     if (!isAllowedType) {
@@ -271,9 +242,7 @@ export function validateFileUpload(
  */
 export function sanitizeCertificate(content: string): string {
   // Keep only the valid certificate content
-  const certMatch = content.match(
-    /-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----/g
-  );
+  const certMatch = content.match(/-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----/g);
 
   if (!certMatch || certMatch.length === 0) {
     throw new Error("Invalid certificate format");

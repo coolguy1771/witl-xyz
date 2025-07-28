@@ -41,8 +41,7 @@ export const securityHeaders = {
     "X-Frame-Options": "DENY",
     "X-XSS-Protection": "1; mode=block",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy":
-      "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
 
   // Additional headers for endpoints that support caching
@@ -53,10 +52,7 @@ export const securityHeaders = {
 
 // Allowed CORS origins
 export const corsConfig = {
-  origins:
-    process.env.NODE_ENV === "production"
-      ? ["https://witl.xyz"]
-      : ["http://localhost:3000"],
+  origins: process.env.NODE_ENV === "production" ? ["https://witl.xyz"] : ["http://localhost:3000"],
   methods: ["GET", "POST", "OPTIONS"],
   headers: ["Content-Type", "Authorization"],
   maxAge: 86400, // 24 hours

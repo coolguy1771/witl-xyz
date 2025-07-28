@@ -18,7 +18,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Tyler Witlin - Software Engineer & Kubernetes Administrator",
-  description: "Personal portfolio and blog showcasing software engineering projects and design work.",
+  description:
+    "Personal portfolio and blog showcasing software engineering projects and design work.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

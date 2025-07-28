@@ -187,8 +187,7 @@ export function PostBody({ content }: PostBodyProps) {
               boxShadow: theme.shadows[1],
             },
             "& pre": {
-              backgroundColor:
-                theme.palette.mode === "dark" ? "#282a36" : "#f5f5f5",
+              backgroundColor: theme.palette.mode === "dark" ? "#282a36" : "#f5f5f5",
               p: 3,
               pt: 4,
               borderRadius: 1,
@@ -201,24 +200,17 @@ export function PostBody({ content }: PostBodyProps) {
                 height: "8px",
               },
               "&::-webkit-scrollbar-track": {
-                background:
-                  theme.palette.mode === "dark"
-                    ? "rgba(0,0,0,0.2)"
-                    : "rgba(0,0,0,0.05)",
+                background: theme.palette.mode === "dark" ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.05)",
                 borderRadius: "0 0 8px 8px",
               },
               "&::-webkit-scrollbar-thumb": {
                 background:
-                  theme.palette.mode === "dark"
-                    ? "rgba(255,255,255,0.1)"
-                    : "rgba(0,0,0,0.2)",
+                  theme.palette.mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.2)",
                 borderRadius: "4px",
               },
               "&::-webkit-scrollbar-thumb:hover": {
                 background:
-                  theme.palette.mode === "dark"
-                    ? "rgba(255,255,255,0.2)"
-                    : "rgba(0,0,0,0.3)",
+                  theme.palette.mode === "dark" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)",
               },
               // Add a decorative top bar
               "&::before": {
@@ -243,17 +235,12 @@ export function PostBody({ content }: PostBodyProps) {
                 fontSize: "0.7rem",
                 fontWeight: 500,
                 color:
-                  theme.palette.mode === "dark"
-                    ? theme.palette.grey[400]
-                    : theme.palette.grey[600],
+                  theme.palette.mode === "dark" ? theme.palette.grey[400] : theme.palette.grey[600],
                 textTransform: "uppercase",
                 fontFamily: '"Fira Code", "Geist Mono", monospace',
                 letterSpacing: "0.05em",
                 display: "inline-block",
-                background:
-                  theme.palette.mode === "dark"
-                    ? "rgba(0,0,0,0.4)"
-                    : "rgba(0,0,0,0.1)",
+                background: theme.palette.mode === "dark" ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.1)",
                 padding: "4px 6px",
                 borderRadius: "4px",
                 zIndex: 5,
@@ -262,22 +249,15 @@ export function PostBody({ content }: PostBodyProps) {
             "& code": {
               fontFamily: '"Fira Code", "Geist Mono", monospace',
               backgroundColor:
-                theme.palette.mode === "dark"
-                  ? "rgba(15, 15, 25, 0.6)"
-                  : "rgba(0, 0, 0, 0.05)",
+                theme.palette.mode === "dark" ? "rgba(15, 15, 25, 0.6)" : "rgba(0, 0, 0, 0.05)",
               px: 1,
               borderRadius: 0.5,
-              color:
-                theme.palette.mode === "dark"
-                  ? "#E4E4E7"
-                  : theme.palette.text.primary,
+              color: theme.palette.mode === "dark" ? "#E4E4E7" : theme.palette.text.primary,
             },
             // Inline code (not in a pre block)
             "& :not(pre) > code": {
               backgroundColor:
-                theme.palette.mode === "dark"
-                  ? "rgba(15, 15, 25, 0.6)"
-                  : "rgba(0, 0, 0, 0.05)",
+                theme.palette.mode === "dark" ? "rgba(15, 15, 25, 0.6)" : "rgba(0, 0, 0, 0.05)",
               padding: "0.2em 0.4em",
               fontSize: "0.9em",
               borderRadius: "4px",
@@ -330,18 +310,12 @@ export function PostBody({ content }: PostBodyProps) {
       </Grid>
 
       {/* Sidebar with Table of Contents - Desktop */}
-      <Grid
-        size={{ xs: 12, lg: 4 }}
-        sx={{ display: { xs: "none", lg: "block" } }}
-      >
+      <Grid size={{ xs: 12, lg: 4 }} sx={{ display: { xs: "none", lg: "block" } }}>
         <TableOfContents content={content} />
       </Grid>
 
       {/* Mobile ToC - Shown only on small screens */}
-      <Grid
-        size={{ xs: 12 }}
-        sx={{ display: { xs: "block", lg: "none" }, mt: 4, mb: 2 }}
-      >
+      <Grid size={{ xs: 12 }} sx={{ display: { xs: "block", lg: "none" }, mt: 4, mb: 2 }}>
         <Box
           sx={(theme) => ({
             border: `1px solid ${theme.palette.divider}`,

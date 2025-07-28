@@ -24,7 +24,6 @@ import {
   Copy,
   CheckCircle,
   XCircle,
-  Info,
   HelpCircle,
   AlertTriangle,
   Lock,
@@ -134,11 +133,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           >
             <AlertTriangle size={32} color={theme.palette.error.main} />
             <Box>
-              <Typography
-                variant="subtitle1"
-                fontWeight="bold"
-                color={theme.palette.error.main}
-              >
+              <Typography variant="subtitle1" fontWeight="bold" color={theme.palette.error.main}>
                 Certificate Error
               </Typography>
               <Typography variant="body2">
@@ -162,10 +157,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
     (validTo.getTime() - validFrom.getTime()) / (1000 * 60 * 60 * 24)
   );
   const elapsed = totalValidityDays - daysRemaining;
-  const validityPercentage = Math.max(
-    0,
-    Math.min(100, (elapsed / totalValidityDays) * 100)
-  );
+  const validityPercentage = Math.max(0, Math.min(100, (elapsed / totalValidityDays) * 100));
 
   // Log certificate validity calculations
   console.log("Certificate validity calculations:", {
@@ -201,9 +193,9 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
   // Get certificate strength assessment
   const getCertificateStrength = () => {
     // Check if it's a wildcard certificate
-    const hasWildcard = certificate.subjectAlternativeName?.some((name) =>
-      name.includes("*.")
-    );
+    // const hasWildcard = certificate.subjectAlternativeName?.some((name) =>
+    //   name.includes("*.")
+    // );
 
     // Check algorithm strength
     const isStrongAlgorithm =
@@ -233,8 +225,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
       return {
         strength: "Expired",
         color: theme.palette.error.main,
-        description:
-          "This certificate has expired and is no longer considered valid by browsers.",
+        description: "This certificate has expired and is no longer considered valid by browsers.",
       };
     } else if (daysRemaining <= 30) {
       return {
@@ -246,15 +237,13 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
       return {
         strength: "Moderate",
         color: theme.palette.warning.main,
-        description:
-          "This certificate uses an older or less secure signature algorithm.",
+        description: "This certificate uses an older or less secure signature algorithm.",
       };
     } else {
       return {
         strength: "Good",
         color: theme.palette.info.main,
-        description:
-          "This certificate provides adequate security but could be improved.",
+        description: "This certificate provides adequate security but could be improved.",
       };
     }
   };
@@ -262,13 +251,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
   const strength = getCertificateStrength();
 
   // Field label with tooltip helper
-  const FieldLabel = ({
-    label,
-    tooltipText,
-  }: {
-    label: string;
-    tooltipText: string;
-  }) => (
+  const FieldLabel = ({ label, tooltipText }: { label: string; tooltipText: string }) => (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
       <Typography variant="subtitle2" fontWeight="bold">
         {label}
@@ -322,19 +305,9 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           </Box>
 
           <Chip
-            label={
-              daysRemaining > 0 ? `${daysRemaining} days remaining` : "Expired"
-            }
-            color={
-              daysRemaining <= 0
-                ? "error"
-                : daysRemaining <= 30
-                ? "warning"
-                : "success"
-            }
-            icon={
-              daysRemaining > 0 ? <Clock size={16} /> : <XCircle size={16} />
-            }
+            label={daysRemaining > 0 ? `${daysRemaining} days remaining` : "Expired"}
+            color={daysRemaining <= 0 ? "error" : daysRemaining <= 30 ? "warning" : "success"}
+            icon={daysRemaining > 0 ? <Clock size={16} /> : <XCircle size={16} />}
             sx={{ fontWeight: 500 }}
             variant="outlined"
           />
@@ -357,11 +330,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
         >
           <Lock size={32} color={strength.color} />
           <Box>
-            <Typography
-              variant="subtitle1"
-              fontWeight="bold"
-              color={strength.color}
-            >
+            <Typography variant="subtitle1" fontWeight="bold" color={strength.color}>
               {strength.strength} Security
             </Typography>
             <Typography variant="body2">{strength.description}</Typography>
@@ -378,16 +347,14 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                     {fieldExplanations.validity}
                     <br />
                     <br />
-                    Certificate validity starts on this date. Before this date,
-                    the certificate is not considered valid.
+                    Certificate validity starts on this date. Before this date, the certificate is
+                    not considered valid.
                   </Typography>
                 }
                 arrow
                 placement="top"
               >
-                <Box
-                  sx={{ display: "flex", alignItems: "center", cursor: "help" }}
-                >
+                <Box sx={{ display: "flex", alignItems: "center", cursor: "help" }}>
                   <Calendar
                     size={16}
                     style={{ verticalAlign: "text-bottom", marginRight: "4px" }}
@@ -405,16 +372,14 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                     {fieldExplanations.validity}
                     <br />
                     <br />
-                    Certificate expiration date. After this date, browsers will
-                    show security warnings or block access.
+                    Certificate expiration date. After this date, browsers will show security
+                    warnings or block access.
                   </Typography>
                 }
                 arrow
                 placement="top"
               >
-                <Box
-                  sx={{ display: "flex", alignItems: "center", cursor: "help" }}
-                >
+                <Box sx={{ display: "flex", alignItems: "center", cursor: "help" }}>
                   <Calendar
                     size={16}
                     style={{ verticalAlign: "text-bottom", marginRight: "4px" }}
@@ -455,13 +420,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 color: statusColor,
                 border: `1px solid ${alpha(statusColor, 0.3)}`,
               }}
-              icon={
-                daysRemaining > 0 ? (
-                  <CheckCircle size={12} />
-                ) : (
-                  <XCircle size={12} />
-                )
-              }
+              icon={daysRemaining > 0 ? <CheckCircle size={12} /> : <XCircle size={12} />}
             />
           </Box>
         </Box>
@@ -471,44 +430,27 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
         {/* Certificate details grid with tooltips */}
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FieldLabel
-              label="Common Name (CN)"
-              tooltipText={fieldExplanations.commonName}
-            />
+            <FieldLabel label="Common Name (CN)" tooltipText={fieldExplanations.commonName} />
             <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
-              <Typography
-                variant="body2"
-                fontFamily="monospace"
-                sx={{ flex: 1 }}
-              >
+              <Typography variant="body2" fontFamily="monospace" sx={{ flex: 1 }}>
                 {certificate.subject.CN}
               </Typography>
-              <Tooltip
-                title={copiedField === "cn" ? "Copied!" : "Copy to clipboard"}
-              >
+              <Tooltip title={copiedField === "cn" ? "Copied!" : "Copy to clipboard"}>
                 <IconButton
                   size="small"
                   onClick={() => copyToClipboard(certificate.subject.CN, "cn")}
                   sx={{
-                    color:
-                      copiedField === "cn" ? "success.main" : "action.active",
+                    color: copiedField === "cn" ? "success.main" : "action.active",
                   }}
                 >
-                  {copiedField === "cn" ? (
-                    <CheckCircle size={16} />
-                  ) : (
-                    <Copy size={16} />
-                  )}
+                  {copiedField === "cn" ? <CheckCircle size={16} /> : <Copy size={16} />}
                 </IconButton>
               </Tooltip>
             </Box>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FieldLabel
-              label="Organization (O)"
-              tooltipText={fieldExplanations.organization}
-            />
+            <FieldLabel label="Organization (O)" tooltipText={fieldExplanations.organization} />
             <Typography variant="body2" fontFamily="monospace">
               {formatFieldValue(certificate.subject.O)}
             </Typography>
@@ -523,10 +465,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FieldLabel
-              label="Serial Number"
-              tooltipText={fieldExplanations.serialNumber}
-            />
+            <FieldLabel label="Serial Number" tooltipText={fieldExplanations.serialNumber} />
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 variant="body2"
@@ -540,28 +479,15 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 {certificate.serialNumber || "Not available"}
               </Typography>
               {certificate.serialNumber && (
-                <Tooltip
-                  title={
-                    copiedField === "serial" ? "Copied!" : "Copy to clipboard"
-                  }
-                >
+                <Tooltip title={copiedField === "serial" ? "Copied!" : "Copy to clipboard"}>
                   <IconButton
                     size="small"
-                    onClick={() =>
-                      copyToClipboard(certificate.serialNumber || "", "serial")
-                    }
+                    onClick={() => copyToClipboard(certificate.serialNumber || "", "serial")}
                     sx={{
-                      color:
-                        copiedField === "serial"
-                          ? "success.main"
-                          : "action.active",
+                      color: copiedField === "serial" ? "success.main" : "action.active",
                     }}
                   >
-                    {copiedField === "serial" ? (
-                      <CheckCircle size={16} />
-                    ) : (
-                      <Copy size={16} />
-                    )}
+                    {copiedField === "serial" ? <CheckCircle size={16} /> : <Copy size={16} />}
                   </IconButton>
                 </Tooltip>
               )}
@@ -584,21 +510,14 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
               arrow
               placement="top"
             >
-              <Typography
-                variant="body2"
-                fontFamily="monospace"
-                sx={{ cursor: "help" }}
-              >
+              <Typography variant="body2" fontFamily="monospace" sx={{ cursor: "help" }}>
                 {certificate.signatureAlgorithm || "Not available"}
               </Typography>
             </Tooltip>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
-            <FieldLabel
-              label="Fingerprint"
-              tooltipText={fieldExplanations.fingerprint}
-            />
+            <FieldLabel label="Fingerprint" tooltipText={fieldExplanations.fingerprint} />
             <Typography
               variant="body2"
               fontFamily="monospace"
@@ -611,54 +530,46 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
             </Typography>
           </Grid>
 
-          {certificate.subjectAlternativeName &&
-            certificate.subjectAlternativeName.length > 0 && (
-              <Grid size={{ xs: 12 }}>
-                <FieldLabel
-                  label="Subject Alternative Names"
-                  tooltipText={fieldExplanations.subjectAltNames}
-                />
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                  {certificate.subjectAlternativeName.map((san, index) => (
-                    <Tooltip
-                      key={index}
-                      title={
-                        <Typography variant="body2" sx={{ p: 1 }}>
-                          This is an additional domain secured by this
-                          certificate. Modern browsers check these names when
-                          validating certificates.
-                        </Typography>
-                      }
-                      arrow
-                    >
-                      <Chip
-                        label={san.replace("DNS:", "")}
-                        size="small"
-                        sx={{
-                          backgroundColor: alpha(
-                            theme.palette.primary.main,
-                            0.1
-                          ),
-                          borderRadius: 1,
-                          fontFamily: "monospace",
-                          fontSize: "0.75rem",
-                          cursor: "help",
-                        }}
-                      />
-                    </Tooltip>
-                  ))}
-                </Box>
-              </Grid>
-            )}
+          {certificate.subjectAlternativeName && certificate.subjectAlternativeName.length > 0 && (
+            <Grid size={{ xs: 12 }}>
+              <FieldLabel
+                label="Subject Alternative Names"
+                tooltipText={fieldExplanations.subjectAltNames}
+              />
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+                {certificate.subjectAlternativeName.map((san, index) => (
+                  <Tooltip
+                    key={index}
+                    title={
+                      <Typography variant="body2" sx={{ p: 1 }}>
+                        This is an additional domain secured by this certificate. Modern browsers
+                        check these names when validating certificates.
+                      </Typography>
+                    }
+                    arrow
+                  >
+                    <Chip
+                      label={san.replace("DNS:", "")}
+                      size="small"
+                      sx={{
+                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                        borderRadius: 1,
+                        fontFamily: "monospace",
+                        fontSize: "0.75rem",
+                        cursor: "help",
+                      }}
+                    />
+                  </Tooltip>
+                ))}
+              </Box>
+            </Grid>
+          )}
         </Grid>
 
         {certificate.keyUsage && certificate.keyUsage.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
-            <FieldLabel
-              label="Key Usage"
-              tooltipText={fieldExplanations.keyUsage}
-            />
+            <FieldLabel label="Key Usage" tooltipText={fieldExplanations.keyUsage} />
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
               {certificate.keyUsage.map((usage, index) => (
                 <Tooltip
@@ -668,8 +579,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                       {usage === "Digital Signature"
                         ? "Allows the certificate to be used for authenticating documents or messages."
                         : usage === "Key Encipherment"
-                        ? "Allows the certificate to be used for encrypting symmetric keys."
-                        : `This usage restricts what the certificate can be used for.`}
+                          ? "Allows the certificate to be used for encrypting symmetric keys."
+                          : `This usage restricts what the certificate can be used for.`}
                     </Typography>
                   }
                   arrow
@@ -686,39 +597,38 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           </>
         )}
 
-        {certificate.extendedKeyUsage &&
-          certificate.extendedKeyUsage.length > 0 && (
-            <Box sx={{ mt: 2 }}>
-              <FieldLabel
-                label="Extended Key Usage"
-                tooltipText={fieldExplanations.extendedKeyUsage}
-              />
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                {certificate.extendedKeyUsage.map((usage, index) => (
-                  <Tooltip
-                    key={index}
-                    title={
-                      <Typography variant="body2" sx={{ p: 1 }}>
-                        {usage === "Server Authentication"
-                          ? "This certificate can be used to identify web servers (websites)."
-                          : usage === "Client Authentication"
+        {certificate.extendedKeyUsage && certificate.extendedKeyUsage.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            <FieldLabel
+              label="Extended Key Usage"
+              tooltipText={fieldExplanations.extendedKeyUsage}
+            />
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+              {certificate.extendedKeyUsage.map((usage, index) => (
+                <Tooltip
+                  key={index}
+                  title={
+                    <Typography variant="body2" sx={{ p: 1 }}>
+                      {usage === "Server Authentication"
+                        ? "This certificate can be used to identify web servers (websites)."
+                        : usage === "Client Authentication"
                           ? "This certificate can be used to identify clients to servers."
                           : `Specifies a specific purpose for which this certificate can be used.`}
-                      </Typography>
-                    }
-                    arrow
-                  >
-                    <Chip
-                      label={usage}
-                      size="small"
-                      variant="outlined"
-                      sx={{ fontSize: "0.75rem", cursor: "help" }}
-                    />
-                  </Tooltip>
-                ))}
-              </Box>
+                    </Typography>
+                  }
+                  arrow
+                >
+                  <Chip
+                    label={usage}
+                    size="small"
+                    variant="outlined"
+                    sx={{ fontSize: "0.75rem", cursor: "help" }}
+                  />
+                </Tooltip>
+              ))}
             </Box>
-          )}
+          </Box>
+        )}
 
         <Divider sx={{ my: 2 }} />
 
@@ -741,15 +651,11 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 p: 2,
                 borderRadius: 2,
                 bgcolor: alpha(
-                  daysRemaining <= 30
-                    ? theme.palette.warning.main
-                    : theme.palette.success.main,
+                  daysRemaining <= 30 ? theme.palette.warning.main : theme.palette.success.main,
                   0.05
                 ),
                 border: `1px solid ${alpha(
-                  daysRemaining <= 30
-                    ? theme.palette.warning.main
-                    : theme.palette.success.main,
+                  daysRemaining <= 30 ? theme.palette.warning.main : theme.palette.success.main,
                   0.2
                 )}`,
               }}
@@ -761,8 +667,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 {daysRemaining <= 0
                   ? "Your certificate has expired. You need to renew it immediately to restore secure connections."
                   : daysRemaining <= 30
-                  ? `Your certificate will expire in ${daysRemaining} days. Begin the renewal process now to ensure uninterrupted service.`
-                  : `Your certificate is valid for another ${daysRemaining} days. Set a reminder to renew it before expiration.`}
+                    ? `Your certificate will expire in ${daysRemaining} days. Begin the renewal process now to ensure uninterrupted service.`
+                    : `Your certificate is valid for another ${daysRemaining} days. Set a reminder to renew it before expiration.`}
               </Typography>
             </Box>
 
@@ -802,10 +708,8 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                     Domain Coverage
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 0.5 }}>
-                    This certificate covers{" "}
-                    {certificate.subjectAlternativeName.length} domain
-                    {certificate.subjectAlternativeName.length !== 1 ? "s" : ""}
-                    .
+                    This certificate covers {certificate.subjectAlternativeName.length} domain
+                    {certificate.subjectAlternativeName.length !== 1 ? "s" : ""}.
                     {certificate.subjectAlternativeName.length === 1
                       ? " Consider using a certificate that also covers the 'www' subdomain if applicable."
                       : " Multi-domain certificates provide good flexibility, but ensure all critical subdomains are included."}

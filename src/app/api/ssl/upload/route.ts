@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SSLCertificateResponse } from "@/app/types/ssl";
 import * as asn1js from "asn1js";
 import * as pkijs from "pkijs";
-import { arrayBufferToString, fromBase64, stringToArrayBuffer } from "pvutils";
+import { fromBase64, stringToArrayBuffer } from "pvutils";
 import { secureLogger, sanitizeHeaders } from "../../utils/secure-logger";
 import { sanitizeFilename } from "../../utils/validators";
 
@@ -59,7 +59,7 @@ function parseCertificate(pemString: string) {
     let certificateBuffer;
     try {
       certificateBuffer = stringToArrayBuffer(fromBase64(b64Encoded));
-    } catch (e) {
+    } catch {
       throw new Error("Failed to decode certificate Base64 data");
     }
 
@@ -67,7 +67,7 @@ function parseCertificate(pemString: string) {
     let asn1;
     try {
       asn1 = asn1js.fromBER(certificateBuffer);
-    } catch (e) {
+    } catch {
       throw new Error("Failed to parse ASN.1 structure");
     }
 
@@ -79,7 +79,7 @@ function parseCertificate(pemString: string) {
     let certificate;
     try {
       certificate = new pkijs.Certificate({ schema: asn1.result });
-    } catch (e) {
+    } catch {
       throw new Error("Invalid certificate structure");
     }
 
@@ -132,9 +132,7 @@ function parseCertificateDetails(certificate: pkijs.Certificate) {
 
   // Calculate days remaining
   const now = new Date();
-  const daysRemaining = Math.floor(
-    (validTo.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const daysRemaining = Math.floor((validTo.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
   // Extract serial number
   const serialNumber = certificate.serialNumber.valueBlock.toString();
@@ -144,7 +142,7 @@ function parseCertificateDetails(certificate: pkijs.Certificate) {
   const signatureAlgorithmName = getAlgorithmName(signatureAlgorithm);
 
   // Extract fingerprint
-  const fingerprint = generateFingerprint(certificate);
+  const fingerprint = generateFingerprint();
 
   // Process extensions
   const extensions = processExtensions(certificate);
@@ -217,7 +215,7 @@ function getAlgorithmName(oid: string): string {
 /**
  * Generate a fingerprint hash for the certificate
  */
-function generateFingerprint(certificate: pkijs.Certificate): string {
+function generateFingerprint(): string {
   // For simplicity, we'll generate a random fingerprint
   // In a real implementation, you'd hash the certificate data
   return Array.from({ length: 20 }, () =>
@@ -300,9 +298,9 @@ function processExtensions(certificate: pkijs.Certificate) {
           "1.3.6.1.5.5.7.3.9": "OCSP Signing",
         };
 
-        const eku = extension.parsedValue;
+        const eku = extension.parsedValue as { keyPurposes: string[] };
         for (const ekuOid of eku.keyPurposes) {
-          const usage = extKeyUsageOIDs[ekuOid] || ekuOid;
+          const usage = extKeyUsageOIDs[ekuOid as keyof typeof extKeyUsageOIDs] || ekuOid;
           result.extendedKeyUsage.push(usage);
         }
       } catch (e) {
@@ -323,10 +321,10 @@ export async function POST(request: NextRequest) {
     // Parse multipart form data
     const formData = await request.formData();
     const certificateFile = formData.get("certificate") as File | null;
-    const privateKeyFile = formData.get("privateKey") as File | null;
+    // const privateKeyFile = formData.get("privateKey") as File | null;
 
     // Passphrase is highly sensitive - don't log it even in redacted form
-    const hasPassphrase = formData.has("passphrase");
+    // const hasPassphrase = formData.has("passphrase");
 
     // Validate certificate file existence
     if (!certificateFile) {
@@ -370,10 +368,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate MIME type (less reliable, but still a good check)
-    if (
-      certificateFile.type &&
-      !ALLOWED_MIME_TYPES.includes(certificateFile.type.toLowerCase())
-    ) {
+    if (certificateFile.type && !ALLOWED_MIME_TYPES.includes(certificateFile.type.toLowerCase())) {
       secureLogger.warn("Invalid certificate mime type", {
         type: certificateFile.type,
       });
@@ -413,9 +408,7 @@ export async function POST(request: NextRequest) {
       certificateContent.includes("javascript:") ||
       certificateContent.includes("data:")
     ) {
-      secureLogger.error(
-        "Potentially malicious content detected in certificate"
-      );
+      secureLogger.error("Potentially malicious content detected in certificate");
       return NextResponse.json(
         {
           success: false,
@@ -432,10 +425,7 @@ export async function POST(request: NextRequest) {
 
       // Use a simple timeout wrapper to prevent long-running operations
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(
-          () => reject(new Error("Certificate parsing timed out")),
-          5000
-        );
+        setTimeout(() => reject(new Error("Certificate parsing timed out")), 5000);
       });
 
       // Race the parsing against the timeout

@@ -25,7 +25,7 @@
 
 //     // For Cloudflare environment
 //     const env = process.env as unknown as CloudflareEnv;
-    
+
 //     // Try KV first
 //     if (env.BLOG_POSTS) {
 //       const postsData = await env.BLOG_POSTS.get('posts', 'json') as BlogPostMetadata[];
@@ -34,12 +34,12 @@
 //         return postsData as BlogPostMetadata[];
 //       }
 //     }
-    
+
 //     // Fallback to Assets (static JSON)
 //     const postsData = await fetch('/blog-data/posts.json', {
 //       headers: { 'Accept': 'application/json' }
 //     }).then(res => res.json());
-    
+
 //     postsCache = postsData as BlogPostMetadata[];
 //     return postsData as BlogPostMetadata[];
 //   } catch (error) {
@@ -68,14 +68,14 @@
 //         }
 //         return res.json();
 //       });
-      
+
 //       postCache.set(slug, post as BlogPost);
 //       return post as BlogPost;
 //     }
 
 //     // For Cloudflare environment
 //     const env = process.env as unknown as CloudflareEnv;
-    
+
 //     // Try KV first
 //     if (env.BLOG_POSTS) {
 //       const post = await env.BLOG_POSTS.get(`post:${slug}`, 'json') as BlogPost;
@@ -84,7 +84,7 @@
 //         return post as BlogPost;
 //       }
 //     }
-    
+
 //     // Fallback to Assets (static JSON)
 //     const post = await fetch(`/blog-data/${slug}.json`, {
 //       headers: { 'Accept': 'application/json' }
@@ -94,7 +94,7 @@
 //       }
 //       return res.json();
 //     });
-    
+
 //     postCache.set(slug, post);
 //     return post;
 //   } catch (error) {
@@ -111,12 +111,12 @@
 // export async function getPostsByTags(tags: string[]): Promise<BlogPostMetadata[]> {
 //   try {
 //     const allPosts = await getAllPosts();
-    
+
 //     if (!tags || tags.length === 0) {
 //       return allPosts;
 //     }
-    
-//     return allPosts.filter(post => 
+
+//     return allPosts.filter(post =>
 //       post.tags && post.tags.some(tag => tags.includes(tag))
 //     );
 //   } catch (error) {
@@ -145,7 +145,7 @@
 
 //     // For Cloudflare environment
 //     const env = process.env as unknown as CloudflareEnv;
-    
+
 //     // Try KV first
 //     if (env.BLOG_POSTS) {
 //       const tagsData = await env.BLOG_POSTS.get('tags', 'json') as Record<string, string[]>;
@@ -154,12 +154,12 @@
 //         return tagsCache;
 //       }
 //     }
-    
+
 //     // Fallback to Assets (static JSON)
 //     const tagsData = await fetch('/blog-data/tags.json', {
 //       headers: { 'Accept': 'application/json' }
 //     }).then(res => res.json());
-    
+
 //     tagsCache = Object.keys(tagsData).sort();
 //     return tagsCache;
 //   } catch (error) {
@@ -176,10 +176,10 @@
 // export async function getFeaturedPosts(limit?: number): Promise<BlogPostMetadata[]> {
 //   try {
 //     const allPosts = await getAllPosts();
-    
+
 //     // Filter featured posts
 //     const featuredPosts = allPosts.filter(post => post.featured);
-    
+
 //     // Limit the number of posts if specified
 //     return limit ? featuredPosts.slice(0, limit) : featuredPosts;
 //   } catch (error) {
@@ -195,42 +195,42 @@
 //  * @returns Array of related posts sorted by matching tag count and date
 //  */
 // export async function getRelatedPosts(
-//   currentSlug: string, 
+//   currentSlug: string,
 //   limit: number = 3
 // ): Promise<BlogPostMetadata[]> {
 //   try {
 //     // Get current post to get its tags
 //     const currentPost = await getPostBySlug(currentSlug);
-    
+
 //     // Get all posts
 //     const allPosts = await getAllPosts();
-    
+
 //     // Filter out the current post and posts without tags
-//     const candidates = allPosts.filter(post => 
-//       post.slug !== currentSlug && 
-//       post.tags && 
+//     const candidates = allPosts.filter(post =>
+//       post.slug !== currentSlug &&
+//       post.tags &&
 //       post.tags.length > 0
 //     );
-    
+
 //     // If no candidates or current post has no tags, return most recent posts
 //     if (candidates.length === 0 || !currentPost.tags || currentPost.tags.length === 0) {
 //       return allPosts
 //         .filter(post => post.slug !== currentSlug)
 //         .slice(0, limit);
 //     }
-    
+
 //     // Calculate matching tag count for each post
 //     const scoredPosts = candidates.map(post => {
-//       const matchingTags = post.tags!.filter(tag => 
+//       const matchingTags = post.tags!.filter(tag =>
 //         currentPost.tags!.includes(tag)
 //       );
-      
+
 //       return {
 //         post,
 //         score: matchingTags.length
 //       };
 //     });
-    
+
 //     // Sort by matching tag count (desc) and then by date (newer first)
 //     const relatedPosts = scoredPosts
 //       .sort((a, b) => {
@@ -238,13 +238,13 @@
 //         if (b.score !== a.score) {
 //           return b.score - a.score;
 //         }
-        
+
 //         // Then sort by date if tag scores are equal
 //         return new Date(b.post.date).getTime() - new Date(a.post.date).getTime();
 //       })
 //       .map(item => item.post)
 //       .slice(0, limit);
-    
+
 //     return relatedPosts;
 //   } catch (error) {
 //     console.error('Error getting related posts:', error);

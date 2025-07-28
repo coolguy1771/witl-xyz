@@ -1,8 +1,8 @@
-import { Variants } from 'framer-motion';
+import { Variants } from "framer-motion";
 
 /**
  * Animation variants for use with Framer Motion
- * 
+ *
  * This file contains reusable animation presets with carefully tuned easing curves
  * for smooth, professional animations throughout the site. Each animation is
  * optimized for specific UI elements and interaction patterns.
@@ -13,26 +13,26 @@ import { Variants } from 'framer-motion';
  * Best used for: page transitions, content appearing on scroll, modal dialogs
  */
 export const fadeIn: Variants = {
-  initial: { 
-    opacity: 0, 
-    y: 15 
+  initial: {
+    opacity: 0,
+    y: 15,
   },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.1, 0.25, 1] // Smooth ease-out curve
-    }
+      ease: [0.25, 0.1, 0.25, 1], // Smooth ease-out curve
+    },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     y: -10,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 0.2, 1] // Material Design standard easing
-    }
-  }
+      ease: [0.4, 0, 0.2, 1], // Material Design standard easing
+    },
+  },
 };
 
 /**
@@ -46,9 +46,9 @@ export const staggerContainer: Variants = {
     transition: {
       staggerChildren: 0.1,
       delayChildren: 0.05,
-      ease: [0.4, 0, 0.2, 1] // Material Design standard easing
-    }
-  }
+      ease: [0.4, 0, 0.2, 1], // Material Design standard easing
+    },
+  },
 };
 
 /**
@@ -57,18 +57,18 @@ export const staggerContainer: Variants = {
  * Pairs well with slideInFromRight for creating balanced entry effects
  */
 export const slideInFromLeft: Variants = {
-  initial: { 
-    x: -30, 
-    opacity: 0 
+  initial: {
+    x: -30,
+    opacity: 0,
   },
-  animate: { 
-    x: 0, 
+  animate: {
+    x: 0,
     opacity: 1,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1]
-    }
-  }
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
 };
 
 /**
@@ -77,18 +77,18 @@ export const slideInFromLeft: Variants = {
  * Complements slideInFromLeft for creating balanced entry effects
  */
 export const slideInFromRight: Variants = {
-  initial: { 
-    x: 30, 
-    opacity: 0 
+  initial: {
+    x: 30,
+    opacity: 0,
   },
-  animate: { 
-    x: 0, 
+  animate: {
+    x: 0,
     opacity: 1,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1]
-    }
-  }
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
 };
 
 /**
@@ -97,20 +97,20 @@ export const slideInFromRight: Variants = {
  * Best used for: cards, UI elements, images, or any container that should grow into view
  */
 export const scaleUp: Variants = {
-  initial: { 
-    scale: 0.95, 
+  initial: {
+    scale: 0.95,
     opacity: 0,
-    y: 10 
+    y: 10,
   },
-  animate: { 
-    scale: 1, 
+  animate: {
+    scale: 1,
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1]
-    }
-  }
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
 };
 
 /**
@@ -119,18 +119,18 @@ export const scaleUp: Variants = {
  * Best used for: top navigation bars, app headers, fixed position UI elements
  */
 export const navAnimation: Variants = {
-  initial: { 
-    y: -20, 
-    opacity: 0 
+  initial: {
+    y: -20,
+    opacity: 0,
   },
-  animate: { 
-    y: 0, 
+  animate: {
+    y: 0,
     opacity: 1,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 0.2, 1]
-    }
-  }
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
 };
 
 /**
@@ -142,23 +142,23 @@ export const navAnimation: Variants = {
 export const popIn: Variants = {
   initial: {
     scale: 0.9,
-    opacity: 0
+    opacity: 0,
   },
   animate: {
     scale: 1,
     opacity: 1,
     transition: {
       duration: 0.4,
-      ease: [0.34, 1.56, 0.64, 1] // Custom spring-like easing
-    }
+      ease: [0.34, 1.56, 0.64, 1], // Custom spring-like easing
+    },
   },
   hover: {
     scale: 1.03,
     transition: {
       duration: 0.2,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 /**
@@ -168,17 +168,17 @@ export const popIn: Variants = {
  * Note: Apply this to elements with the whileHover prop in Framer Motion
  */
 export const cardHover: Variants = {
-  initial: { 
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)" 
+  initial: {
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
   },
-  hover: { 
+  hover: {
     y: -5,
     boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)",
     transition: {
       duration: 0.3,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 /**
@@ -189,14 +189,14 @@ export const cardHover: Variants = {
 export const revealFromBottom: Variants = {
   initial: {
     opacity: 0,
-    y: 50
+    y: 50,
   },
   animate: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1]
-    }
-  }
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
 };
