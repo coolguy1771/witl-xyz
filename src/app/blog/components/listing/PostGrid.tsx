@@ -78,7 +78,7 @@ function BlogCard({ post, index }: BlogCardProps) {
       transition: {
         delay: i * 0.1,
         duration: 0.5,
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
       },
     }),
@@ -95,7 +95,7 @@ function BlogCard({ post, index }: BlogCardProps) {
       whileHover={{
         scale: 1.03,
         boxShadow: theme.shadows[10],
-        transition: { duration: 0.2, type: "spring", stiffness: 400 },
+        transition: { duration: 0.2, type: "spring" as const, stiffness: 400 },
       }}
       whileTap={{ scale: 0.98 }}
     >
