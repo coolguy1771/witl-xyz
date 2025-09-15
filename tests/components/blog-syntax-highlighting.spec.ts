@@ -25,7 +25,7 @@ test.describe("Blog Post Syntax Highlighting", () => {
 
       // Check that the code block has copy button
       const copyButton = await codeBlock.locator("button.code-copy-button");
-      await expect(copyButton).toBeVisible({ visible: "hover" });
+      await expect(copyButton).toBeVisible();
 
       // Test the copy button functionality by clicking it
       await copyButton.click();
