@@ -65,7 +65,7 @@
   "devDependencies": {
     "@opennextjs/cloudflare": "1.5.1",
     "@playwright/test": "1.54.1",
-    "@tailwindcss/postcss": "4.1.11",
+    "@tailwindcss/postcss": "4.1.13",
     "@tailwindcss/typography": "0.5.16",
     "@types/node": "24.0.13",
     "@types/react": "19.1.12",
@@ -73,7 +73,7 @@
     "eslint": "9.31.0",
     "eslint-config-next": "15.5.3",
     "postcss": "8.5.6",
-    "tailwindcss": "4.1.11",
+    "tailwindcss": "4.1.13",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
     "wrangler": "4.24.3",
