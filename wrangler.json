@@ -77,18 +77,18 @@
   /**
    * KV Namespaces for distributed rate limiting and caching
    */
-  "kv_namespaces": [
-    {
-      "binding": "RATE_LIMIT_KV",
-      "id": "your-rate-limit-kv-namespace-id",
-      "preview_id": "your-preview-rate-limit-kv-namespace-id"
-    },
-    {
-      "binding": "CACHE_KV",
-      "id": "your-cache-kv-namespace-id", 
-      "preview_id": "your-preview-cache-kv-namespace-id"
-    }
-  ],
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "RATE_LIMIT_KV",
+  //     "id": "your-rate-limit-kv-namespace-id",
+  //     "preview_id": "your-preview-rate-limit-kv-namespace-id"
+  //   },
+  //   {
+  //     "binding": "CACHE_KV",
+  //     "id": "your-cache-kv-namespace-id", 
+  //     "preview_id": "your-preview-cache-kv-namespace-id"
+  //   }
+  // ],
 
   /**
    * Environment Variables
