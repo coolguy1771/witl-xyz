@@ -63,7 +63,7 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "1.9.1",
+    "@opennextjs/cloudflare": "1.9.2",
     "@playwright/test": "1.56.0",
     "@tailwindcss/postcss": "4.1.14",
     "@tailwindcss/typography": "0.5.19",
