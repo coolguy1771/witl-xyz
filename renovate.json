@@ -13,7 +13,7 @@
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
   "rollbackPrs": true,
-  "enabledManagers": ["bun", "github-actions", "regex"],
+  "enabledManagers": ["bun", "github-actions", "custom.regex"],
   "ignorePaths": ["package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
   "packageRules": [
     {
@@ -57,12 +57,12 @@
     {
       "description": "Group MUI packages",
       "matchManagers": ["bun"],
-      "matchPackagePatterns": ["^@mui/"],
+      "matchPackageNames": ["@mui/*"],
       "groupName": "mui"
     },
     {
       "description": "Keep Bun runtime pins aligned",
-      "matchManagers": ["regex"],
+      "matchManagers": ["custom.regex"],
       "matchDepNames": ["oven-sh/bun"],
       "groupName": "bun runtime",
       "automerge": true,

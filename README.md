@@ -19,8 +19,7 @@ on Cloudflare Workers via OpenNext.
 
 ### Prerequisites
 
-- Node.js 24+ (via Bun)
-- [Bun](https://bun.sh) 1.3.9+
+- Either Node.js 24+ or [Bun](https://bun.sh) 1.3.9+ (Bun is a standalone JavaScript runtime and package manager that can be used instead of Node.js)
 
 ### Installation
 

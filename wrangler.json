@@ -25,6 +25,11 @@
     }
   },
   "placement": { "mode": "smart" },
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_INC_CACHE_KV"
+    }
+  ],
   "vars": {
     "ENVIRONMENT": "production",
     "NODE_ENV": "production",

@@ -22,7 +22,7 @@ export const AboutSection: React.FC = () => {
       variants={fadeIn}
     >
       <Container maxWidth="lg">
-        <Box sx={{ maxWidth: (theme) => theme.breakpoints.values.md, mx: "auto", width: "100%" }}>
+        <Box sx={{ maxWidth: theme.breakpoints.values.md, mx: "auto", width: "100%" }}>
           {/* Terminal label above heading */}
           <MotionBox
             variants={slideInFromLeft}
@@ -122,7 +122,7 @@ export const AboutSection: React.FC = () => {
                 sx={{
                   fontFamily: "'Geist Mono', monospace",
                   fontWeight: 700,
-                  color: isDark ? "#f59e0b" : "#d97706",
+                  color: isDark ? theme.palette.warning.light : theme.palette.warning.main,
                   fontSize: "0.95em",
                 }}
               >

@@ -38,15 +38,21 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     return postCache.get(realSlug)!;
   }
 
-  const fullPath = resolvePostFilePath(slug);
+  const fullPath = resolvePostFilePath(realSlug, true);
 
-  // Check if file exists
-  if (!existsSync(fullPath)) {
-    throw new Error(`Post not found: ${realSlug}`);
+  let fileContents: string;
+  try {
+    fileContents = await fs.readFile(fullPath, "utf8");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as NodeJS.ErrnoException).code === "ENOENT"
+    ) {
+      throw new Error(`Post not found: ${realSlug}`);
+    }
+    throw error;
   }
-
-  // Read file
-  const fileContents = await fs.readFile(fullPath, "utf8");
 
   // Parse frontmatter
   const { data, content } = matter(fileContents);

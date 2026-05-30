@@ -1,0 +1,14 @@
+export { AboutSection } from "./About";
+export { BlogPostCard } from "./BlogPostCard";
+export { CertificationsSection } from "./Certifications";
+export { ContactSection } from "./Contact";
+export { Footer } from "./Footer";
+export { HeroSection } from "./Hero";
+export { default as Navbar } from "./Navbar";
+export { ProjectsSection } from "./Projects";
+export { ProjectCard } from "./ProjectCard";
+export { SEO } from "./SEO";
+export { SkillsGrid } from "./SkillsGrid";
+export { TechBadge } from "./TechBadge";
+export { ThemeRegistry } from "./ThemeRegistry";
+export { default as VisitorDashboard } from "./VisitorDashboard";

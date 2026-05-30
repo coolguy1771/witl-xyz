@@ -82,23 +82,26 @@ Playwright E2E tests cover critical user paths. Test files are in `tests/` direc
    - Code quality checks (linting, type checking)
    - Playwright tests across multiple browsers
    - Build validation
-   - NPM security audit
+   - Bun security audit (`bun audit`)
 
 2. **Deployment (`deploy.yml`)**: Automated deployments
    - Staging: Auto-deploys on push to main
    - Production: Manual trigger with approval required
    - Includes cache purging and deployment tracking
 
-3. **Performance Monitoring (`performance.yml`)**: Runs on PRs
-   - Bundle size analysis
-   - Lighthouse CI for Core Web Vitals
-   - Build time tracking
+3. **Release (`release.yml`)**: Tag and manual release builds
 
 4. **Security Scanning (`security.yml`)**: Comprehensive security checks
    - Secret scanning with Trufflehog
-   - NPM vulnerability audit
+   - Bun vulnerability audit (`bun audit --json`)
    - License compliance checking
-   - SAST with Semgrep
+   - SAST with Semgrep (currently commented out)
+
+5. **CodeQL (`codeql.yml`)**: GitHub code scanning
+
+6. **Dependency Review (`dependency-review.yml`)**: PR dependency change review
+
+7. **OpenSSF Scorecard (`scorecards.yml`)**: Supply chain security scoring
 
 ### Required Secrets
 

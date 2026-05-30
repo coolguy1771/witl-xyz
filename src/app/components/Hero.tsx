@@ -219,6 +219,7 @@ export const HeroSection: React.FC = () => {
                         pl: 2,
                         color: getLineColor(currentLine.type),
                         fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                        fontWeight: currentLine.type === "output-highlight" ? 600 : 400,
                       }}
                     >
                       {partialText}

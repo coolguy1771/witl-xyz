@@ -50,8 +50,8 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
     },
     success: {
       main: mode === "dark" ? "#3dd68c" : "#2d8c60",
-      light: "#6ee7a8",
-      dark: "#28b870",
+      light: mode === "dark" ? "#6ee7a8" : "#3aad78",
+      dark: mode === "dark" ? "#28b870" : "#1f6644",
     },
   },
   typography: {

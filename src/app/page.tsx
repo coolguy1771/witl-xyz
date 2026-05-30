@@ -3,13 +3,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { AboutSection } from "./components/About";
-import { CertificationsSection } from "./components/Certifications";
-import { Footer } from "./components/Footer";
-import { ContactSection } from "./components/Contact";
-import { HeroSection } from "./components/Hero";
-import { ProjectsSection } from "./components/Projects";
-import { SkillsGrid } from "./components/SkillsGrid";
+import { AboutSection, CertificationsSection, ContactSection, Footer, HeroSection, ProjectsSection, SkillsGrid } from "./components";
 
 /**
  * Renders the main single-page layout composed of the site's sections and footer.

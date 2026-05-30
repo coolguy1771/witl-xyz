@@ -32,8 +32,8 @@ export function normalizeBlogSlug(slug: string): string {
  * @returns The resolved file system path for the post's markdown file.
  * @throws Error if no matching post file can be found for the normalized slug.
  */
-export function resolvePostFilePath(slug: string): string {
-  const realSlug = normalizeBlogSlug(slug);
+export function resolvePostFilePath(slug: string, alreadyNormalized = false): string {
+  const realSlug = alreadyNormalized ? slug : normalizeBlogSlug(slug);
   let fullPath = getPostPathsBySlug().get(realSlug);
 
   if (!fullPath) {

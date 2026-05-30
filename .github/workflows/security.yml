@@ -61,9 +61,12 @@ jobs:
 
       - name: Check for critical vulnerabilities
         run: |
-          AUDIT_RESULT=$(bun audit --json 2>/dev/null || true)
-          CRITICAL=$(echo "$AUDIT_RESULT" | jq '[.[].[] | select(.severity == "critical")] | length')
-          HIGH=$(echo "$AUDIT_RESULT" | jq '[.[].[] | select(.severity == "high")] | length')
+          AUDIT_RESULT=$(bun audit --json 2>/dev/null || echo "{}")
+          if [ -z "$AUDIT_RESULT" ]; then
+            AUDIT_RESULT="{}"
+          fi
+          CRITICAL=$(echo "$AUDIT_RESULT" | jq '.metadata.vulnerabilities.critical // 0')
+          HIGH=$(echo "$AUDIT_RESULT" | jq '.metadata.vulnerabilities.high // 0')
 
           if [ "$CRITICAL" -gt 0 ]; then
             echo "Found $CRITICAL critical vulnerabilities"

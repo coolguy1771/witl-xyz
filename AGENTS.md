@@ -1,4 +1,4 @@
-## Learned User Preferences
+# Learned User Preferences
 
 - Use Bun for package management, scripts, and CI instead of npm, yarn, or pnpm.
 - Prefer minimal, surgical changes; verify review or audit findings against current code before fixing.

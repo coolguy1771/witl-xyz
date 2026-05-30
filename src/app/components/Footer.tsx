@@ -37,6 +37,7 @@ export const Footer: React.FC = () => {
             <Box>
               <Typography
                 variant="body2"
+                aria-hidden="true"
                 sx={{
                   color: theme.palette.secondary.main,
                   fontFamily: "'Geist Mono', monospace",

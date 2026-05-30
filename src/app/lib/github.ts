@@ -32,7 +32,7 @@ export async function fetchGithubProjects(
         ),
         link: repo.homepage || repo.html_url,
         githubUrl: repo.html_url,
-        stars: repo.stargazers_count,
+        stars: repo.stargazers_count ?? 0,
         updatedAt: repo.updated_at ?? "",
       }));
   } catch (error) {

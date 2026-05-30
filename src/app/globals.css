@@ -216,16 +216,16 @@ td {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: var(--mui-palette-divider);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3dd68c;
+  background: var(--mui-palette-secondary-main);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6ee7a8;
+  background: var(--mui-palette-secondary-light);
 }
 
 /* Terminal cursor blink animation */

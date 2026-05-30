@@ -41,7 +41,6 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
   if (isLoading && !fallbackProjects?.length) {
     return (
       <MotionBox
-        
         sx={{
           py: 12,
           backgroundColor: theme.palette.background.default,
@@ -71,8 +70,6 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
 
   return (
     <MotionBox
-      id="work"
-      
       sx={{
         py: 12,
         backgroundColor: theme.palette.background.default,

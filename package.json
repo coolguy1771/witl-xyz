@@ -13,7 +13,7 @@
     "build:worker": "opennextjs-cloudflare build",
     "dev:worker": "wrangler dev --port 8771",
     "preview:worker": "bun run build:worker && bun run dev:worker",
-    "deploy:worker": "opennextjs-cloudflare build && wrangler deploy",
+    "deploy:worker": "bun run deploy",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
