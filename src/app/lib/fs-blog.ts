@@ -4,14 +4,18 @@
  */
 
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
+import {
+  clearPostPathCache,
+  normalizeBlogSlug,
+  POSTS_DIRECTORY,
+  resolvePostFilePath,
+} from "./blog-path";
 import { remark } from "remark";
 import html from "remark-html";
 import { BlogPost, BlogPostFrontMatter, Heading } from "../types/blog";
 
 // Blog configuration
-const POSTS_DIRECTORY = path.join(process.cwd(), "posts");
 const WORDS_PER_MINUTE = 200;
 const EXCERPT_LENGTH = 150;
 
@@ -24,14 +28,14 @@ const postCache = new Map<string, BlogPost>();
  * @returns The blog post data
  */
 export async function getPostBySlug(slug: string): Promise<BlogPost> {
-  const realSlug = slug.replace(/\.md$/, "");
+  const realSlug = normalizeBlogSlug(slug);
 
   // Return cached post if available
   if (postCache.has(realSlug)) {
     return postCache.get(realSlug)!;
   }
 
-  const fullPath = path.join(POSTS_DIRECTORY, `${realSlug}.md`);
+  const fullPath = resolvePostFilePath(slug);
 
   // Check if file exists
   if (!fs.existsSync(fullPath)) {
@@ -278,4 +282,5 @@ export function extractHeadingsFromContent(content: string): Heading[] {
  */
 export function clearPostCache(): void {
   postCache.clear();
+  clearPostPathCache();
 }

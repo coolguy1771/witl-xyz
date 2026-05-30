@@ -1,13 +1,17 @@
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import path from "path";
 import matter from "gray-matter";
+import {
+  clearPostPathCache,
+  normalizeBlogSlug,
+  POSTS_DIRECTORY,
+  resolvePostFilePath,
+} from "./blog-path";
 import { remark } from "remark";
 import html from "remark-html";
 import { BlogPost, BlogPostFrontMatter, Heading } from "../types/blog";
 
 // Configuration
-const postsDirectory = path.join(process.cwd(), "posts");
 const WORDS_PER_MINUTE = 200;
 const EXCERPT_LENGTH = 150;
 
@@ -21,14 +25,14 @@ const postCache = new Map<string, BlogPost>();
  * @returns The blog post data
  */
 export async function getPostBySlug(slug: string, useCache: boolean = true): Promise<BlogPost> {
-  const realSlug = slug.replace(/\.md$/, "");
+  const realSlug = normalizeBlogSlug(slug);
 
   // Return cached post if available and caching is enabled
   if (useCache && postCache.has(realSlug)) {
     return postCache.get(realSlug)!;
   }
 
-  const fullPath = path.join(postsDirectory, `${realSlug}.md`);
+  const fullPath = resolvePostFilePath(slug);
 
   // Check if file exists
   if (!existsSync(fullPath)) {
@@ -112,7 +116,7 @@ export async function getPostBySlug(slug: string, useCache: boolean = true): Pro
  */
 export async function getPostSlugs(): Promise<string[]> {
   try {
-    const filenames = await fs.readdir(postsDirectory);
+    const filenames = await fs.readdir(POSTS_DIRECTORY);
     return filenames
       .filter((filename) => filename.endsWith(".md"))
       .map((filename) => filename.replace(/\.md$/, ""));
@@ -137,7 +141,7 @@ export async function getAllPosts(useCache: boolean = true): Promise<BlogPost[]>
       try {
         return await getPostBySlug(slug, useCache);
       } catch (error) {
-        console.error(`Error processing post ${slug}:`, error);
+        console.error("Error processing post", slug, error);
         return null;
       }
     });
@@ -174,6 +178,7 @@ export async function getPostsByTags(tags: string[]): Promise<BlogPost[]> {
  */
 export function clearPostCache(): void {
   postCache.clear();
+  clearPostPathCache();
 }
 
 /**
