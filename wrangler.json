@@ -23,7 +23,8 @@
   "placement": { "mode": "smart" },
   "kv_namespaces": [
     {
-      "binding": "NEXT_INC_CACHE_KV"
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "353ed2f9d9aa431e8a0affea838aeb28"
     }
   ],
   "vars": {
