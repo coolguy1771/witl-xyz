@@ -10,7 +10,7 @@
     "deploy": "bun run build:worker && wrangler deploy",
     "preview": "opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "build:worker": "opennextjs-cloudflare build && wrangler deploy --dry-run",
+    "build:worker": "opennextjs-cloudflare build",
     "check:worker": "wrangler deploy --dry-run",
     "dev:worker": "wrangler dev --port 8771",
     "preview:worker": "bun run build:worker && bun run dev:worker",

@@ -3,7 +3,7 @@
   "name": "witl-xyz",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-05-30",
-  "compatibility_flags": ["nodejs_compat_v2"],
+  "compatibility_flags": ["nodejs_compat"],
   "minify": true,
   "assets": {
     "binding": "ASSETS",
