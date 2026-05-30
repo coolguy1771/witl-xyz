@@ -5,12 +5,10 @@ declare namespace Cloudflare {
 	interface Env {
 		ENVIRONMENT: "production";
 		API_RATE_LIMIT: "60";
-		SSL_FETCH_TIMEOUT: "10000";
 		NODE_ENV: "production";
 		LOG_LEVEL: "info";
 		RATE_LIMIT_WINDOW: "60";
 		RATE_LIMIT_MAX_REQUESTS: "20";
-		SSL_RATE_LIMIT_MAX_REQUESTS: "5";
 		ASSETS: Fetcher;
 	}
 }

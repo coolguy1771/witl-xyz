@@ -240,9 +240,12 @@ function EmptyStateCard({
 }
 
 /**
- * Loading state component for VisitorDashboard
+ * Render the full-page loading UI shown while visitor data is being fetched.
  *
- * @returns {JSX.Element} Loading state UI
+ * Displays a centered progress indicator with explanatory text and a grid of skeleton cards
+ * that mirror the dashboard layout.
+ *
+ * @returns A JSX element containing the loading state UI
  */
 function LoadingState() {
   const theme = useTheme();
@@ -260,9 +263,8 @@ function LoadingState() {
     >
       <Container maxWidth="lg">
         <Box
-          textAlign="center"
-          mb={{ xs: 6, md: 8 }}
-          sx={{
+          sx={{ textAlign: "center",
+            mb: { xs: 6, md: 8 },
             animation: "fadeIn 0.5s ease-out",
             "@keyframes fadeIn": {
               "0%": { opacity: 0 },
@@ -317,10 +319,12 @@ function LoadingState() {
 }
 
 /**
- * VisitorDashboard Component
+ * Renders a visitor dashboard showing IP, location, device, network, time, and weather information.
  *
- * @param {Props} props - Component props containing initial visitor data
- * @returns {JSX.Element} The dashboard UI
+ * Displays initial server-provided data immediately, defers fetching enhanced client-side data (including weather) during browser idle time, and supports manual refresh; fetched results are merged into the component state and may update the displayed values.
+ *
+ * @param initialData - Partial visitor data supplied by the server; weather is intentionally fetched client-side
+ * @returns The dashboard UI element
  */
 export default function VisitorDashboard({ initialData }: Props) {
   // State Management
@@ -374,7 +378,6 @@ export default function VisitorDashboard({ initialData }: Props) {
             geo?: object;
             weather?: WeatherData;
           } | null;
-          console.log("Visitor API response:", responseData);
 
           if (typeof responseData === "object" && responseData !== null) {
             // Handle the nested structure from the API
@@ -391,17 +394,12 @@ export default function VisitorDashboard({ initialData }: Props) {
               updatedData.weather = responseData.weather;
             }
 
-            console.log("Processed visitor data:", updatedData);
             setData((prev) => ({ ...prev, ...updatedData }));
-          } else {
-            console.error("Invalid visitor data:", responseData);
           }
           setInitialLoaded(true);
         } catch (err) {
-          if ((err as Error).name === "AbortError") {
-            console.log("Request timed out - using initial data");
-          } else {
-            console.error("Error fetching visitor data:", err);
+          if ((err as Error).name !== "AbortError") {
+            console.error("Failed to load complete visitor data");
             setError("Failed to load complete visitor data. Some information may be missing.");
           }
           // Keep initial data if fetch fails
@@ -500,7 +498,7 @@ export default function VisitorDashboard({ initialData }: Props) {
       }}
     >
       <Container maxWidth="lg">
-        <Box mb={{ xs: 6, md: 8 }}>
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Box
             sx={{
               display: "flex",
@@ -524,7 +522,7 @@ export default function VisitorDashboard({ initialData }: Props) {
               >
                 Your Digital Profile
               </Typography>
-              <Typography variant="h6" color="text.secondary" fontWeight="normal">
+              <Typography variant="h6" color="text.secondary" sx={{ fontWeight: "normal" }}>
                 Analyzing your connection data in real-time
               </Typography>
             </Box>
@@ -616,7 +614,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="IP Address" icon={<Globe size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontFamily="monospace" fontWeight="bold" sx={{ mb: 2 }}>
+                  <Typography variant="h5" sx={{ fontFamily: "monospace", fontWeight: "bold", mb: 2 }}>
                     {data.ip}
                   </Typography>
 
@@ -665,7 +663,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="Your Location" icon={<MapPin size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
+                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
                     {data.city}, {data.countryName || data.country}
                   </Typography>
 
@@ -706,7 +704,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="Time Information" icon={<Clock size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
                     {new Date().toLocaleTimeString("en-US", {
                       timeZone: data.timezone,
                       hour: "2-digit",
@@ -756,7 +754,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                       mb: 2,
                     }}
                   >
-                    <Typography variant="h5" fontWeight="bold">
+                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                       {data.weather.temp}°C
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
@@ -904,9 +902,8 @@ export default function VisitorDashboard({ initialData }: Props) {
         </Grid>
 
         <Box
-          textAlign="center"
-          mt={{ xs: 6, md: 8 }}
-          sx={{
+          sx={{ textAlign: "center",
+            mt: { xs: 6, md: 8 },
             backgroundColor: alpha(theme.palette.primary.main, 0.03),
             borderRadius: 2,
             p: 3,

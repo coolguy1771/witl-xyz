@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getAllTags } from "@/app/lib/fs-blog";
 
+export const revalidate = 3600;
+
 export async function GET() {
   try {
     const tags = await getAllTags();

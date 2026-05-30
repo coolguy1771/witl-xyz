@@ -3,15 +3,20 @@
  * Works in both development and production environments
  */
 
-import fs from "fs";
-import path from "path";
+import { existsSync } from "fs";
+import fs from "fs/promises";
 import matter from "gray-matter";
+import {
+  clearPostPathCache,
+  normalizeBlogSlug,
+  POSTS_DIRECTORY,
+  resolvePostFilePath,
+} from "./blog-path";
 import { remark } from "remark";
 import html from "remark-html";
 import { BlogPost, BlogPostFrontMatter, Heading } from "../types/blog";
 
 // Blog configuration
-const POSTS_DIRECTORY = path.join(process.cwd(), "posts");
 const WORDS_PER_MINUTE = 200;
 const EXCERPT_LENGTH = 150;
 
@@ -19,27 +24,35 @@ const EXCERPT_LENGTH = 150;
 const postCache = new Map<string, BlogPost>();
 
 /**
- * Gets a blog post by its slug
- * @param slug The post slug (without .md extension)
- * @returns The blog post data
+ * Load and build a BlogPost for the given slug, converting Markdown to HTML and deriving metadata.
+ *
+ * @param slug - The post slug (without the `.md` extension); the value will be normalized before lookup.
+ * @returns The assembled `BlogPost` including HTML `content`, `title`, `date`, `excerpt`, `readingTime`, `tags`, `coverImage`, and extracted `headings`.
+ * @throws Error if the post file does not exist, or if required frontmatter fields (`title` or `date`) are missing.
  */
 export async function getPostBySlug(slug: string): Promise<BlogPost> {
-  const realSlug = slug.replace(/\.md$/, "");
+  const realSlug = normalizeBlogSlug(slug);
 
   // Return cached post if available
   if (postCache.has(realSlug)) {
     return postCache.get(realSlug)!;
   }
 
-  const fullPath = path.join(POSTS_DIRECTORY, `${realSlug}.md`);
+  const fullPath = resolvePostFilePath(realSlug, true);
 
-  // Check if file exists
-  if (!fs.existsSync(fullPath)) {
-    throw new Error(`Post not found: ${realSlug}`);
+  let fileContents: string;
+  try {
+    fileContents = await fs.readFile(fullPath, "utf8");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as NodeJS.ErrnoException).code === "ENOENT"
+    ) {
+      throw new Error(`Post not found: ${realSlug}`);
+    }
+    throw error;
   }
-
-  // Read file
-  const fileContents = fs.readFileSync(fullPath, "utf8");
 
   // Parse frontmatter
   const { data, content } = matter(fileContents);
@@ -110,7 +123,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
  * @returns Array of blog posts sorted by date (newest first)
  */
 export async function getAllPosts(): Promise<BlogPost[]> {
-  const slugs = getPostSlugs();
+  const slugs = await getPostSlugs();
   const postsPromises = slugs.map((slug) => getPostBySlug(slug));
   const posts = await Promise.all(postsPromises);
 
@@ -122,13 +135,13 @@ export async function getAllPosts(): Promise<BlogPost[]> {
  * Gets all post slugs
  * @returns Array of post slugs without the .md extension
  */
-export function getPostSlugs(): string[] {
-  if (!fs.existsSync(POSTS_DIRECTORY)) {
+export async function getPostSlugs(): Promise<string[]> {
+  if (!existsSync(POSTS_DIRECTORY)) {
     console.warn(`Posts directory not found: ${POSTS_DIRECTORY}`);
     return [];
   }
 
-  const filenames = fs.readdirSync(POSTS_DIRECTORY);
+  const filenames = await fs.readdir(POSTS_DIRECTORY);
   return filenames
     .filter((filename) => filename.endsWith(".md"))
     .map((filename) => filename.replace(/\.md$/, ""));
@@ -274,8 +287,12 @@ export function extractHeadingsFromContent(content: string): Heading[] {
 }
 
 /**
- * Clears the post cache
+ * Clears the in-memory post cache and the resolved post path cache.
+ *
+ * This removes all cached BlogPost entries and also clears any cached
+ * filesystem path resolutions used to locate post files.
  */
 export function clearPostCache(): void {
   postCache.clear();
+  clearPostPathCache();
 }

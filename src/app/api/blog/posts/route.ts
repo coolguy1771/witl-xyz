@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllPosts, getPostsByTags, getFeaturedPosts } from "@/app/lib/fs-blog";
 
+export const revalidate = 3600;
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

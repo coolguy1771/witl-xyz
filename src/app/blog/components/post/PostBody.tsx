@@ -188,10 +188,11 @@ export function PostBody({ content }: PostBodyProps) {
             },
             "& pre": {
               backgroundColor: theme.palette.mode === "dark" ? "#282a36" : "#f5f5f5",
-              p: 3,
-              pt: 4,
+              p: { xs: 2, sm: 3 },
+              pt: { xs: 3.5, sm: 4 },
               borderRadius: 1,
               overflowX: "auto",
+              maxWidth: "100%",
               boxShadow: theme.shadows[1],
               border: `1px solid ${theme.palette.divider}`,
               position: "relative",
@@ -293,6 +294,9 @@ export function PostBody({ content }: PostBodyProps) {
               width: "100%",
               borderCollapse: "collapse",
               marginBottom: 3,
+              display: "block",
+              overflowX: "auto",
+              WebkitOverflowScrolling: "touch",
             },
             "& th, & td": {
               border: `1px solid ${theme.palette.divider}`,

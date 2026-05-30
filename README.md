@@ -1,12 +1,11 @@
 # Personal Blog and Portfolio
 
-A modern, responsive blog and portfolio website built with Next.js 15, featuring
-dark mode, markdown blog posts, dynamic content, and deployed on cloudflare
-workers
+A modern, responsive blog and portfolio website built with Next.js 16, deployed
+on Cloudflare Workers via OpenNext.
 
 ## Features
 
-- ⚡️ Built with Next.js 15 and TypeScript
+- Built with Next.js 16 and TypeScript
 - 🎨 Dark theme with custom styling
 - 📝 Markdown blog posts with frontmatter
 - 📑 Table of contents with active section highlighting
@@ -14,14 +13,13 @@ workers
 - 🔗 Previous/Next post navigation
 - 📱 Fully responsive design
 - 🎭 Custom fonts (Geist Sans & Geist Mono)
-- 🚀 Fast page loads with static generation
+- Fast page loads with static generation and ISR
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Either Node.js 24+ or [Bun](https://bun.sh) 1.3.9+ (Bun is a standalone JavaScript runtime and package manager that can be used instead of Node.js)
 
 ### Installation
 
@@ -35,13 +33,13 @@ cd witl-xyz
 2. Install dependencies:
 
 ```bash
-npm install
+bun install
 ```
 
 3. Run the development server:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the result.
@@ -140,7 +138,7 @@ The blog functionality works by:
 Simply build and deploy:
 
 ```bash
-npm run deploy
+bun run deploy
 ```
 
 The filesystem access only happens during build time, not in production. Next.js

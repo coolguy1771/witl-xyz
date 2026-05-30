@@ -9,6 +9,12 @@ interface BlogPostCardProps {
   post: BlogPost;
 }
 
+/**
+ * Renders a clickable blog post preview card with title, formatted date, reading time, truncated excerpt, and a "Read more" action.
+ *
+ * @param props.post - Blog post data containing `slug`, `title`, `date`, `readingTime`, and `excerpt`
+ * @returns A Card element linking to `/blog/{post.slug}` that displays the post preview
+ */
 export function BlogPostCard({ post }: BlogPostCardProps) {
   return (
     <motion.div variants={fadeIn} whileHover={{ y: -5 }}>
@@ -110,8 +116,8 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
             >
               <Typography
                 variant="body2"
-                fontWeight="medium"
                 sx={{
+                  fontWeight: 500,
                   transition: (theme) => theme.transitions.create("all"),
                   display: "flex",
                   alignItems: "center",

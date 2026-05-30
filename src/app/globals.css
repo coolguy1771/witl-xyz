@@ -1,3 +1,10 @@
+/* === TAILWIND CSS v4 === */
+@import "lenis/dist/lenis.css";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@config "../../tailwind.config.js";
+@source inline("my-4 p-4 rounded-lg border-l-4 bg-blue-50 dark:bg-blue-900/20 border-blue-500 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500 bg-green-50 dark:bg-green-900/20 border-green-500 bg-gray-50 dark:bg-gray-900/20 border-gray-500 overflow-x-auto text-sm transition-colors");
+
 /* === MUI THEME BASED STYLES === */
 
 /* 
@@ -64,18 +71,25 @@ html, body {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* Scroll margin for anchor links to account for fixed navbar */
 :target {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 80px;
 }
 
 /* Anchor sections */
 section[id],
 div[id],
 h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 80px;
 }
 
 /* Links */
@@ -95,12 +109,23 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
+h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 3.5vw, 1.75rem); }
+h4 { font-size: clamp(1.125rem, 3vw, 1.5rem); }
+h5 { font-size: clamp(1rem, 2.5vw, 1.25rem); }
 h6 { font-size: 1rem; }
+
+@media (max-width: 600px) {
+  pre {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  pre .code-copy-button {
+    opacity: 1 !important;
+  }
+}
 
 /* Paragraphs */
 p {
@@ -206,18 +231,64 @@ td {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--mui-palette-grey-800);
+  background: var(--mui-palette-divider);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--mui-palette-primary-main);
-  border-radius: 5px;
+  background: var(--mui-palette-secondary-main);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--mui-palette-primary-light);
+  background: var(--mui-palette-secondary-light);
 }
+
+/* Terminal cursor blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  background-color: #3dd68c;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor {
+    animation: none;
+  }
+}
+
+/* Terminal prompt prefix */
+.terminal-prompt::before {
+  content: "$ ";
+  color: #3dd68c;
+  font-family: "Geist Mono", monospace;
+  font-weight: 600;
+}
+
+/* Terminal comment style */
+.terminal-comment {
+  color: #94a3b8;
+  font-family: "Geist Mono", monospace;
+  font-size: 0.85em;
+}
+
+.terminal-comment::before {
+  content: "// ";
+}
+
+/* Terminal window dots */
+.terminal-dot-red { background-color: #ff5f57; }
+.terminal-dot-yellow { background-color: #febc2e; }
+.terminal-dot-green { background-color: #28c840; }

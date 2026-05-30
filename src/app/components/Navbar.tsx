@@ -3,11 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import { navAnimation } from "../lib/animations";
+import { AppBar } from "@mui/material";
 import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import {
-  AppBar,
   Container,
   Toolbar,
   Box,
@@ -17,65 +15,87 @@ import {
   useMediaQuery,
   Drawer,
   Button,
-  Slide,
-  useScrollTrigger,
   Fab,
   Tooltip,
   alpha,
   Zoom,
 } from "@mui/material";
 import { useThemeMode } from "./ThemeRegistry";
+import { useLenis } from "lenis/react";
 
-// Hide on scroll functionality
-function HideOnScroll({ children }: { children: React.ReactElement }) {
-  const trigger = useScrollTrigger();
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  );
-}
-
+/**
+ * Top navigation bar component with responsive links, theme toggle, mobile drawer, and a scroll-to-top control.
+ *
+ * The component synchronizes a local `hash` state with window.location.hash, tracks page scroll to adjust elevation and reveal a scroll-to-top FAB, and renders desktop and mobile navigation (including anchor links) with active styling.
+ *
+ * @returns The rendered navbar React element
+ */
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const [hash, setHash] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const lenis = useLenis();
 
-  // Handle scroll effect for navbar
   useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 60) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
     };
-  }, []);
+  }, [pathname]);
+
+  useLenis((instance) => {
+    setScrolled(instance.scroll > 60);
+
+    if (isMobile || instance.scroll <= 0) {
+      setNavVisible(true);
+      return;
+    }
+
+    if (instance.direction === 1) {
+      setNavVisible(false);
+    } else if (instance.direction === -1) {
+      setNavVisible(true);
+    }
+  });
+
+  useEffect(() => {
+    if (!lenis) {
+      return;
+    }
+
+    if (isOpen) {
+      lenis.stop();
+      return;
+    }
+
+    lenis.start();
+  }, [isOpen, lenis]);
 
   const navItems = [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/#work" },
-    { label: "Blog", href: "/blog" },
-    { label: "SSL", href: "/ssl" },
-    { label: "About", href: "/#about" },
-    { label: "You", href: "/you" },
-    { label: "Contact", href: "/#contact" },
+    { label: "~/", href: "/" },
+    { label: "skills", href: "/#skills" },
+    { label: "certs", href: "/#certs" },
+    { label: "projects", href: "/#projects" },
+    { label: "blog", href: "/blog" },
+    { label: "about", href: "/#about" },
+    { label: "contact", href: "/#contact" },
   ];
 
   const NavLink = ({ item }: { item: { label: string; href: string } }) => {
+    const linkHash = item.href.includes("#")
+      ? item.href.slice(item.href.indexOf("#"))
+      : "";
     const isActive =
-      pathname === item.href ||
-      (pathname === "/" && item.href.startsWith("/#")) ||
-      (item.href === "/ssl" && pathname.startsWith("/ssl")) ||
+      (item.href === "/" && pathname === "/" && !hash) ||
+      (pathname === "/" && linkHash !== "" && hash === linkHash) ||
       (item.href === "/blog" && pathname.startsWith("/blog"));
 
     return (
@@ -86,10 +106,12 @@ export default function Navbar() {
           position: "relative",
           color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
           textDecoration: "none",
-          fontWeight: isActive ? 700 : 400,
+          fontWeight: isActive ? 600 : 400,
+          fontFamily: "'Geist Mono', monospace",
+          fontSize: "0.85rem",
           transition: "color 0.2s ease",
           "&:hover": {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             "&::after": {
               width: "100%",
             },
@@ -100,8 +122,8 @@ export default function Navbar() {
             bottom: -4,
             left: 0,
             width: isActive ? "100%" : 0,
-            height: "2px",
-            backgroundColor: theme.palette.primary.light,
+            height: "1px",
+            backgroundColor: theme.palette.primary.main,
             transition: "width 0.2s ease",
           },
         }}
@@ -125,43 +147,27 @@ export default function Navbar() {
           right: 0,
           zIndex: theme.zIndex.appBar,
           width: "100%",
+          transform: isOpen || navVisible ? "translateY(0)" : "translateY(-100%)",
+          transition: "transform 0.3s ease",
         }}
       >
-        <HideOnScroll>
           <AppBar
-            component={motion.nav}
             position="static"
             elevation={scrolled ? 4 : 0}
-            initial="initial"
-            animate="animate"
-            variants={navAnimation}
             sx={(theme) => ({
               backgroundColor:
-                theme.palette.mode === "dark"
-                  ? scrolled
-                    ? "rgba(24, 24, 27, 0.95)"
-                    : "rgba(24, 24, 27, 0.9)"
-                  : scrolled
-                    ? "rgba(255, 255, 255, 0.95)"
-                    : "rgba(249, 250, 251, 0.9)",
-              borderBottom: `1px solid ${
-                scrolled ? theme.palette.divider : alpha(theme.palette.divider, 0.6)
-              }`,
-              backdropFilter: "blur(12px)",
+                theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
+              borderBottom: `1px solid ${theme.palette.divider}`,
+              backdropFilter: "none",
               transition: "all 0.3s ease",
-              zIndex: theme.zIndex.drawer + 1, // Ensure navbar is above any drawer/sidebar
-              height: { xs: "72px", md: scrolled ? "72px" : "80px" },
-              borderRadius: 0, // Ensure no rounded corners
-              boxSizing: "border-box", // Include padding and border in element's width and height
-              width: "100%", // Ensure full width
+              zIndex: theme.zIndex.drawer + 1,
+              height: { xs: "64px", md: "72px" },
+              borderRadius: 0,
+              boxSizing: "border-box",
+              width: "100%",
               left: 0,
               right: 0,
-              // Add bottom shadow to better separate from content
-              boxShadow: scrolled
-                ? theme.palette.mode === "dark"
-                  ? "0 4px 20px rgba(0, 0, 0, 0.5)"
-                  : "0 4px 20px rgba(0, 0, 0, 0.1)"
-                : "none",
+              boxShadow: "none",
             })}
           >
             <Container maxWidth="lg">
@@ -169,8 +175,8 @@ export default function Navbar() {
                 disableGutters
                 sx={{
                   px: { xs: 2, sm: 3 },
-                  py: { xs: 2, md: 2.5 },
-                  minHeight: { xs: "72px", md: "80px" },
+                  py: { xs: 1.5, md: 2 },
+                  minHeight: { xs: "64px", md: "72px" },
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -187,20 +193,20 @@ export default function Navbar() {
                     component={Link}
                     href="/"
                     variant="h6"
-                    fontFamily="monospace"
-                    fontWeight="bold"
                     sx={(theme) => ({
-                      color: theme.palette.text.primary,
+                      color: theme.palette.secondary.main,
                       textDecoration: "none",
                       transition: "color 0.2s ease",
-                      fontSize: { xs: "1.25rem", md: "1.5rem" },
-                      letterSpacing: "-0.025em",
+                      fontSize: { xs: "1rem", md: "1.1rem" },
+                      letterSpacing: "0.01em",
+                      fontFamily: "'Geist Mono', monospace",
+                      fontWeight: "bold",
                       "&:hover": {
                         color: theme.palette.primary.main,
                       },
                     })}
                   >
-                    witl.xyz
+                    witl@xyz:~$
                   </Typography>
                 </Box>
 
@@ -289,9 +295,13 @@ export default function Navbar() {
                     ml: "auto",
                     display: { md: "none" },
                     color: theme.palette.text.primary,
+                    width: 44,
+                    height: 44,
                   }}
                   onClick={() => setIsOpen(!isOpen)}
                   edge="end"
+                  aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+                  aria-expanded={isOpen}
                 >
                   {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </IconButton>
@@ -311,14 +321,13 @@ export default function Navbar() {
                     backgroundColor: theme.palette.background.default + "A6",
                   },
                 },
-              }}
-              PaperProps={{
-                sx: {
-                  mt: { xs: "72px", md: "80px" },
-                  boxShadow: "none",
-                  backgroundColor: theme.palette.background.paper,
-                  backdropFilter: "blur(8px)",
-                  transition: "background-color 0.3s ease",
+                paper: {
+                  sx: {
+                    mt: { xs: "64px", md: "72px" },
+                    boxShadow: "none",
+                    backgroundColor: theme.palette.background.paper,
+                    transition: "background-color 0.3s ease",
+                  },
                 },
               }}
             >
@@ -417,7 +426,6 @@ export default function Navbar() {
               </Box>
             </Drawer>
           </AppBar>
-        </HideOnScroll>
       </Box>
 
       {/* Scroll to top button */}
@@ -426,7 +434,7 @@ export default function Navbar() {
           color="primary"
           size="small"
           aria-label="scroll back to top"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => lenis?.scrollTo(0)}
           sx={{
             position: "fixed",
             bottom: 20,

@@ -4,6 +4,8 @@ export interface Project {
   tech: string[];
   link: string;
   githubUrl?: string;
+  stars: number;
+  updatedAt: string;
 }
 
 export interface AnimationProps {

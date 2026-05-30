@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPostBySlug } from "@/app/lib/fs-blog";
 
+export const revalidate = 3600;
+
 export async function GET(request: NextRequest, props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   try {

@@ -4,6 +4,8 @@ import { BlogView } from "./components";
 import { BlogListSkeleton } from "./components/shared/BlogListSkeleton";
 import { Post } from "../types/blog";
 
+export const revalidate = 3600;
+
 // This async function leverages React Server Components to fetch data
 async function getPosts(): Promise<Post[]> {
   try {

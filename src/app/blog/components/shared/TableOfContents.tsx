@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Box, Typography, Link as MuiLink } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useLenis } from "lenis/react";
 
 interface TocHeading {
   id: string;
@@ -20,6 +21,7 @@ export function TableOfContents({
   const [headings, setHeadings] = useState<TocHeading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const router = useRouter();
+  const lenis = useLenis();
 
   useEffect(() => {
     const doc = new DOMParser().parseFromString(content, "text/html");
@@ -100,9 +102,7 @@ export function TableOfContents({
                 e.preventDefault();
                 const element = document.getElementById(heading.id);
                 if (element) {
-                  const yOffset = -104; // Adjust offset to account for taller sticky header
-                  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                  window.scrollTo({ top: y, behavior: "smooth" });
+                  lenis?.scrollTo(element, { offset: -104 });
                   router.push(`#${heading.id}`, { scroll: false });
                 }
               }}
@@ -231,9 +231,7 @@ export function TableOfContents({
                 e.preventDefault();
                 const element = document.getElementById(heading.id);
                 if (element) {
-                  const yOffset = -104; // Adjust offset to account for taller sticky header
-                  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                  window.scrollTo({ top: y, behavior: "smooth" });
+                  lenis?.scrollTo(element, { offset: -104 });
                   router.push(`#${heading.id}`, { scroll: false });
                 }
               }}

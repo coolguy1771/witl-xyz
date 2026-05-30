@@ -1,0 +1,6 @@
+node_modules/
+patches/
+.next/
+.open-next/
+dist/
+coverage/

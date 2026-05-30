@@ -4,6 +4,8 @@ import { getPostBySlug, getPostSlugs, getRelatedPosts } from "../../lib/fs-blog"
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
 
+export const revalidate = 3600;
+
 // Generate metadata for the page
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
@@ -60,19 +62,17 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
 // Generate static paths for build time
 export async function generateStaticParams() {
   try {
-    // Get all post slugs from the filesystem
-    const slugs = getPostSlugs();
+    const slugs = await getPostSlugs();
 
     if (slugs.length > 0) {
       console.log(`Found ${slugs.length} blog posts in filesystem`);
       return slugs.map((slug) => ({ slug }));
     }
 
-    // Fallback for empty directory
-    console.warn("No blog posts found, using fallback");
-    return [{ slug: "sample-post" }];
+    console.warn("No blog posts found for static generation");
+    return [];
   } catch (error) {
     console.error("Error generating static paths:", error);
-    return [{ slug: "sample-post" }];
+    return [];
   }
 }
