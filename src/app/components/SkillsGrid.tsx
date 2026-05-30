@@ -39,8 +39,6 @@ export const SkillsGrid: React.FC = () => {
 
   return (
     <MotionBox
-      id="skills"
-      
       sx={{
         py: 10,
         bgcolor: isDark ? "#0d1117" : "#e8edf3",

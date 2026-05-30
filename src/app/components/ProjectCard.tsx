@@ -103,7 +103,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           {project.description}
         </Typography>
 
-        <Stack direction="row" spacing={1} sx={{ mt: "auto", flexWrap: "wrap", gap: 1 }}>
+        <Stack direction="row" sx={{ mt: "auto", flexWrap: "wrap", gap: 1 }}>
           {project.tech.map((tech, index) => (
             <TechBadge key={index} tech={tech} index={index} />
           ))}

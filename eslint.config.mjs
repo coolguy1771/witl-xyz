@@ -8,7 +8,7 @@ const eslintConfig = [
     rules: {
       // eslint-plugin-react-hooks@7 introduced strict new rules that flag
       // established patterns throughout this codebase. Demote to warnings
-      // until each site is audited and fixed intentionally.
+      // until the codebase is audited and fixed intentionally.
       "react-hooks/purity": "warn",
       "react-hooks/error-boundaries": "warn",
       "react-hooks/set-state-in-effect": "warn",

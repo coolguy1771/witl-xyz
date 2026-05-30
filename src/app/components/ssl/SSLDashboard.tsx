@@ -18,7 +18,7 @@ import {
   CardContent,
   Grid,
 } from "@mui/material";
-import { motion } from "framer-motion";
+import { MotionBox, MotionPaper, MotionTypography } from "../motion-ui";
 import { SSLCertificate, SSLCertificateResponse } from "@/app/types/ssl";
 import CertificateCard from "./CertificateCard";
 import FileUpload from "../ui/FileUpload";
@@ -250,9 +250,8 @@ const SSLDashboard: React.FC = () => {
     >
       <Container maxWidth="lg">
         <Box sx={{ mb: { xs: 6, md: 8 } }}>
-          <Typography
+          <MotionTypography
             variant="h3"
-            component={motion.h1}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -266,20 +265,18 @@ const SSLDashboard: React.FC = () => {
             }}
           >
             SSL Certificate Tools
-          </Typography>
-          <Typography
+          </MotionTypography>
+          <MotionTypography
             variant="h6"
-            component={motion.p}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             color="text.secondary" sx={{ fontWeight: "normal" }}
           >
             Check, analyze, and manage SSL certificates
-          </Typography>
+          </MotionTypography>
 
-          <Box
-            component={motion.div}
+          <MotionBox
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -297,10 +294,10 @@ const SSLDashboard: React.FC = () => {
               and build trust with users. Regularly monitoring certificate validity helps prevent
               security warnings and downtime.
             </Typography>
-          </Box>
+          </MotionBox>
         </Box>
 
-        <Paper
+        <MotionPaper
           elevation={0}
           sx={{
             borderRadius: 3,
@@ -308,7 +305,6 @@ const SSLDashboard: React.FC = () => {
             border: `1px solid ${theme.palette.divider}`,
             mb: 4,
           }}
-          component={motion.div}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -422,15 +418,14 @@ const SSLDashboard: React.FC = () => {
               )}
 
               {(certificate || error) && (
-                <Box
-                  component={motion.div}
+                <MotionBox
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                   sx={{ mt: 2 }}
                 >
                   <CertificateCard certificate={certificate} error={error} />
-                </Box>
+                </MotionBox>
               )}
 
               {!certificate && !isLoading && !error && (
@@ -536,15 +531,14 @@ const SSLDashboard: React.FC = () => {
                 )}
 
                 {(certificate || uploadError) && !isUploading && (
-                  <Box
-                    component={motion.div}
+                  <MotionBox
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                     sx={{ mt: 3 }}
                   >
                     <CertificateCard certificate={certificate} error={uploadError} />
-                  </Box>
+                  </MotionBox>
                 )}
 
                 {!certificate && !isUploading && !uploadError && (
@@ -624,10 +618,9 @@ const SSLDashboard: React.FC = () => {
               </Box>
             </TabPanel>
           </Box>
-        </Paper>
+        </MotionPaper>
 
-        <Box
-          component={motion.div}
+        <MotionBox
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -710,7 +703,7 @@ const SSLDashboard: React.FC = () => {
               All certificate data is processed in your browser and is not stored permanently
             </Typography>
           </Box>
-        </Box>
+        </MotionBox>
       </Container>
     </Box>
   );

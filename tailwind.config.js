@@ -1,10 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
   theme: {
     extend: {
       typography: {
@@ -42,26 +37,4 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
-  safelist: [
-    "my-4",
-    "p-4",
-    "rounded-lg",
-    "border-l-4",
-    "bg-blue-50",
-    "dark:bg-blue-900/20",
-    "border-blue-500",
-    "bg-yellow-50",
-    "dark:bg-yellow-900/20",
-    "border-yellow-500",
-    "bg-green-50",
-    "dark:bg-green-900/20",
-    "border-green-500",
-    "bg-gray-50",
-    "dark:bg-gray-900/20",
-    "border-gray-500",
-    "overflow-x-auto",
-    "text-sm",
-    "transition-colors",
-  ],
 };

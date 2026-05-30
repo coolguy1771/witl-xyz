@@ -10,8 +10,6 @@ export const AboutSection: React.FC = () => {
 
   return (
     <MotionBox
-      id="about"
-      
       sx={{
         py: 12,
         bgcolor: theme.palette.background.default,
@@ -24,7 +22,7 @@ export const AboutSection: React.FC = () => {
       variants={fadeIn}
     >
       <Container maxWidth="lg">
-        <Box sx={{ maxWidth: "md", mx: "auto" }}>
+        <Box sx={{ maxWidth: (theme) => theme.breakpoints.values.md, mx: "auto", width: "100%" }}>
           {/* Terminal label above heading */}
           <MotionBox
             variants={slideInFromLeft}

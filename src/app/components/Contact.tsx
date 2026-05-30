@@ -10,8 +10,6 @@ export const ContactSection: React.FC = () => {
 
   return (
     <MotionBox
-      id="contact"
-      
       sx={{
         py: 12,
         backgroundColor: theme.palette.background.default,

@@ -55,7 +55,7 @@ export const HeroSection: React.FC = () => {
       return () => clearTimeout(timer);
     } else {
       const timer = setTimeout(() => {
-        setVisibleLines((prev) => [...prev, { ...line, text: line.text }]);
+        setVisibleLines((prev) => [...prev, line]);
         setCurrentLineIndex((i) => i + 1);
         setCurrentCharIndex(0);
       }, LINE_PAUSE);

@@ -23,8 +23,6 @@ export const CertificationsSection: React.FC = () => {
 
   return (
     <MotionBox
-      id="certs"
-      
       sx={{
         py: 10,
         bgcolor: theme.palette.background.default,

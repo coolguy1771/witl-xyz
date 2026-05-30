@@ -27,16 +27,17 @@ npm run test -- path/to/test.spec.ts
 
 ## Architecture Overview
 
-This is a Next.js 15 portfolio and blog site deployed on Cloudflare Workers using OpenNext.js.
+This is a Next.js 16 portfolio and blog site deployed on Cloudflare Workers using OpenNext.js.
 
 ### Key Architectural Decisions
 
 1. **App Router Structure**: Uses Next.js App Router with TypeScript for all pages and components.
 
-2. **Styling**: Dual approach with Material-UI (MUI) v7 for components and Tailwind CSS v4 for utility classes. Emotion handles CSS-in-JS.
+2. **Styling**: Dual approach with Material-UI (MUI) v9 for components and Tailwind CSS v4 for utility classes. Emotion handles CSS-in-JS.
 
-3. **Blog System**: Markdown-based with frontmatter metadata. Posts are stored in `content/posts/` and processed through:
-   - `src/app/lib/posts.ts` - Post loading and processing
+3. **Blog System**: Markdown-based with frontmatter metadata. Posts are stored in `posts/` and processed through:
+   - `src/app/lib/fs-blog.ts` - Filesystem post loading
+   - `src/app/lib/blog.ts` - Blog processing utilities
    - `src/app/lib/blog-cf.ts` - Cloudflare-specific blog utilities
    - Syntax highlighting via highlight.js
    - Table of contents auto-generation
@@ -59,7 +60,7 @@ This is a Next.js 15 portfolio and blog site deployed on Cloudflare Workers usin
 - **Components**: Export from `src/app/components/index.ts` for cleaner imports
 - **Types**: Centralized in `src/app/types/` and `src/types/`
 - **Utilities**: Split between `src/app/lib/` (app-specific) and `src/utils/` (general)
-- **Theme**: Custom theme configuration in `src/theme/` integrating MUI with Tailwind
+- **Theme**: Custom theme configuration in `src/app/lib/theme.ts` integrating MUI with Tailwind
 - **Hooks**: Custom hooks in `src/hooks/` for reusable logic
 
 ### Testing Approach

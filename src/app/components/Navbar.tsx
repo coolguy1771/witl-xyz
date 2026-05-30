@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { navAnimation } from "../lib/animations";
+import { MotionAppBar } from "./motion-ui";
 import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import {
-  AppBar,
   Container,
   Toolbar,
   Box,
@@ -130,8 +129,7 @@ export default function Navbar() {
         }}
       >
         <HideOnScroll>
-          <AppBar
-            component={motion.nav}
+          <MotionAppBar
             position="static"
             elevation={scrolled ? 4 : 0}
             initial="initial"
@@ -404,7 +402,7 @@ export default function Navbar() {
                 </Box>
               </Box>
             </Drawer>
-          </AppBar>
+          </MotionAppBar>
         </HideOnScroll>
       </Box>
 
