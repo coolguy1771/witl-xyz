@@ -70,6 +70,7 @@
    * Optimize caching for static assets and API responses
    */
   "cache": {
+    "enabled": true,
     "default_ttl": 3600,
     "browser_ttl": 86400
   },

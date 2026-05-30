@@ -57,12 +57,12 @@ jobs:
         run: |
           echo "## NPM Audit Report" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          npm audit --production >> $GITHUB_STEP_SUMMARY 2>&1 || true
+          npm audit --omit=dev >> $GITHUB_STEP_SUMMARY 2>&1 || true
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Check for critical vulnerabilities
         run: |
-          AUDIT_RESULT=$(npm audit --production --json)
+          AUDIT_RESULT=$(npm audit --omit=dev --json || true)
           CRITICAL=$(echo $AUDIT_RESULT | jq '.metadata.vulnerabilities.critical // 0')
           HIGH=$(echo $AUDIT_RESULT | jq '.metadata.vulnerabilities.high // 0')
 

@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "deploy": "npm run build && opennextjs-cloudflare build && wrangler deploy",
     "preview": "opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
@@ -70,14 +70,14 @@
     "@types/node": "25.9.1",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
-    "eslint": "10.4.1",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.2.6",
     "postcss": "8.5.15",
+    "prettier": "3.8.3",
     "tailwindcss": "4.3.0",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
-    "wrangler": "4.95.0",
-    "prettier": "3.8.3"
+    "wrangler": "4.95.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

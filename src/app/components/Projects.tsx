@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, Container, Typography, Grid, useTheme } from "@mui/material";
+import { Container, Typography, Grid, useTheme } from "@mui/material";
 import { MotionBox } from "./motion-ui";
 import { Project } from "../types";
 import { fetchGithubProjects } from "../lib/github";

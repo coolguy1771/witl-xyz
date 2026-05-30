@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Container, Typography, Box, Paper, useTheme } from "@mui/material";
+import { Button, Container, Typography, Paper, useTheme } from "@mui/material";
 import { fadeIn, popIn } from "../lib/animations";
 import { MotionBox } from "./motion-ui";
 
