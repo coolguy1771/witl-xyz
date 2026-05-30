@@ -74,7 +74,6 @@ export default function Navbar() {
     const isActive =
       pathname === item.href ||
       (pathname === "/" && item.href.startsWith("/#")) ||
-      (item.href === "/ssl" && pathname.startsWith("/ssl")) ||
       (item.href === "/blog" && pathname.startsWith("/blog"));
 
     return (

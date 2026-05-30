@@ -45,12 +45,6 @@ class RateLimiter {
     record.lastRequest = now;
     this.requestMap.set(key, record);
 
-    // API-specific limits
-    if (key.includes("ssl") || key.includes("certificate")) {
-      // Stricter limits for SSL certificate API
-      return record.count > 5;
-    }
-
     // Default limit
     return record.count > this.maxRequests;
   }

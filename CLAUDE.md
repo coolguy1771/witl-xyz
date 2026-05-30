@@ -44,7 +44,6 @@ This is a Next.js 16 portfolio and blog site deployed on Cloudflare Workers usin
 
 4. **API Routes**: Located in `src/app/api/` handling:
    - Blog operations (posts, tags, search)
-   - SSL certificate management
    - Visitor tracking and analytics
 
 5. **State Management**: React hooks and context for local state. No global state management library.

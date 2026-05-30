@@ -12,12 +12,6 @@ export const rateLimitConfig = {
     windowMs: 60 * 1000, // 1 minute
   },
 
-  // Certificate-related routes
-  ssl: {
-    limit: 5,
-    windowMs: 60 * 1000, // 1 minute
-  },
-
   // Blog-related routes
   blog: {
     limit: 60,
