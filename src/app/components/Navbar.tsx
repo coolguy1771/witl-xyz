@@ -40,8 +40,16 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hash, setHash] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -71,9 +79,12 @@ export default function Navbar() {
   ];
 
   const NavLink = ({ item }: { item: { label: string; href: string } }) => {
+    const linkHash = item.href.includes("#")
+      ? item.href.slice(item.href.indexOf("#"))
+      : "";
     const isActive =
-      pathname === item.href ||
-      (pathname === "/" && item.href.startsWith("/#")) ||
+      (item.href === "/" && pathname === "/" && !hash) ||
+      (pathname === "/" && linkHash !== "" && hash === linkHash) ||
       (item.href === "/blog" && pathname.startsWith("/blog"));
 
     return (
