@@ -8,14 +8,21 @@
     ":semanticCommits",
     ":timezone(America/New_York)"
   ],
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "dependencyDashboardTitle": "Renovate Dashboard",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
   "rollbackPrs": true,
+  "enabledManagers": ["bun", "github-actions", "regex"],
+  "ignorePaths": ["package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
   "packageRules": [
     {
-      "description": ["Auto-merge GitHub Actions for minor and patch"],
+      "description": "Disable npm, yarn, and pnpm managers",
+      "matchManagers": ["npm", "yarn", "pnpm"],
+      "enabled": false
+    },
+    {
+      "description": "Auto-merge GitHub Actions for minor and patch",
       "matchManagers": ["github-actions"],
       "matchDatasources": ["github-tags"],
       "automerge": true,
@@ -24,16 +31,70 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Automerge non-major updates",
+      "description": "Automerge non-major Bun dependency updates",
       "matchManagers": ["bun"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Group Next.js ecosystem packages",
+      "matchManagers": ["bun"],
+      "matchPackageNames": [
+        "next",
+        "eslint-config-next",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "groupName": "nextjs"
+    },
+    {
+      "description": "Group Cloudflare deployment tooling",
+      "matchManagers": ["bun"],
+      "matchPackageNames": ["wrangler", "@opennextjs/cloudflare"],
+      "groupName": "cloudflare"
+    },
+    {
+      "description": "Group MUI packages",
+      "matchManagers": ["bun"],
+      "matchPackagePatterns": ["^@mui/"],
+      "groupName": "mui"
+    },
+    {
+      "description": "Keep Bun runtime pins aligned",
+      "matchManagers": ["regex"],
+      "matchDepNames": ["oven-sh/bun"],
+      "groupName": "bun runtime",
+      "automerge": true,
+      "matchUpdateTypes": ["patch", "minor"]
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "schedule": ["before 5:00am on monday"]
-  }
+    "schedule": ["before 5am on monday"],
+    "matchManagers": ["bun"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update .bun-version pin",
+      "managerFilePatterns": ["/(^|/)\\.bun-version$/"],
+      "matchStrings": ["^(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s*$"],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "node"
+    },
+    {
+      "customType": "regex",
+      "description": "Update setup-bun action bun-version in workflows",
+      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "matchStrings": [
+        "bun-version:\\s+['\"]?(?<currentValue>\\d+\\.\\d+\\.\\d+)['\"]?"
+      ],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "node"
+    }
+  ]
 }
