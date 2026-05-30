@@ -16,18 +16,22 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      testIgnore: "**/mobile/**",
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "firefox",
+      testIgnore: "**/mobile/**",
       use: { ...devices["Desktop Firefox"] },
     },
     {
       name: "webkit",
+      testIgnore: "**/mobile/**",
       use: { ...devices["Desktop Safari"] },
     },
     {
       name: "mobile-chrome",
+      testMatch: "**/mobile/**",
       use: { ...devices["Pixel 5"] },
     },
   ],
