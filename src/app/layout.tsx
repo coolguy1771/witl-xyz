@@ -17,9 +17,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tyler Witlin - Software Engineer & Kubernetes Administrator",
+  title: "Tyler Witlin - DevOps Engineer",
   description:
-    "Personal portfolio and blog showcasing software engineering projects and design work.",
+    "DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure. CKA certified.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeRegistry>
           <Navbar />
-          <main className="pt-[96px] md:pt-[104px]">{children}</main>
+          <main className="pt-[64px] md:pt-[72px]">{children}</main>
         </ThemeRegistry>
       </body>
     </html>

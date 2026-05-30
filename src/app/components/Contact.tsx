@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { Button, Container, Typography, Box, Paper, useTheme } from "@mui/material";
-import { fadeIn, slideInFromLeft, popIn } from "../lib/animations";
+import { fadeIn, popIn } from "../lib/animations";
+import { MotionBox } from "./motion-ui";
 
 export const ContactSection: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <Box
-      component={motion.section}
+    <MotionBox
       id="contact"
+      
       sx={{
         py: 12,
         backgroundColor: theme.palette.background.default,
@@ -58,11 +58,10 @@ export const ContactSection: React.FC = () => {
           }}
         >
           <Typography
-            component={motion.h2}
             variant="h3"
-            fontWeight={700}
-            mb={3}
             sx={{
+              fontWeight: 700,
+              mb: 3,
               color: theme.palette.text.primary,
               position: "relative",
               display: "inline-block",
@@ -77,54 +76,56 @@ export const ContactSection: React.FC = () => {
                 background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               },
             }}
-            variants={slideInFromLeft}
           >
             Get In Touch
           </Typography>
 
           <Typography
-            component={motion.p}
             variant="body1"
-            mb={6}
-            mx="auto"
-            maxWidth="36rem"
             sx={{
+              mb: 6,
+              mx: "auto",
+              maxWidth: "36rem",
               color: theme.palette.text.secondary,
               fontSize: "1.125rem",
               lineHeight: 1.7,
             }}
-            variants={fadeIn}
           >
-            Whether you have a project in mind or just want to chat, feel free to reach out.
-            I&apos;m always open to discussing new opportunities.
+            Open to DevOps and SRE roles. I&apos;ve spent most of my career in air-gapped
+            environments and I&apos;m not scared off by compliance requirements.
           </Typography>
 
-          <motion.div variants={popIn}>
+          <MotionBox variants={popIn}>
             <Button
               href="mailto:twitlin@witl.xyz"
               variant="contained"
               size="large"
               sx={{
-                backgroundImage: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                color: theme.palette.common.white,
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.mode === "dark" ? "#0a0e14" : "#ffffff",
                 px: 5,
                 py: 1.5,
-                fontSize: "1.125rem",
-                fontWeight: 500,
-                borderRadius: 2,
-                transition: "all 0.3s ease",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                fontSize: "1rem",
+                fontWeight: 600,
+                fontFamily: "'Geist Mono', monospace",
+                borderRadius: "4px",
+                transition: "all 0.2s ease",
+                boxShadow: theme.palette.mode === "dark"
+                  ? "0 0 20px rgba(0, 212, 255, 0.15)"
+                  : "0 4px 10px rgba(0,0,0,0.15)",
                 "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+                  transform: "translateY(-1px)",
+                  boxShadow: theme.palette.mode === "dark"
+                    ? "0 0 30px rgba(0, 212, 255, 0.3)"
+                    : "0 8px 20px rgba(0,0,0,0.2)",
                 },
               }}
             >
-              Say Hello
+              ./say-hello
             </Button>
-          </motion.div>
+          </MotionBox>
         </Paper>
       </Container>
-    </Box>
+    </MotionBox>
   );
 };

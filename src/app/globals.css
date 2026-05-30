@@ -68,14 +68,14 @@ html, body {
 
 /* Scroll margin for anchor links to account for fixed navbar */
 :target {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 80px;
 }
 
 /* Anchor sections */
 section[id],
 div[id],
 h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 80px;
 }
 
 /* Links */
@@ -206,18 +206,58 @@ td {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--mui-palette-grey-800);
+  background: #1e293b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--mui-palette-primary-main);
-  border-radius: 5px;
+  background: #3dd68c;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--mui-palette-primary-light);
+  background: #6ee7a8;
 }
+
+/* Terminal cursor blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  background-color: #3dd68c;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+/* Terminal prompt prefix */
+.terminal-prompt::before {
+  content: "$ ";
+  color: #3dd68c;
+  font-family: "Geist Mono", monospace;
+  font-weight: 600;
+}
+
+/* Terminal comment style */
+.terminal-comment {
+  color: #94a3b8;
+  font-family: "Geist Mono", monospace;
+  font-size: 0.85em;
+}
+
+.terminal-comment::before {
+  content: "// ";
+}
+
+/* Terminal window dots */
+.terminal-dot-red { background-color: #ff5f57; }
+.terminal-dot-yellow { background-color: #febc2e; }
+.terminal-dot-green { background-color: #28c840; }

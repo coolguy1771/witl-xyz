@@ -1,18 +1,19 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
 import { Container, Typography, Box, useTheme } from "@mui/material";
 import { fadeIn, slideInFromLeft } from "../lib/animations";
+import { MotionBox } from "./motion-ui";
 
 export const AboutSection: React.FC = () => {
-  const theme = useTheme(); // Get the theme context
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   return (
-    <Box
-      component={motion.section}
+    <MotionBox
       id="about"
-      py={12}
+      
       sx={{
+        py: 12,
         bgcolor: theme.palette.background.default,
         color: theme.palette.text.primary,
         transition: "background-color 0.3s ease, color 0.3s ease",
@@ -23,129 +24,118 @@ export const AboutSection: React.FC = () => {
       variants={fadeIn}
     >
       <Container maxWidth="lg">
-        <Box maxWidth="md" mx="auto">
+        <Box sx={{ maxWidth: "md", mx: "auto" }}>
+          {/* Terminal label above heading */}
+          <MotionBox
+            variants={slideInFromLeft}
+            sx={{
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: "0.85rem",
+              color: theme.palette.secondary.main,
+              mb: 1,
+              letterSpacing: "0.02em",
+            }}
+          >
+            $ cat about.md
+          </MotionBox>
+
           <Typography
-            component={motion.h2}
             id="about-heading"
             variant="h2"
             sx={{
-              fontSize: { xs: "2.5rem", sm: "3rem" },
+              fontSize: { xs: "2rem", sm: "2.5rem" },
               fontWeight: 700,
-              mb: 4,
+              mb: 5,
               letterSpacing: "-0.02em",
               color: theme.palette.primary.main,
               transition: "color 0.3s ease",
             }}
-            variants={slideInFromLeft}
           >
             About Me
           </Typography>
+
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               gap: 3,
-              fontSize: { xs: "1.125rem", sm: "1.25rem" },
-              lineHeight: 1.75,
+              fontSize: { xs: "1rem", sm: "1.1rem" },
+              lineHeight: 1.8,
+              borderLeft: `3px solid ${theme.palette.secondary.main}`,
+              pl: 3,
             }}
           >
             <Typography
-              component={motion.p}
               variant="body1"
               sx={{
                 color: theme.palette.text.secondary,
                 fontWeight: 400,
                 transition: "color 0.3s ease",
               }}
-              variants={fadeIn}
             >
-              I&apos;m experienced in building{" "}
+              I run{" "}
               <Box
                 component="span"
-                sx={{
-                  color: theme.palette.primary.light,
-                  fontWeight: 500,
-                  transition: "color 0.3s ease",
-                }}
+                sx={{ color: theme.palette.primary.main, fontWeight: 600 }}
               >
-                CI/CD pipelines
-              </Box>
-              , deploying{" "}
+                Kubernetes
+              </Box>{" "}
+              for a living. Right now that means CI/CD infrastructure at Cisco on OpenShift; before
+              that it was{" "}
               <Box
                 component="span"
-                sx={{
-                  color: theme.palette.primary.light,
-                  fontWeight: 500,
-                  transition: "color 0.3s ease",
-                }}
+                sx={{ color: theme.palette.primary.main, fontWeight: 600 }}
               >
-                Kubernetes clusters
-              </Box>
-              , and setting up developer-friendly infrastructures to make workflows smoother. I also
-              specialize in{" "}
-              <Box
-                component="span"
-                sx={{
-                  color: theme.palette.primary.light,
-                  fontWeight: 500,
-                  transition: "color 0.3s ease",
-                }}
-              >
-                network systems
-              </Box>
-              , handling everything from planning and troubleshooting to delivering reliable
-              solutions—even in tricky setups like air-gapped networks.
+                air-gapped clusters
+              </Box>{" "}
+              at General Dynamics for three years, which is exactly as fun as it sounds.
             </Typography>
+
             <Typography
-              component={motion.p}
               variant="body1"
               sx={{
                 color: theme.palette.text.secondary,
                 fontWeight: 400,
                 transition: "color 0.3s ease",
               }}
-              variants={fadeIn}
             >
-              My focus is on blending tech know-how with design thinking to create{" "}
+              I have a homelab (
               <Box
                 component="span"
-                sx={{
-                  color: theme.palette.secondary.main,
-                  fontWeight: 600,
-                  transition: "color 0.3s ease",
-                }}
+                sx={{ color: theme.palette.secondary.main, fontWeight: 600 }}
               >
-                practical, impactful results
-              </Box>
-              . Right now, I&apos;m diving into open-source projects and staying up-to-date with the
-              latest in web development.
+                home-ops
+              </Box>{" "}
+              on GitHub) where I run FluxCD, Prometheus, and Grafana. Mostly an excuse to break
+              things without anyone noticing.
             </Typography>
+
             <Typography
-              component={motion.p}
               variant="body1"
               sx={{
                 color: theme.palette.text.secondary,
                 fontWeight: 400,
                 transition: "color 0.3s ease",
               }}
-              variants={fadeIn}
             >
-              I&apos;m also a{" "}
+              I write Go when I need something that doesn&apos;t already exist.{" "}
               <Box
                 component="span"
                 sx={{
-                  fontWeight: 600,
-                  color: theme.palette.secondary.dark,
-                  transition: "color 0.3s ease",
+                  fontFamily: "'Geist Mono', monospace",
+                  fontWeight: 700,
+                  color: isDark ? "#f59e0b" : "#d97706",
+                  fontSize: "0.95em",
                 }}
               >
-                Certified Kubernetes Administrator
-              </Box>
-              , always learning and growing to keep up with the fast-paced tech world.
+                Guardrail
+              </Box>{" "}
+              is an RBAC analyzer I built for Kubernetes, finds over-permissive roles before they
+              become someone else&apos;s incident. CKA since March 2024.
             </Typography>
           </Box>
         </Box>
       </Container>
-    </Box>
+    </MotionBox>
   );
 };

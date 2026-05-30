@@ -4,10 +4,12 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { AboutSection } from "./components/About";
+import { CertificationsSection } from "./components/Certifications";
 import { Footer } from "./components/Footer";
 import { ContactSection } from "./components/Contact";
 import { HeroSection } from "./components/Hero";
 import { ProjectsSection } from "./components/Projects";
+import { SkillsGrid } from "./components/SkillsGrid";
 
 export default function Home() {
   const theme = useTheme();
@@ -24,12 +26,22 @@ export default function Home() {
         {/* Hero Section */}
         <HeroSection />
 
+        {/* Skills Section */}
+        <Box id="skills" component="section">
+          <SkillsGrid />
+        </Box>
+
+        {/* Certifications Section */}
+        <Box id="certs" component="section">
+          <CertificationsSection />
+        </Box>
+
         {/* About Section */}
         <Box id="about" component="section">
           <AboutSection />
         </Box>
 
-        {/* Work Section */}
+        {/* Projects Section */}
         <Box id="projects" component="section">
           <ProjectsSection />
         </Box>

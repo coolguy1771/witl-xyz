@@ -1,56 +1,57 @@
 import { createTheme, PaletteMode } from "@mui/material/styles";
 import type { ThemeOptions } from "@mui/material/styles";
 
-// Create theme options for both light and dark modes
+// Terminal-inspired color palette
 export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
   palette: {
     mode,
     primary: {
-      main: "#3b82f6", // Vibrant blue (passes AA contrast)
-      light: "#60a5fa", // Soft blue highlight
-      dark: "#2563eb", // Deep blue
-      contrastText: "#ffffff", // High-contrast white
+      main: mode === "dark" ? "#00d4ff" : "#0077aa",
+      light: mode === "dark" ? "#40e0ff" : "#0099cc",
+      dark: mode === "dark" ? "#0099bb" : "#005580",
+      contrastText: mode === "dark" ? "#0a0e14" : "#ffffff",
     },
     secondary: {
-      main: "#10b981", // Emerald green (better AA contrast than previous green)
-      light: "#34d399", // Softer green highlight
-      dark: "#059669", // Dark green
-      contrastText: "#ffffff", // White text
+      main: mode === "dark" ? "#3dd68c" : "#2d8c60",
+      light: mode === "dark" ? "#6ee7a8" : "#3aad78",
+      dark: mode === "dark" ? "#28b870" : "#1f6644",
+      contrastText: mode === "dark" ? "#0a0e14" : "#ffffff",
     },
     background:
       mode === "dark"
         ? {
-            default: "#050507", // Deeper charcoal for better contrast
-            paper: "#18181b", // UI surface (cards, modals)
+            default: "#0a0e14",
+            paper: "#141c27",
           }
         : {
-            default: "#f9fafb", // Light background
-            paper: "#ffffff", // White surface
+            default: "#f0f4f8",
+            paper: "#ffffff",
           },
     text:
       mode === "dark"
         ? {
-            primary: "#f9fafb", // Crisp white (passes AAA contrast)
-            secondary: "#d1d5db", // Light gray (increased contrast - passes AA)
+            primary: "#e2e8f0",
+            secondary: "#94a3b8",
           }
         : {
-            primary: "#18181b", // Dark text for light mode
-            secondary: "#4b5563", // Medium gray for secondary text
+            primary: "#0d1117",
+            secondary: "#4b5563",
           },
+    divider: mode === "dark" ? "#1e293b" : "#d1d5db",
     error: {
-      main: "#ef4444", // Red with better contrast
+      main: "#ef4444",
       light: "#f87171",
       dark: "#dc2626",
     },
     warning: {
-      main: "#f59e0b", // Amber with better contrast
+      main: "#f59e0b",
       light: "#fbbf24",
       dark: "#d97706",
     },
     success: {
-      main: "#10b981", // Emerald with better contrast
-      light: "#34d399",
-      dark: "#059669",
+      main: mode === "dark" ? "#3dd68c" : "#2d8c60",
+      light: "#6ee7a8",
+      dark: "#28b870",
     },
   },
   typography: {
@@ -63,29 +64,32 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: mode === "dark" ? "#050507" : "#f9fafb",
-          color: mode === "dark" ? "#f9fafb" : "#18181b",
+          backgroundColor: mode === "dark" ? "#0a0e14" : "#f0f4f8",
+          color: mode === "dark" ? "#e2e8f0" : "#0d1117",
           colorScheme: mode,
           scrollBehavior: "smooth",
         },
         "::selection": {
-          backgroundColor: "#3b82f6",
-          color: "#ffffff",
+          backgroundColor: mode === "dark" ? "#00d4ff" : "#0077aa",
+          color: mode === "dark" ? "#0a0e14" : "#ffffff",
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: "8px",
+          borderRadius: "4px",
           textTransform: "none",
-          transition: "all 0.3s ease",
+          transition: "all 0.2s ease",
           fontWeight: 500,
           padding: "10px 16px",
-          letterSpacing: "0.01em",
+          letterSpacing: "0.02em",
+          fontFamily: "'Geist Mono', monospace",
           "&:hover": {
-            transform: "translateY(-2px)",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            transform: "translateY(-1px)",
+            boxShadow: mode === "dark"
+              ? "0 4px 12px rgba(0, 212, 255, 0.2)"
+              : "0 4px 12px rgba(0, 119, 170, 0.2)",
           },
         },
       },
@@ -94,20 +98,21 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: mode === "dark" ? "#18181b" : "#ffffff",
-          borderRadius: "12px",
+          backgroundColor: mode === "dark" ? "#141c27" : "#ffffff",
+          borderRadius: "6px",
+          border: `1px solid ${mode === "dark" ? "#1e293b" : "#d1d5db"}`,
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: mode === "dark" ? "rgba(5, 5, 7, 0.8)" : "rgba(249, 250, 251, 0.8)",
-          backdropFilter: "blur(10px)",
+          backgroundColor: mode === "dark" ? "#0a0e14" : "#f0f4f8",
+          backdropFilter: "none",
           transition: "background-color 0.3s ease",
-          boxShadow:
-            mode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.25)" : "0 1px 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: 0, // Explicitly set no border radius
+          boxShadow: "none",
+          borderBottom: `1px solid ${mode === "dark" ? "#1e293b" : "#d1d5db"}`,
+          borderRadius: 0,
           width: "100%",
           top: 0,
           left: 0,
@@ -118,10 +123,11 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: "6px",
-          fontSize: "0.85rem",
+          borderRadius: "4px",
+          fontSize: "0.8rem",
           height: "auto",
-          padding: "6px 0",
+          padding: "4px 0",
+          fontFamily: "'Geist Mono', monospace",
         },
       },
     },

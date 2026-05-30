@@ -62,13 +62,13 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { label: "Home", href: "/" },
-    { label: "Work", href: "/#work" },
-    { label: "Blog", href: "/blog" },
-    { label: "SSL", href: "/ssl" },
-    { label: "About", href: "/#about" },
-    { label: "You", href: "/you" },
-    { label: "Contact", href: "/#contact" },
+    { label: "~/", href: "/" },
+    { label: "skills", href: "/#skills" },
+    { label: "certs", href: "/#certs" },
+    { label: "projects", href: "/#projects" },
+    { label: "blog", href: "/blog" },
+    { label: "about", href: "/#about" },
+    { label: "contact", href: "/#contact" },
   ];
 
   const NavLink = ({ item }: { item: { label: string; href: string } }) => {
@@ -86,10 +86,12 @@ export default function Navbar() {
           position: "relative",
           color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
           textDecoration: "none",
-          fontWeight: isActive ? 700 : 400,
+          fontWeight: isActive ? 600 : 400,
+          fontFamily: "'Geist Mono', monospace",
+          fontSize: "0.85rem",
           transition: "color 0.2s ease",
           "&:hover": {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             "&::after": {
               width: "100%",
             },
@@ -100,8 +102,8 @@ export default function Navbar() {
             bottom: -4,
             left: 0,
             width: isActive ? "100%" : 0,
-            height: "2px",
-            backgroundColor: theme.palette.primary.light,
+            height: "1px",
+            backgroundColor: theme.palette.primary.main,
             transition: "width 0.2s ease",
           },
         }}
@@ -137,31 +139,18 @@ export default function Navbar() {
             variants={navAnimation}
             sx={(theme) => ({
               backgroundColor:
-                theme.palette.mode === "dark"
-                  ? scrolled
-                    ? "rgba(24, 24, 27, 0.95)"
-                    : "rgba(24, 24, 27, 0.9)"
-                  : scrolled
-                    ? "rgba(255, 255, 255, 0.95)"
-                    : "rgba(249, 250, 251, 0.9)",
-              borderBottom: `1px solid ${
-                scrolled ? theme.palette.divider : alpha(theme.palette.divider, 0.6)
-              }`,
-              backdropFilter: "blur(12px)",
+                theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
+              borderBottom: `1px solid ${theme.palette.divider}`,
+              backdropFilter: "none",
               transition: "all 0.3s ease",
-              zIndex: theme.zIndex.drawer + 1, // Ensure navbar is above any drawer/sidebar
-              height: { xs: "72px", md: scrolled ? "72px" : "80px" },
-              borderRadius: 0, // Ensure no rounded corners
-              boxSizing: "border-box", // Include padding and border in element's width and height
-              width: "100%", // Ensure full width
+              zIndex: theme.zIndex.drawer + 1,
+              height: { xs: "64px", md: "72px" },
+              borderRadius: 0,
+              boxSizing: "border-box",
+              width: "100%",
               left: 0,
               right: 0,
-              // Add bottom shadow to better separate from content
-              boxShadow: scrolled
-                ? theme.palette.mode === "dark"
-                  ? "0 4px 20px rgba(0, 0, 0, 0.5)"
-                  : "0 4px 20px rgba(0, 0, 0, 0.1)"
-                : "none",
+              boxShadow: "none",
             })}
           >
             <Container maxWidth="lg">
@@ -169,8 +158,8 @@ export default function Navbar() {
                 disableGutters
                 sx={{
                   px: { xs: 2, sm: 3 },
-                  py: { xs: 2, md: 2.5 },
-                  minHeight: { xs: "72px", md: "80px" },
+                  py: { xs: 1.5, md: 2 },
+                  minHeight: { xs: "64px", md: "72px" },
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -187,20 +176,20 @@ export default function Navbar() {
                     component={Link}
                     href="/"
                     variant="h6"
-                    fontFamily="monospace"
-                    fontWeight="bold"
                     sx={(theme) => ({
-                      color: theme.palette.text.primary,
+                      color: theme.palette.secondary.main,
                       textDecoration: "none",
                       transition: "color 0.2s ease",
-                      fontSize: { xs: "1.25rem", md: "1.5rem" },
-                      letterSpacing: "-0.025em",
+                      fontSize: { xs: "1rem", md: "1.1rem" },
+                      letterSpacing: "0.01em",
+                      fontFamily: "'Geist Mono', monospace",
+                      fontWeight: "bold",
                       "&:hover": {
                         color: theme.palette.primary.main,
                       },
                     })}
                   >
-                    witl.xyz
+                    witl@xyz:~$
                   </Typography>
                 </Box>
 
@@ -311,14 +300,13 @@ export default function Navbar() {
                     backgroundColor: theme.palette.background.default + "A6",
                   },
                 },
-              }}
-              PaperProps={{
-                sx: {
-                  mt: { xs: "72px", md: "80px" },
-                  boxShadow: "none",
-                  backgroundColor: theme.palette.background.paper,
-                  backdropFilter: "blur(8px)",
-                  transition: "background-color 0.3s ease",
+                paper: {
+                  sx: {
+                    mt: { xs: "64px", md: "72px" },
+                    boxShadow: "none",
+                    backgroundColor: theme.palette.background.paper,
+                    transition: "background-color 0.3s ease",
+                  },
                 },
               }}
             >

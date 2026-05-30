@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Box, Container, Typography, Grid, useTheme } from "@mui/material";
+import { MotionBox } from "./motion-ui";
 import { Project } from "../types";
 import { fetchGithubProjects } from "../lib/github";
 import { ProjectCard } from "./ProjectCard";
@@ -37,8 +37,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
 
   if (isLoading && !fallbackProjects?.length) {
     return (
-      <Box
-        component={motion.section}
+      <MotionBox
+        
         sx={{
           py: 12,
           backgroundColor: theme.palette.background.default,
@@ -62,14 +62,14 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
         <Container maxWidth="lg">
           <Loading />
         </Container>
-      </Box>
+      </MotionBox>
     );
   }
 
   return (
-    <Box
-      component={motion.section}
+    <MotionBox
       id="work"
+      
       sx={{
         py: 12,
         backgroundColor: theme.palette.background.default,
@@ -92,30 +92,29 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
       variants={revealFromBottom}
     >
       <Container maxWidth="lg">
-        <Box component={motion.div} variants={slideInFromLeft} mb={6}>
+        <MotionBox variants={slideInFromLeft} sx={{ mb: 6 }}>
           <Typography
-            variant="h3"
-            component="h2"
-            fontWeight="bold"
+            sx={{
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: "0.85rem",
+              color: theme.palette.secondary.main,
+              mb: 1,
+            }}
+          >
+            $ gh repo list coolguy1771 --limit 6
+          </Typography>
+          <Typography
+            variant="h2"
             gutterBottom
             sx={{
               mb: 6,
-              color: theme.palette.text.primary,
-              textShadow: `0 1px 2px rgba(0,0,0,0.1)`,
-              position: "relative",
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                bottom: -8,
-                left: 0,
-                width: 60,
-                height: 4,
-                borderRadius: 2,
-                background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              },
+              fontWeight: 700,
+              fontSize: { xs: "2rem", sm: "2.5rem" },
+              color: theme.palette.primary.main,
+              letterSpacing: "-0.02em",
             }}
           >
-            Featured Projects
+            Projects
             {error && (
               <Typography
                 component="span"
@@ -130,16 +129,16 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
               </Typography>
             )}
           </Typography>
-        </Box>
+        </MotionBox>
 
-        <Grid container spacing={3} component={motion.div} variants={staggerContainer}>
+        <Grid container spacing={3} component={MotionBox} variants={staggerContainer}>
           {projects.map((project, index) => (
-            <Grid size={{ xs: 12, md: 6 }} key={index} component={motion.div} variants={fadeIn}>
+            <Grid size={{ xs: 12, md: 6 }} key={index} component={MotionBox} variants={fadeIn}>
               <ProjectCard project={project} />
             </Grid>
           ))}
         </Grid>
       </Container>
-    </Box>
+    </MotionBox>
   );
 };
