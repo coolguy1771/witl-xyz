@@ -72,8 +72,7 @@
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "schedule": ["before 5am on monday"],
-    "matchManagers": ["bun"]
+    "schedule": ["before 5am on monday"]
   },
   "customManagers": [
     {
