@@ -124,7 +124,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
             }}
           >
             <FileText size={16} />
-            <Typography variant="body2" fontFamily="monospace">
+            <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
               {selectedFileName}
             </Typography>
           </Box>

@@ -249,7 +249,7 @@ const SSLDashboard: React.FC = () => {
       }}
     >
       <Container maxWidth="lg">
-        <Box mb={{ xs: 6, md: 8 }}>
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Typography
             variant="h3"
             component={motion.h1}
@@ -273,8 +273,7 @@ const SSLDashboard: React.FC = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            color="text.secondary"
-            fontWeight="normal"
+            color="text.secondary" sx={{ fontWeight: "normal" }}
           >
             Check, analyze, and manage SSL certificates
           </Typography>
@@ -350,7 +349,7 @@ const SSLDashboard: React.FC = () => {
           <Box sx={{ p: 3 }}>
             <TabPanel value={tabValue} index={0}>
               <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
                   <Globe size={20} style={{ verticalAlign: "text-bottom", marginRight: 8 }} />
                   Check SSL Certificate for a Domain
                 </Typography>
@@ -463,7 +462,7 @@ const SSLDashboard: React.FC = () => {
                         borderRadius: 2,
                       }}
                     >
-                      <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
                         What is an SSL certificate?
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -474,7 +473,7 @@ const SSLDashboard: React.FC = () => {
                         passwords and credit card details.
                       </Typography>
 
-                      <Typography variant="subtitle2" fontWeight="bold" sx={{ mt: 2, mb: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: "bold", mt: 2, mb: 1 }}>
                         Why check SSL certificates?
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -495,7 +494,7 @@ const SSLDashboard: React.FC = () => {
 
             <TabPanel value={tabValue} index={1}>
               <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
                   <Upload size={20} style={{ verticalAlign: "text-bottom", marginRight: 8 }} />
                   Upload SSL Certificate
                 </Typography>
@@ -576,7 +575,7 @@ const SSLDashboard: React.FC = () => {
                           borderRadius: 2,
                         }}
                       >
-                        <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
                           About Certificate Formats
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -607,7 +606,7 @@ const SSLDashboard: React.FC = () => {
                           -----END CERTIFICATE-----
                         </Box>
 
-                        <Typography variant="subtitle2" fontWeight="bold" sx={{ mt: 2, mb: 1 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: "bold", mt: 2, mb: 1 }}>
                           Common Certificate File Extensions
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -628,19 +627,19 @@ const SSLDashboard: React.FC = () => {
         </Paper>
 
         <Box
-          mt={{ xs: 6, md: 8 }}
           component={motion.div}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           sx={{
+            mt: { xs: 6, md: 8 },
             backgroundColor: alpha(theme.palette.primary.main, 0.03),
             borderRadius: 2,
             p: 3,
             border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
             Understanding SSL Certificate Components
           </Typography>
 
@@ -653,7 +652,7 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
+                <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: "bold" }}>
                   Certificate Subject
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>
@@ -672,7 +671,7 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
+                <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: "bold" }}>
                   Certificate Authority
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>
@@ -691,7 +690,7 @@ const SSLDashboard: React.FC = () => {
                   height: "100%",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="bold" color="primary.main">
+                <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: "bold" }}>
                   Validity Period
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1, flex: 1 }}>

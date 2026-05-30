@@ -110,8 +110,8 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
             >
               <Typography
                 variant="body2"
-                fontWeight="medium"
                 sx={{
+                  fontWeight: 500,
                   transition: (theme) => theme.transitions.create("all"),
                   display: "flex",
                   alignItems: "center",

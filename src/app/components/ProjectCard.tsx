@@ -42,7 +42,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <Box
           sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}
         >
-          <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+          <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: "bold" }}>
             {project.title}
           </Typography>
 
@@ -103,7 +103,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           {project.description}
         </Typography>
 
-        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mt: "auto" }}>
+        <Stack direction="row" spacing={1} sx={{ mt: "auto", flexWrap: "wrap", gap: 1 }}>
           {project.tech.map((tech, index) => (
             <TechBadge key={index} tech={tech} index={index} />
           ))}

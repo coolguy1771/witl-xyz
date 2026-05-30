@@ -109,7 +109,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <XCircle size={24} color={theme.palette.error.main} />
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 Certificate Not Available
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -133,7 +133,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           >
             <AlertTriangle size={32} color={theme.palette.error.main} />
             <Box>
-              <Typography variant="subtitle1" fontWeight="bold" color={theme.palette.error.main}>
+              <Typography variant="subtitle1" color={theme.palette.error.main} sx={{ fontWeight: "bold" }}>
                 Certificate Error
               </Typography>
               <Typography variant="body2">
@@ -253,7 +253,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
   // Field label with tooltip helper
   const FieldLabel = ({ label, tooltipText }: { label: string; tooltipText: string }) => (
     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-      <Typography variant="subtitle2" fontWeight="bold">
+      <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
         {label}
       </Typography>
       <Tooltip
@@ -295,7 +295,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Shield size={24} color={statusColor} />
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {certificate.subject.CN}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -330,7 +330,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
         >
           <Lock size={32} color={strength.color} />
           <Box>
-            <Typography variant="subtitle1" fontWeight="bold" color={strength.color}>
+            <Typography variant="subtitle1" color={strength.color} sx={{ fontWeight: "bold" }}>
               {strength.strength} Security
             </Typography>
             <Typography variant="body2">{strength.description}</Typography>
@@ -432,7 +432,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
           <Grid size={{ xs: 12, sm: 6 }}>
             <FieldLabel label="Common Name (CN)" tooltipText={fieldExplanations.commonName} />
             <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
-              <Typography variant="body2" fontFamily="monospace" sx={{ flex: 1 }}>
+              <Typography variant="body2" sx={{ fontFamily: "monospace", flex: 1 }}>
                 {certificate.subject.CN}
               </Typography>
               <Tooltip title={copiedField === "cn" ? "Copied!" : "Copy to clipboard"}>
@@ -451,14 +451,14 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
 
           <Grid size={{ xs: 12, sm: 6 }}>
             <FieldLabel label="Organization (O)" tooltipText={fieldExplanations.organization} />
-            <Typography variant="body2" fontFamily="monospace">
+            <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
               {formatFieldValue(certificate.subject.O)}
             </Typography>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
             <FieldLabel label="Issuer" tooltipText={fieldExplanations.issuer} />
-            <Typography variant="body2" fontFamily="monospace">
+            <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
               {certificate.issuer.CN}
               {certificate.issuer.O && `, ${certificate.issuer.O}`}
             </Typography>
@@ -469,8 +469,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
                 variant="body2"
-                fontFamily="monospace"
-                sx={{
+                sx={{ fontFamily: "monospace",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   flex: 1,
@@ -510,7 +509,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
               arrow
               placement="top"
             >
-              <Typography variant="body2" fontFamily="monospace" sx={{ cursor: "help" }}>
+              <Typography variant="body2" sx={{ fontFamily: "monospace", cursor: "help" }}>
                 {certificate.signatureAlgorithm || "Not available"}
               </Typography>
             </Tooltip>
@@ -520,8 +519,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
             <FieldLabel label="Fingerprint" tooltipText={fieldExplanations.fingerprint} />
             <Typography
               variant="body2"
-              fontFamily="monospace"
-              sx={{
+              sx={{ fontFamily: "monospace",
                 wordBreak: "break-all",
                 fontSize: "0.75rem",
               }}
@@ -634,7 +632,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
 
         {/* Security recommendations */}
         <Box sx={{ mt: 3 }}>
-          <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2 }}>
             Security Recommendations
           </Typography>
 
@@ -660,7 +658,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 )}`,
               }}
             >
-              <Typography variant="subtitle2" fontWeight="bold">
+              <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
                 Certificate Expiration
               </Typography>
               <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -681,7 +679,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
               }}
             >
-              <Typography variant="subtitle2" fontWeight="bold">
+              <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
                 Certificate Authority
               </Typography>
               <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -704,7 +702,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                     border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
                   }}
                 >
-                  <Typography variant="subtitle2" fontWeight="bold">
+                  <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
                     Domain Coverage
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -742,7 +740,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({
                 )}`,
               }}
             >
-              <Typography variant="subtitle2" fontWeight="bold">
+              <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
                 Encryption Strength
               </Typography>
               <Typography variant="body2" sx={{ mt: 0.5 }}>

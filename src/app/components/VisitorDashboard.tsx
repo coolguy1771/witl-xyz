@@ -260,9 +260,8 @@ function LoadingState() {
     >
       <Container maxWidth="lg">
         <Box
-          textAlign="center"
-          mb={{ xs: 6, md: 8 }}
-          sx={{
+          sx={{ textAlign: "center",
+            mb: { xs: 6, md: 8 },
             animation: "fadeIn 0.5s ease-out",
             "@keyframes fadeIn": {
               "0%": { opacity: 0 },
@@ -500,7 +499,7 @@ export default function VisitorDashboard({ initialData }: Props) {
       }}
     >
       <Container maxWidth="lg">
-        <Box mb={{ xs: 6, md: 8 }}>
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Box
             sx={{
               display: "flex",
@@ -524,7 +523,7 @@ export default function VisitorDashboard({ initialData }: Props) {
               >
                 Your Digital Profile
               </Typography>
-              <Typography variant="h6" color="text.secondary" fontWeight="normal">
+              <Typography variant="h6" color="text.secondary" sx={{ fontWeight: "normal" }}>
                 Analyzing your connection data in real-time
               </Typography>
             </Box>
@@ -616,7 +615,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="IP Address" icon={<Globe size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontFamily="monospace" fontWeight="bold" sx={{ mb: 2 }}>
+                  <Typography variant="h5" sx={{ fontFamily: "monospace", fontWeight: "bold", mb: 2 }}>
                     {data.ip}
                   </Typography>
 
@@ -665,7 +664,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="Your Location" icon={<MapPin size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
+                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
                     {data.city}, {data.countryName || data.country}
                   </Typography>
 
@@ -706,7 +705,7 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="Time Information" icon={<Clock size={24} />}>
                 <Box>
-                  <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
                     {new Date().toLocaleTimeString("en-US", {
                       timeZone: data.timezone,
                       hour: "2-digit",
@@ -756,7 +755,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                       mb: 2,
                     }}
                   >
-                    <Typography variant="h5" fontWeight="bold">
+                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                       {data.weather.temp}°C
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
@@ -904,9 +903,8 @@ export default function VisitorDashboard({ initialData }: Props) {
         </Grid>
 
         <Box
-          textAlign="center"
-          mt={{ xs: 6, md: 8 }}
-          sx={{
+          sx={{ textAlign: "center",
+            mt: { xs: 6, md: 8 },
             backgroundColor: alpha(theme.palette.primary.main, 0.03),
             borderRadius: 2,
             p: 3,
