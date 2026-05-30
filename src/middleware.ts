@@ -26,7 +26,7 @@ function applySecurityHeaders(headers: Headers, csp?: string): void {
   }
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("X-Frame-Options", "DENY");
-  headers.set("X-XSS-Protection", "1; mode=block");
+  headers.set("X-XSS-Protection", "0");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set(
     "Permissions-Policy",
@@ -104,7 +104,6 @@ function handlePageRequest(request: NextRequest): NextResponse {
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", contentSecurityPolicy);
 
   const response = NextResponse.next({
     request: {

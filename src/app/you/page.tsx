@@ -4,8 +4,6 @@ import { Suspense } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import VisitorDashboard from "../components/VisitorDashboard";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Your Digital Profile | witl.xyz",
   description: "View real-time information about your connection, location, and device.",

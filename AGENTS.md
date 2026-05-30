@@ -5,7 +5,7 @@
 - When addressing review feedback, fix only still-valid issues and skip the rest with a brief reason.
 - Commit and push when explicitly asked (e.g. "commit and push", "do it").
 
-## Learned Workspace Facts
+# Learned Workspace Facts
 
 - Next.js 16 portfolio/blog (`witl-xyz`) deployed to Cloudflare Workers via OpenNext (`@opennextjs/cloudflare`).
 - Production site: https://witl.xyz; Cloudflare Worker name `witl-xyz`.

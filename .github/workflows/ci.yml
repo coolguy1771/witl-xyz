@@ -39,8 +39,9 @@ jobs:
           LOADER="node_modules/@tailwindcss/node/dist/esm-cache.loader.mjs"
           INDEX="node_modules/@tailwindcss/node/dist/index.mjs"
           grep -q 'resolveSync' "$LOADER" || { echo "Missing resolveSync export in esm-cache.loader"; exit 1; }
-          grep -q 'resolveSync as en' "$INDEX" || { echo "Missing resolveSync import in index.mjs"; exit 1; }
+          grep -q 'resolveSync' "$INDEX" || { echo "Missing resolveSync import in index.mjs"; exit 1; }
           grep -q 'registerHooks' "$INDEX" || { echo "Missing registerHooks fallback in index.mjs"; exit 1; }
+          bunx patch-package --check
 
       - name: Run linter
         run: bun run lint
