@@ -23,9 +23,11 @@ const EXCERPT_LENGTH = 150;
 const postCache = new Map<string, BlogPost>();
 
 /**
- * Gets a blog post by its slug
- * @param slug The post slug (without .md extension)
- * @returns The blog post data
+ * Load and build a BlogPost for the given slug, converting Markdown to HTML and deriving metadata.
+ *
+ * @param slug - The post slug (without the `.md` extension); the value will be normalized before lookup.
+ * @returns The assembled `BlogPost` including HTML `content`, `title`, `date`, `excerpt`, `readingTime`, `tags`, `coverImage`, and extracted `headings`.
+ * @throws Error if the post file does not exist, or if required frontmatter fields (`title` or `date`) are missing.
  */
 export async function getPostBySlug(slug: string): Promise<BlogPost> {
   const realSlug = normalizeBlogSlug(slug);
@@ -278,7 +280,10 @@ export function extractHeadingsFromContent(content: string): Heading[] {
 }
 
 /**
- * Clears the post cache
+ * Clears the in-memory post cache and the resolved post path cache.
+ *
+ * This removes all cached BlogPost entries and also clears any cached
+ * filesystem path resolutions used to locate post files.
  */
 export function clearPostCache(): void {
   postCache.clear();

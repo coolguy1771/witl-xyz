@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     "DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure. CKA certified.",
 };
 
+/**
+ * Application root layout that applies global fonts and theme, renders the navbar, and mounts page content.
+ *
+ * @param children - Page content to render inside the layout's main region (includes top padding responsive at `md`)
+ * @returns The root HTML structure including `<html>`, `<body>`, the theme registry, `Navbar`, and a `<main>` that contains `children`
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="scroll-smooth">

@@ -11,6 +11,15 @@ import { HeroSection } from "./components/Hero";
 import { ProjectsSection } from "./components/Projects";
 import { SkillsGrid } from "./components/SkillsGrid";
 
+/**
+ * Renders the main single-page layout composed of the site's sections and footer.
+ *
+ * The layout uses the current MUI theme for background and text colors and contains
+ * Hero, Skills, Certifications, About, Projects, and Contact sections inside a
+ * main container with a Footer placed outside the main content.
+ *
+ * @returns The page's root React element with themed background and text color.
+ */
 export default function Home() {
   const theme = useTheme();
 

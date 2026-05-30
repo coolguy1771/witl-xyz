@@ -36,6 +36,13 @@ function HideOnScroll({ children }: { children: React.ReactElement }) {
   );
 }
 
+/**
+ * Top navigation bar component with responsive links, theme toggle, mobile drawer, and a scroll-to-top control.
+ *
+ * The component synchronizes a local `hash` state with window.location.hash, tracks page scroll to adjust elevation and reveal a scroll-to-top FAB, and renders desktop and mobile navigation (including anchor links) with active styling.
+ *
+ * @returns The rendered navbar React element
+ */
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);

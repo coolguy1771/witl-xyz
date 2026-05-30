@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Edge middleware for security headers on all matched routes.
- * Uses middleware.ts (not proxy.ts) so OpenNext on Cloudflare Workers can deploy it.
+ * Edge middleware that attaches a set of security-focused HTTP headers to the response for matched routes.
+ *
+ * Sets Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy,
+ * and Permissions-Policy; also sets Strict-Transport-Security when NODE_ENV is "production".
+ *
+ * @returns The passthrough NextResponse with the security headers applied
  */
 export function middleware(_request: NextRequest) {
   const response = NextResponse.next();

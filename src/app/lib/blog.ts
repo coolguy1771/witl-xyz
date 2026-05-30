@@ -19,10 +19,13 @@ const EXCERPT_LENGTH = 150;
 const postCache = new Map<string, BlogPost>();
 
 /**
- * Gets a blog post by its slug
- * @param slug - The post slug (with or without .md extension)
- * @param useCache - Whether to use cached posts (default: true)
- * @returns The blog post data
+ * Load and return the blog post identified by `slug`.
+ *
+ * @param slug - Post slug (may include or omit the `.md` extension); will be normalized before lookup
+ * @param useCache - If true, return a cached post when available (default: true)
+ * @returns The assembled `BlogPost` object for the requested slug
+ * @throws Error if the post file does not exist
+ * @throws Error if required frontmatter fields (`title` or `date`) are missing
  */
 export async function getPostBySlug(slug: string, useCache: boolean = true): Promise<BlogPost> {
   const realSlug = normalizeBlogSlug(slug);
@@ -111,8 +114,9 @@ export async function getPostBySlug(slug: string, useCache: boolean = true): Pro
 }
 
 /**
- * Gets all post slugs
- * @returns Array of post slugs without the .md extension
+ * Retrieve the list of blog post slugs found in the posts directory.
+ *
+ * @returns An array of slugs derived from filenames by removing the `.md` extension; returns `[]` if the directory cannot be read.
  */
 export async function getPostSlugs(): Promise<string[]> {
   try {
@@ -127,9 +131,13 @@ export async function getPostSlugs(): Promise<string[]> {
 }
 
 /**
- * Gets all blog posts
- * @param useCache - Whether to use cached posts (default: true)
- * @returns Array of blog posts sorted by date (newest first)
+ * Load all blog posts and return them sorted by date descending.
+ *
+ * Posts that fail to load are omitted from the result; if an unrecoverable
+ * error occurs, an empty array is returned.
+ *
+ * @param useCache - Whether to use cached post data (default: `true`)
+ * @returns An array of BlogPost objects sorted by date descending; empty array on error
  */
 export async function getAllPosts(useCache: boolean = true): Promise<BlogPost[]> {
   try {
@@ -174,7 +182,9 @@ export async function getPostsByTags(tags: string[]): Promise<BlogPost[]> {
 }
 
 /**
- * Clears the post cache
+ * Clear in-memory blog post cache and related post path resolution cache.
+ *
+ * Also calls `clearPostPathCache()` to remove any cached resolved file paths.
  */
 export function clearPostCache(): void {
   postCache.clear();

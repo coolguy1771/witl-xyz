@@ -240,9 +240,12 @@ function EmptyStateCard({
 }
 
 /**
- * Loading state component for VisitorDashboard
+ * Render the full-page loading UI shown while visitor data is being fetched.
  *
- * @returns {JSX.Element} Loading state UI
+ * Displays a centered progress indicator with explanatory text and a grid of skeleton cards
+ * that mirror the dashboard layout.
+ *
+ * @returns A JSX element containing the loading state UI
  */
 function LoadingState() {
   const theme = useTheme();
@@ -316,10 +319,12 @@ function LoadingState() {
 }
 
 /**
- * VisitorDashboard Component
+ * Renders a visitor dashboard showing IP, location, device, network, time, and weather information.
  *
- * @param {Props} props - Component props containing initial visitor data
- * @returns {JSX.Element} The dashboard UI
+ * Displays initial server-provided data immediately, defers fetching enhanced client-side data (including weather) during browser idle time, and supports manual refresh; fetched results are merged into the component state and may update the displayed values.
+ *
+ * @param initialData - Partial visitor data supplied by the server; weather is intentionally fetched client-side
+ * @returns The dashboard UI element
  */
 export default function VisitorDashboard({ initialData }: Props) {
   // State Management
