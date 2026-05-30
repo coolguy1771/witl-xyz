@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Typography, Grid, useTheme } from "@mui/material";
 import { MotionBox } from "./motion-ui";
 import { Project } from "../types";
-import { fetchGithubProjects } from "../lib/github";
 import { ProjectCard } from "./ProjectCard";
 import { Loading } from "./ui/Loading";
 import { fadeIn, staggerContainer, slideInFromLeft, revealFromBottom } from "../lib/animations";
@@ -22,7 +21,11 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const data = await fetchGithubProjects("coolguy1771");
+        const response = await fetch("/api/github/projects?username=coolguy1771");
+        if (!response.ok) {
+          throw new Error(`GitHub API returned ${response.status}`);
+        }
+        const data = (await response.json()) as Project[];
         setProjects(data);
         setIsLoading(false);
       } catch (err) {

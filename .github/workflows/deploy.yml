@@ -30,13 +30,7 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build application
-        run: bun run build
-
-      - name: Build Cloudflare Worker
-        run: bun run build:worker
-
-      - name: Deploy to Cloudflare Workers
+      - name: Build and deploy Cloudflare Worker
         run: bun run deploy:worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

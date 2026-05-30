@@ -1,12 +1,11 @@
 # Personal Blog and Portfolio
 
-A modern, responsive blog and portfolio website built with Next.js 15, featuring
-dark mode, markdown blog posts, dynamic content, and deployed on cloudflare
-workers
+A modern, responsive blog and portfolio website built with Next.js 16, deployed
+on Cloudflare Workers via OpenNext.
 
 ## Features
 
-- ⚡️ Built with Next.js 15 and TypeScript
+- Built with Next.js 16 and TypeScript
 - 🎨 Dark theme with custom styling
 - 📝 Markdown blog posts with frontmatter
 - 📑 Table of contents with active section highlighting
@@ -14,7 +13,7 @@ workers
 - 🔗 Previous/Next post navigation
 - 📱 Fully responsive design
 - 🎭 Custom fonts (Geist Sans & Geist Mono)
-- 🚀 Fast page loads with static generation
+- Fast page loads with static generation and ISR
 
 ## Getting Started
 

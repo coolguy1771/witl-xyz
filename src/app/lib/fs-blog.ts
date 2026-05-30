@@ -3,7 +3,8 @@
  * Works in both development and production environments
  */
 
-import fs from "fs";
+import { existsSync } from "fs";
+import fs from "fs/promises";
 import matter from "gray-matter";
 import {
   clearPostPathCache,
@@ -40,12 +41,12 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
   const fullPath = resolvePostFilePath(slug);
 
   // Check if file exists
-  if (!fs.existsSync(fullPath)) {
+  if (!existsSync(fullPath)) {
     throw new Error(`Post not found: ${realSlug}`);
   }
 
   // Read file
-  const fileContents = fs.readFileSync(fullPath, "utf8");
+  const fileContents = await fs.readFile(fullPath, "utf8");
 
   // Parse frontmatter
   const { data, content } = matter(fileContents);
@@ -116,7 +117,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
  * @returns Array of blog posts sorted by date (newest first)
  */
 export async function getAllPosts(): Promise<BlogPost[]> {
-  const slugs = getPostSlugs();
+  const slugs = await getPostSlugs();
   const postsPromises = slugs.map((slug) => getPostBySlug(slug));
   const posts = await Promise.all(postsPromises);
 
@@ -128,13 +129,13 @@ export async function getAllPosts(): Promise<BlogPost[]> {
  * Gets all post slugs
  * @returns Array of post slugs without the .md extension
  */
-export function getPostSlugs(): string[] {
-  if (!fs.existsSync(POSTS_DIRECTORY)) {
+export async function getPostSlugs(): Promise<string[]> {
+  if (!existsSync(POSTS_DIRECTORY)) {
     console.warn(`Posts directory not found: ${POSTS_DIRECTORY}`);
     return [];
   }
 
-  const filenames = fs.readdirSync(POSTS_DIRECTORY);
+  const filenames = await fs.readdir(POSTS_DIRECTORY);
   return filenames
     .filter((filename) => filename.endsWith(".md"))
     .map((filename) => filename.replace(/\.md$/, ""));

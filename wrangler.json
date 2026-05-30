@@ -1,12 +1,8 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "witl-xyz",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2025-05-05",
+  "compatibility_date": "2026-05-30",
   "compatibility_flags": ["nodejs_compat_v2"],
   "minify": true,
   "assets": {
@@ -28,97 +24,12 @@
       "head_sampling_rate": 1
     }
   },
-  /**
-   * Smart Placement
-   * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-   */
   "placement": { "mode": "smart" },
-
-  /**
-   * Security Headers Configuration
-   * Applied at the edge level for better performance and security
-   */
-  "security": {
-    "headers": [
-      {
-        "source": "/(.*)",
-        "headers": [
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "X-Frame-Options", "value": "DENY" },
-          { "key": "X-XSS-Protection", "value": "1; mode=block" },
-          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-          { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
-          {
-            "key": "Strict-Transport-Security",
-            "value": "max-age=31536000; includeSubDomains; preload"
-          },
-          {
-            "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://avatars.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://api.github.com; frame-ancestors 'none';"
-          }
-        ]
-      },
-      {
-        "source": "/api/(.*)",
-        "headers": [
-          { "key": "Cache-Control", "value": "no-store" },
-          { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
-        ]
-      }
-    ]
-  },
-
-  /**
-   * CORS Configuration
-   * Configured at edge level for better performance
-   */
-  "cors": {
-    "allowed_origins": ["https://witl.xyz"],
-    "allowed_methods": ["GET", "POST", "OPTIONS"],
-    "allowed_headers": ["Content-Type", "Authorization", "X-Requested-With"],
-    "max_age": 86400
-  },
-
-  /**
-   * KV Namespaces for distributed rate limiting and caching
-   */
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "RATE_LIMIT_KV",
-  //     "id": "your-rate-limit-kv-namespace-id",
-  //     "preview_id": "your-preview-rate-limit-kv-namespace-id"
-  //   },
-  //   {
-  //     "binding": "CACHE_KV",
-  //     "id": "your-cache-kv-namespace-id", 
-  //     "preview_id": "your-preview-cache-kv-namespace-id"
-  //   }
-  // ],
-
-  /**
-   * Environment Variables
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-   */
   "vars": {
     "ENVIRONMENT": "production",
-    "API_RATE_LIMIT": "60",
     "NODE_ENV": "production",
     "LOG_LEVEL": "info",
     "RATE_LIMIT_WINDOW": "60",
     "RATE_LIMIT_MAX_REQUESTS": "20"
-  },
-
-  /**
-   * Note: Use secrets to store sensitive data.
-   * https://developers.cloudflare.com/workers/configuration/secrets/
-   * 
-   * To set secrets, use:
-   * wrangler secret put SECRET_NAME
-   */
-
-  /**
-   * Service Bindings (communicate between multiple Workers)
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-   */
-  // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+  }
 }
