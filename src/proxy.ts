@@ -5,8 +5,7 @@ import type { NextRequest } from "next/server";
  * Global security middleware for Next.js application
  * Applies security headers and rate limiting to all routes
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function middleware(_request: NextRequest) {
+export function proxy(_request: NextRequest) {
   // Get the response
   const response = NextResponse.next();
 
