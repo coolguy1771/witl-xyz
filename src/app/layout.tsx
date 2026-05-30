@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeRegistry } from "./components/ThemeRegistry";
 import Navbar from "./components/Navbar";
+import { SmoothScroll } from "./components/SmoothScroll";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -22,6 +23,12 @@ export const metadata: Metadata = {
     "DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure. CKA certified.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 /**
  * Application root layout that applies global fonts and theme, renders the navbar, and mounts page content.
  *
@@ -30,9 +37,10 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeRegistry>
+          <SmoothScroll />
           <Navbar />
           <main className="pt-[64px] md:pt-[72px]">{children}</main>
         </ThemeRegistry>

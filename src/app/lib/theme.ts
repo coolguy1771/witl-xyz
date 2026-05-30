@@ -67,7 +67,7 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => ({
           backgroundColor: mode === "dark" ? "#0a0e14" : "#f0f4f8",
           color: mode === "dark" ? "#e2e8f0" : "#0d1117",
           colorScheme: mode,
-          scrollBehavior: "smooth",
+          scrollBehavior: "auto",
         },
         "::selection": {
           backgroundColor: mode === "dark" ? "#00d4ff" : "#0077aa",

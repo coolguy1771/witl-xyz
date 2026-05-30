@@ -28,10 +28,12 @@ export const Footer: React.FC = () => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: { xs: "center", sm: "space-between" },
               alignItems: "center",
               flexWrap: "wrap",
               gap: 2,
+              textAlign: { xs: "center", sm: "left" },
             }}
           >
             <Box>

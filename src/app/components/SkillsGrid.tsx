@@ -40,7 +40,7 @@ export const SkillsGrid: React.FC = () => {
   return (
     <MotionBox
       sx={{
-        py: 10,
+        py: { xs: 6, sm: 8, md: 10 },
         bgcolor: isDark ? "#0d1117" : "#e8edf3",
         transition: "background-color 0.3s ease",
       }}

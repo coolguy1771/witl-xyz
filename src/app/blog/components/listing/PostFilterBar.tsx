@@ -101,7 +101,7 @@ export function PostFilterBar({
         </Box>
       </Box>
 
-      <Box sx={{ display: "flex", gap: 1 }}>
+      <Box sx={{ display: "flex", gap: 1, alignSelf: { xs: "flex-end", md: "auto" } }}>
         <IconButton
           onClick={() => onViewChange("grid")}
           color={currentView === "grid" ? "primary" : "default"}

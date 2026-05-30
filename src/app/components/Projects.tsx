@@ -42,7 +42,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
     return (
       <MotionBox
         sx={{
-          py: 12,
+          py: { xs: 6, md: 12 },
           backgroundColor: theme.palette.background.default,
           position: "relative",
           "&::before": {
@@ -71,7 +71,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ fallbackProjec
   return (
     <MotionBox
       sx={{
-        py: 12,
+        py: { xs: 6, md: 12 },
         backgroundColor: theme.palette.background.default,
         position: "relative",
         "&::before": {

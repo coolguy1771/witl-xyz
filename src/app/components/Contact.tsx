@@ -11,7 +11,7 @@ export const ContactSection: React.FC = () => {
   return (
     <MotionBox
       sx={{
-        py: 12,
+        py: { xs: 6, md: 12 },
         backgroundColor: theme.palette.background.default,
         position: "relative",
         "&::before": {
@@ -60,6 +60,7 @@ export const ContactSection: React.FC = () => {
             sx={{
               fontWeight: 700,
               mb: 3,
+              fontSize: { xs: "1.75rem", sm: "2.25rem", md: "3rem" },
               color: theme.palette.text.primary,
               position: "relative",
               display: "inline-block",
@@ -85,7 +86,7 @@ export const ContactSection: React.FC = () => {
               mx: "auto",
               maxWidth: "36rem",
               color: theme.palette.text.secondary,
-              fontSize: "1.125rem",
+              fontSize: { xs: "1rem", md: "1.125rem" },
               lineHeight: 1.7,
             }}
           >

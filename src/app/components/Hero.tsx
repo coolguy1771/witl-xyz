@@ -89,12 +89,13 @@ export const HeroSection: React.FC = () => {
     <Box
       component="section"
       sx={{
-        minHeight: "100vh",
+        minHeight: { xs: "auto", md: "100vh" },
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        pt: 8,
-        pb: 10,
+        pt: { xs: 4, md: 8 },
+        pb: { xs: 8, md: 10 },
+        px: { xs: 0, sm: 0 },
         position: "relative",
         backgroundColor: theme.palette.background.default,
         overflow: "hidden",
@@ -113,7 +114,7 @@ export const HeroSection: React.FC = () => {
       }}
     >
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-        <Stack spacing={4} sx={{ alignItems: "flex-start" }}>
+        <Stack spacing={4} sx={{ alignItems: { xs: "stretch", sm: "flex-start" }, width: "100%" }}>
           {/* Terminal window */}
           <MotionBox
             variants={fadeIn}
@@ -164,7 +165,14 @@ export const HeroSection: React.FC = () => {
             </Box>
 
             {/* Terminal body */}
-            <Box sx={{ p: { xs: 2, sm: 3 }, minHeight: "320px" }}>
+            <Box
+              sx={{
+                p: { xs: 2, sm: 3 },
+                minHeight: { xs: "260px", sm: "320px" },
+                overflowX: "auto",
+                wordBreak: "break-word",
+              }}
+            >
               {/* Completed lines */}
               {visibleLines.map((line, idx) => (
                 <Box key={idx} sx={{ mb: 0.5, lineHeight: 1.6 }}>
@@ -243,12 +251,15 @@ export const HeroSection: React.FC = () => {
 
           {/* CTA buttons */}
           <MotionBox variants={popIn} initial="initial" animate="animate">
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ width: "100%" }}>
               <Button
                 href="#projects"
                 variant="contained"
                 size="large"
+                fullWidth
                 sx={{
+                  display: { sm: "inline-flex" },
+                  width: { xs: "100%", sm: "auto" },
                   backgroundColor: theme.palette.primary.main,
                   color: isDark ? "#0a0e14" : "#ffffff",
                   fontWeight: 600,
@@ -276,7 +287,10 @@ export const HeroSection: React.FC = () => {
                 href="#contact"
                 variant="outlined"
                 size="large"
+                fullWidth
                 sx={{
+                  display: { sm: "inline-flex" },
+                  width: { xs: "100%", sm: "auto" },
                   color: theme.palette.secondary.main,
                   fontWeight: 600,
                   py: 1.25,

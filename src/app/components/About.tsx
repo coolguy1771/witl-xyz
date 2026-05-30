@@ -11,7 +11,7 @@ export const AboutSection: React.FC = () => {
   return (
     <MotionBox
       sx={{
-        py: 12,
+        py: { xs: 6, md: 12 },
         bgcolor: theme.palette.background.default,
         color: theme.palette.text.primary,
         transition: "background-color 0.3s ease, color 0.3s ease",

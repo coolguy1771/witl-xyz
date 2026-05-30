@@ -40,9 +40,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     >
       <CardContent sx={{ p: 3, flexGrow: 1 }}>
         <Box
-          sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}
+          sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2, gap: 1, flexWrap: "wrap" }}
         >
-          <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h5"
+            component="h3"
+            gutterBottom
+            sx={{ fontWeight: "bold", fontSize: { xs: "1.1rem", sm: "1.5rem" }, flex: 1, minWidth: 0 }}
+          >
             {project.title}
           </Typography>
 

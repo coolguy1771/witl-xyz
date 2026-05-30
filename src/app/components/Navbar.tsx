@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navAnimation } from "../lib/animations";
-import { MotionAppBar } from "./motion-ui";
+import { AppBar } from "@mui/material";
 import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import {
   Container,
@@ -16,25 +15,13 @@ import {
   useMediaQuery,
   Drawer,
   Button,
-  Slide,
-  useScrollTrigger,
   Fab,
   Tooltip,
   alpha,
   Zoom,
 } from "@mui/material";
 import { useThemeMode } from "./ThemeRegistry";
-
-// Hide on scroll functionality
-function HideOnScroll({ children }: { children: React.ReactElement }) {
-  const trigger = useScrollTrigger();
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  );
-}
+import { useLenis } from "lenis/react";
 
 /**
  * Top navigation bar component with responsive links, theme toggle, mobile drawer, and a scroll-to-top control.
@@ -47,9 +34,11 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
   const [hash, setHash] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const lenis = useLenis();
 
   useEffect(() => {
     const syncHash = () => setHash(window.location.hash);
@@ -62,22 +51,33 @@ export default function Navbar() {
     };
   }, [pathname]);
 
-  // Handle scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 60) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+  useLenis((instance) => {
+    setScrolled(instance.scroll > 60);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    if (isMobile || instance.scroll <= 0) {
+      setNavVisible(true);
+      return;
+    }
+
+    if (instance.direction === 1) {
+      setNavVisible(false);
+    } else if (instance.direction === -1) {
+      setNavVisible(true);
+    }
+  });
+
+  useEffect(() => {
+    if (!lenis) {
+      return;
+    }
+
+    if (isOpen) {
+      lenis.stop();
+      return;
+    }
+
+    lenis.start();
+  }, [isOpen, lenis]);
 
   const navItems = [
     { label: "~/", href: "/" },
@@ -147,15 +147,13 @@ export default function Navbar() {
           right: 0,
           zIndex: theme.zIndex.appBar,
           width: "100%",
+          transform: isOpen || navVisible ? "translateY(0)" : "translateY(-100%)",
+          transition: "transform 0.3s ease",
         }}
       >
-        <HideOnScroll>
-          <MotionAppBar
+          <AppBar
             position="static"
             elevation={scrolled ? 4 : 0}
-            initial="initial"
-            animate="animate"
-            variants={navAnimation}
             sx={(theme) => ({
               backgroundColor:
                 theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
@@ -297,9 +295,13 @@ export default function Navbar() {
                     ml: "auto",
                     display: { md: "none" },
                     color: theme.palette.text.primary,
+                    width: 44,
+                    height: 44,
                   }}
                   onClick={() => setIsOpen(!isOpen)}
                   edge="end"
+                  aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+                  aria-expanded={isOpen}
                 >
                   {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </IconButton>
@@ -423,8 +425,7 @@ export default function Navbar() {
                 </Box>
               </Box>
             </Drawer>
-          </MotionAppBar>
-        </HideOnScroll>
+          </AppBar>
       </Box>
 
       {/* Scroll to top button */}
@@ -433,7 +434,7 @@ export default function Navbar() {
           color="primary"
           size="small"
           aria-label="scroll back to top"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => lenis?.scrollTo(0)}
           sx={{
             position: "fixed",
             bottom: 20,

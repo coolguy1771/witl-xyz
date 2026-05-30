@@ -28,7 +28,7 @@ export function BlogPostView({ post, relatedPosts = [] }: BlogPostViewProps) {
       }}
       style={{ backgroundColor: theme.palette.background.default }}
     >
-      <Container maxWidth="lg" sx={{ pt: 0, pb: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ pt: { xs: 2, md: 0 }, pb: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
         <Box
           sx={{
             mb: 3,
