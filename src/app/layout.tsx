@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { connection } from "next/server";
 import localFont from "next/font/local";
 import { ThemeRegistry } from "./components/ThemeRegistry";
 import Navbar from "./components/Navbar";
@@ -35,7 +36,9 @@ export const viewport: Viewport = {
  * @param children - Page content to render inside the layout's main region (includes top padding responsive at `md`)
  * @returns The root HTML structure including `<html>`, `<body>`, the theme registry, `Navbar`, and a `<main>` that contains `children`
  */
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  await connection();
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

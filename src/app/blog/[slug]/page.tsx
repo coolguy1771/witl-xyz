@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getPostSlugs, getRelatedPosts } from "../../lib/fs-blog";
+import { getPostBySlug, getRelatedPosts } from "../../lib/fs-blog";
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
-
-export const revalidate = 3600;
 
 // Generate metadata for the page
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
@@ -56,23 +54,5 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
   } catch (error) {
     console.error(`Error loading post ${slug}:`, error);
     notFound();
-  }
-}
-
-// Generate static paths for build time
-export async function generateStaticParams() {
-  try {
-    const slugs = await getPostSlugs();
-
-    if (slugs.length > 0) {
-      console.log(`Found ${slugs.length} blog posts in filesystem`);
-      return slugs.map((slug) => ({ slug }));
-    }
-
-    console.warn("No blog posts found for static generation");
-    return [];
-  } catch (error) {
-    console.error("Error generating static paths:", error);
-    return [];
   }
 }
