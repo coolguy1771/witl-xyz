@@ -18,10 +18,6 @@ const nextConfig = {
         source: '/:path*',
         headers: [
           {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://avatars.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://api.github.com; frame-ancestors 'none';"
-          },
-          {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
           },

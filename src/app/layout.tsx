@@ -22,6 +22,8 @@ export const metadata: Metadata = {
     "DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure. CKA certified.",
 };
 
+export const dynamic = "force-dynamic";
+
 /**
  * Application root layout that applies global fonts and theme, renders the navbar, and mounts page content.
  *

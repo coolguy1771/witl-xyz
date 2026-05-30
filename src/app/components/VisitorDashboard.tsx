@@ -378,7 +378,6 @@ export default function VisitorDashboard({ initialData }: Props) {
             geo?: object;
             weather?: WeatherData;
           } | null;
-          console.log("Visitor API response:", responseData);
 
           if (typeof responseData === "object" && responseData !== null) {
             // Handle the nested structure from the API
@@ -395,17 +394,12 @@ export default function VisitorDashboard({ initialData }: Props) {
               updatedData.weather = responseData.weather;
             }
 
-            console.log("Processed visitor data:", updatedData);
             setData((prev) => ({ ...prev, ...updatedData }));
-          } else {
-            console.error("Invalid visitor data:", responseData);
           }
           setInitialLoaded(true);
         } catch (err) {
-          if ((err as Error).name === "AbortError") {
-            console.log("Request timed out - using initial data");
-          } else {
-            console.error("Error fetching visitor data:", err);
+          if ((err as Error).name !== "AbortError") {
+            console.error("Failed to load complete visitor data");
             setError("Failed to load complete visitor data. Some information may be missing.");
           }
           // Keep initial data if fetch fails

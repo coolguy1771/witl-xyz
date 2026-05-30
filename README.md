@@ -20,8 +20,8 @@ workers
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 24+ (via Bun)
+- [Bun](https://bun.sh) 1.3.9+
 
 ### Installation
 
@@ -35,13 +35,13 @@ cd witl-xyz
 2. Install dependencies:
 
 ```bash
-npm install
+bun install
 ```
 
 3. Run the development server:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the result.
@@ -140,7 +140,7 @@ The blog functionality works by:
 Simply build and deploy:
 
 ```bash
-npm run deploy
+bun run deploy
 ```
 
 The filesystem access only happens during build time, not in production. Next.js

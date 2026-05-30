@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run start",
+      "startServerCommand": "bun run start",
       "startServerReadyPattern": "ready on",
       "numberOfRuns": 3,
       "settings": {

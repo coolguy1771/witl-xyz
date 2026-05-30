@@ -7,22 +7,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Development
 ```bash
 # Start development server with Turbopack
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
+bun run build
 
 # Deploy to Cloudflare Workers
-npm run deploy
+bun run deploy
 
 # Preview worker locally
-npm run preview:worker
+bun run preview:worker
 
 # Run tests
-npm run test
+bun run test
 
 # Run a specific test file
-npm run test -- path/to/test.spec.ts
+bun run test path/to/test.spec.ts
 ```
 
 ## Architecture Overview
