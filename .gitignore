@@ -23,6 +23,10 @@
 .DS_Store
 *.pem
 
+# IDE / tool configs
+.cursor/
+project.inlang/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

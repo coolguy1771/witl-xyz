@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, alpha } from "@mui/material";
+import { Box, alpha } from "@mui/material";
 import { Check, Copy } from "lucide-react";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface CodeBlockProps {
   children: string;
@@ -14,8 +15,6 @@ interface CodeBlockProps {
 export function CodeBlock({ children, language }: CodeBlockProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [highlightedCode, setHighlightedCode] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const theme = useTheme(); // Used in sx props
 
   useEffect(() => {
     // Register languages you want to support
@@ -24,6 +23,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
       languages: [
         "javascript",
         "typescript",
+        "java",
         "json",
         "html",
         "css",
@@ -109,7 +109,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
             top: "0.5rem",
             fontSize: "0.7rem",
             color: theme.palette.common.white,
-            fontFamily: '"Fira Code", "Geist Mono", monospace',
+            fontFamily: CODE_FONT_FAMILY,
             fontWeight: 500,
             letterSpacing: "0.05em",
             backgroundColor:
@@ -136,7 +136,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
           borderRadius: "10px",
           backgroundColor: theme.palette.mode === "dark" ? "#282a36" : "#f7f7f7",
           overflowX: "auto",
-          fontFamily: '"Fira Code", "Geist Mono", monospace',
+          fontFamily: CODE_FONT_FAMILY,
           fontSize: "0.875rem",
           color: theme.palette.mode === "dark" ? "#f8f8f2" : "#24292e",
           boxShadow: theme.shadows[4],
@@ -171,6 +171,7 @@ export function CodeBlock({ children, language }: CodeBlockProps) {
           },
           // Override highlight.js styles
           "& .hljs": {
+            fontFamily: CODE_FONT_FAMILY,
             background: "transparent",
             padding: 0,
           },

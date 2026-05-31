@@ -134,8 +134,15 @@ p {
 }
 
 /* Code Blocks */
+code,
+pre,
+pre code,
+.hljs {
+  font-family: var(--font-fira-code), "Geist Mono", monospace;
+  font-variant-ligatures: normal;
+}
+
 code {
-  font-family: "Fira Code", "Geist Mono", monospace;
   background-color: rgba(15, 15, 25, 0.6);
   color: var(--mui-palette-primary-light);
   padding: 4px 8px;
@@ -292,3 +299,160 @@ td {
 .terminal-dot-red { background-color: #ff5f57; }
 .terminal-dot-yellow { background-color: #febc2e; }
 .terminal-dot-green { background-color: #28c840; }
+
+/* === SYSTEMD BOOT SCREEN (RHEL tty) === */
+
+body.systemd-boot-active {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.systemd-boot-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  z-index: 10000;
+  background: #000000;
+  color: #ffffff;
+  opacity: 1;
+  transition: opacity 180ms linear;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  font-family: var(--font-boot-console), "DejaVu Sans Mono", "Liberation Mono", "Courier New", monospace;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.125;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  font-kerning: none;
+  letter-spacing: 0;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  text-rendering: optimizeSpeed;
+}
+
+.systemd-boot-overlay-exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.systemd-boot-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding:
+    max(0px, env(safe-area-inset-top))
+    max(0px, env(safe-area-inset-right))
+    max(0px, env(safe-area-inset-bottom))
+    max(0px, env(safe-area-inset-left));
+  font: inherit;
+  color: #ffffff;
+}
+
+.systemd-boot-log {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  font: inherit;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.systemd-boot-log::-webkit-scrollbar {
+  display: none;
+}
+
+.systemd-boot-line {
+  display: block;
+  margin: 0;
+  padding: 0;
+  min-height: 1.125em;
+}
+
+.systemd-boot-line-plain {
+  color: #ffffff;
+  white-space: pre;
+}
+
+.systemd-boot-prompt-line {
+  white-space: pre;
+  tab-size: 8;
+}
+
+.systemd-boot-line-kernel {
+  color: #969696;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.systemd-boot-line-banner {
+  color: #cc0000;
+  font-weight: 700;
+}
+
+.systemd-boot-line-warn {
+  color: #ffb300;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 1.125em;
+}
+
+.systemd-boot-tag {
+  display: inline-block;
+  width: 8ch;
+  min-width: 8ch;
+  max-width: 8ch;
+  font-weight: 700;
+  white-space: pre;
+}
+
+.systemd-boot-tag-ok {
+  color: #00ff00;
+}
+
+.systemd-boot-tag-job {
+  color: #ffffff;
+}
+
+.systemd-boot-line-text {
+  color: #ffffff;
+}
+
+.systemd-boot-cursor {
+  color: #00ff00;
+  opacity: 0;
+  font-weight: 400;
+}
+
+.systemd-boot-cursor-visible {
+  opacity: 1;
+}
+
+.systemd-boot-skip-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .systemd-boot-overlay {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .systemd-boot-overlay {
+    transition: none;
+  }
+}

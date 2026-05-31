@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { fadeIn, popIn } from "../lib/animations";
+import { CODE_FONT_FAMILY } from "../lib/code-font";
 import { MotionBox } from "./motion-ui";
 
 const TERMINAL_LINES = [
@@ -130,7 +131,7 @@ export const HeroSection: React.FC = () => {
                 ? "0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 212, 255, 0.05)"
                 : "0 20px 60px rgba(0, 0, 0, 0.4)",
               overflow: "hidden",
-              fontFamily: "'Geist Mono', monospace",
+              fontFamily: CODE_FONT_FAMILY,
             }}
           >
             {/* Terminal title bar */}

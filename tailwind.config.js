@@ -27,8 +27,10 @@ module.exports = {
             },
             code: {
               color: "var(--primary-light)",
+              fontFamily: "var(--font-fira-code), Geist Mono, monospace",
             },
             pre: {
+              fontFamily: "var(--font-fira-code), Geist Mono, monospace",
               backgroundColor: "#111118",
               color: "#E4E4E7",
             },
