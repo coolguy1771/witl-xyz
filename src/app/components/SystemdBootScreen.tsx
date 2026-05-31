@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { getJobSpinnerTag, getOkTag, JOB_DONE_TAG, JOB_SPINNER_MS } from "./boot-animation";
 import { bootConsoleFontClassName } from "./boot-font";
-import { BOOT_STORAGE_KEY, SYSTEMD_BOOT_LINES, type BootLine } from "./systemd-boot-lines";
+import { BOOT_STORAGE_KEY, CLIENT_IP_PLACEHOLDER, SYSTEMD_BOOT_LINES, type BootLine } from "./systemd-boot-lines";
 
 const DEFAULT_LINE_DELAY = 140;
 const FADE_OUT_MS = 180;
@@ -180,6 +180,7 @@ export function SystemdBootScreen() {
   const [fading, setFading] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const [jobSpinnerFrame, setJobSpinnerFrame] = useState(0);
+  const [clientIp, setClientIp] = useState(CLIENT_IP_PLACEHOLDER);
   const scrollRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
   const bootPaceRef = useRef(BOOT_PACE);
@@ -279,6 +280,15 @@ export function SystemdBootScreen() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch("/api/ip")
+      .then((r) => r.json() as Promise<{ ip: string }>)
+      .then(({ ip }) => { if (!cancelled) setClientIp(ip); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
     if (active !== true) return;
 
     lineIndexRef.current = 0;
@@ -370,7 +380,7 @@ export function SystemdBootScreen() {
           {visibleLines.map((line, index) => (
             <BootLineRow
               key={`${index}-${line.text}`}
-              line={line}
+              line={line.text.includes(CLIENT_IP_PLACEHOLDER) ? { ...line, text: line.text.replace(CLIENT_IP_PLACEHOLDER, clientIp) } : line}
               isActiveJob={!pendingLine && index === activeJobIndex && lastLine?.kind === "job"}
               jobSpinnerFrame={jobSpinnerFrame}
             />

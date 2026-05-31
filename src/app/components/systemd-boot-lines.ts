@@ -15,6 +15,7 @@ export interface BootLine {
 export const RHEL_HOSTNAME = "witl.xyz";
 export const RHEL_LOGIN_USER = "visitor";
 export const RHEL_LOGIN_PROMPT = `${RHEL_HOSTNAME} login: `;
+export const CLIENT_IP_PLACEHOLDER = "__CLIENT_IP__";
 
 export const SYSTEMD_BOOT_LINES: BootLine[] = [
   // === Kernel Early Messages ===
@@ -193,7 +194,7 @@ export const SYSTEMD_BOOT_LINES: BootLine[] = [
   },
   { kind: "ok", text: `Started session-1.scope - Session 1 of User ${RHEL_LOGIN_USER}.`, delayMs: 320 },
   { kind: "ok", text: `Started user@1001.service - User Manager for UID 1001.`, delayMs: 280 },
-  { kind: "plain", text: `Last login: ${new Date().toLocaleString()} from 10.0.0.1 on ttyS0`, delayMs: 400 },
+  { kind: "plain", text: `Last login: ${new Date().toLocaleString()} from ${CLIENT_IP_PLACEHOLDER} on ttyS0`, delayMs: 400 },
 ];
 
 export const BOOT_STORAGE_KEY = "witl-systemd-boot-complete";
