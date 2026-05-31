@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Button, Container, Typography, Paper, useTheme } from "@mui/material";
+import { Button, Container, Typography, Paper, useTheme, Box } from "@mui/material";
 import { fadeIn, popIn } from "../lib/animations";
 import { MotionBox } from "./motion-ui";
+import { ContactForm } from "./ContactForm";
 
 export const ContactSection: React.FC = () => {
   const theme = useTheme();
@@ -95,33 +96,28 @@ export const ContactSection: React.FC = () => {
           </Typography>
 
           <MotionBox variants={popIn}>
-            <Button
-              href="mailto:twitlin@witl.xyz"
-              variant="contained"
-              size="large"
+            <Box
               sx={{
-                backgroundColor: theme.palette.primary.main,
-                color: theme.palette.mode === "dark" ? "#0a0e14" : "#ffffff",
-                px: 5,
-                py: 1.5,
-                fontSize: "1rem",
-                fontWeight: 600,
-                fontFamily: "'Geist Mono', monospace",
-                borderRadius: "4px",
-                transition: "all 0.2s ease",
-                boxShadow: theme.palette.mode === "dark"
-                  ? "0 0 20px rgba(0, 212, 255, 0.15)"
-                  : "0 4px 10px rgba(0,0,0,0.15)",
-                "&:hover": {
-                  transform: "translateY(-1px)",
-                  boxShadow: theme.palette.mode === "dark"
-                    ? "0 0 30px rgba(0, 212, 255, 0.3)"
-                    : "0 8px 20px rgba(0,0,0,0.2)",
-                },
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: 2,
+                justifyContent: "center",
+                mb: 2,
               }}
             >
-              ./say-hello
-            </Button>
+              <Button
+                href="mailto:twitlin@witl.xyz"
+                variant="outlined"
+                size="large"
+                sx={{
+                  px: 4,
+                  fontFamily: "'Geist Mono', monospace",
+                }}
+              >
+                ./email-direct
+              </Button>
+            </Box>
+            <ContactForm />
           </MotionBox>
         </Paper>
       </Container>

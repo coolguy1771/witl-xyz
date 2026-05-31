@@ -1,5 +1,4 @@
 export { AboutSection } from "./About";
-export { BlogPostCard } from "./BlogPostCard";
 export { CertificationsSection } from "./Certifications";
 export { ContactSection } from "./Contact";
 export { Footer } from "./Footer";

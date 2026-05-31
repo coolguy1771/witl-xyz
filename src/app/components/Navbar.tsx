@@ -37,7 +37,7 @@ export default function Navbar() {
   const [navVisible, setNavVisible] = useState(true);
   const [hash, setHash] = useState("");
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
   const lenis = useLenis();
 
   useEffect(() => {
@@ -85,6 +85,9 @@ export default function Navbar() {
     { label: "certs", href: "/#certs" },
     { label: "projects", href: "/#projects" },
     { label: "blog", href: "/blog" },
+    { label: "now", href: "/now" },
+    { label: "you", href: "/you" },
+    { label: "status", href: "/status" },
     { label: "about", href: "/#about" },
     { label: "contact", href: "/#contact" },
   ];
@@ -96,7 +99,9 @@ export default function Navbar() {
     const isActive =
       (item.href === "/" && pathname === "/" && !hash) ||
       (pathname === "/" && linkHash !== "" && hash === linkHash) ||
-      (item.href === "/blog" && pathname.startsWith("/blog"));
+      (item.href === "/blog" && pathname.startsWith("/blog")) ||
+      (item.href === "/now" && pathname === "/now") ||
+      (pathname === item.href && linkHash === "");
 
     return (
       <Box

@@ -3,7 +3,10 @@ import { connection } from "next/server";
 import localFont from "next/font/local";
 import { ThemeRegistry } from "./components/ThemeRegistry";
 import Navbar from "./components/Navbar";
+import { JsonLd } from "./components/JsonLd";
 import { SmoothScroll } from "./components/SmoothScroll";
+import { buildPersonJsonLd, buildWebSiteJsonLd } from "./lib/json-ld";
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "./lib/site";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -19,9 +22,14 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tyler Witlin - DevOps Engineer",
-  description:
-    "DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure. CKA certified.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  alternates: {
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "witl.xyz Blog RSS" }],
+    },
+  },
 };
 
 export const viewport: Viewport = {
@@ -42,6 +50,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <JsonLd data={buildWebSiteJsonLd()} />
+        <JsonLd data={buildPersonJsonLd()} />
         <ThemeRegistry>
           <SmoothScroll />
           <Navbar />

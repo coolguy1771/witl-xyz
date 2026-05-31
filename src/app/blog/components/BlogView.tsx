@@ -1,27 +1,29 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Container, Typography, Box, useTheme, useMediaQuery, alpha } from "@mui/material";
 import { motion } from "framer-motion";
 import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
 import { BlogPost } from "@/app/types/blog";
+import { postMatchesQuery } from "@/app/lib/blog-search";
 
 interface BlogViewProps {
   posts: BlogPost[];
   initialSelectedTag?: string;
+  initialSearchQuery?: string;
 }
 
-export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
+export function BlogView({ posts, initialSelectedTag, initialSearchQuery = "" }: BlogViewProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initialSelectedTag ? [initialSelectedTag] : []
   );
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts);
 
   // Handle tag selection/deselection
   const handleTagToggle = (tag: string) => {
@@ -37,16 +39,14 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
     }
   };
 
-  // Filter posts when selected tags change
-  useEffect(() => {
-    if (selectedTags.length === 0) {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(
-        posts.filter((post) => post.tags?.some((tag) => selectedTags.includes(tag)))
-      );
-    }
-  }, [selectedTags, posts]);
+  const filteredPosts = useMemo(() => {
+    const tagFiltered =
+      selectedTags.length === 0
+        ? posts
+        : posts.filter((post) => post.tags?.some((tag) => selectedTags.includes(tag)));
+
+    return tagFiltered.filter((post) => postMatchesQuery(post, searchQuery));
+  }, [posts, selectedTags, searchQuery]);
 
   return (
     <Box
@@ -143,6 +143,8 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
             onTagToggle={handleTagToggle}
             onViewChange={setViewMode}
             currentView={viewMode}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
           />
 
           {viewMode === "grid" ? (

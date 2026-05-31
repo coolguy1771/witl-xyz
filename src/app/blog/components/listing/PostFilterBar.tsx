@@ -1,16 +1,28 @@
 "use client";
 
 import React from "react";
-import { Box, Chip, Typography, IconButton, useTheme, Skeleton } from "@mui/material";
+import {
+  Box,
+  Chip,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+  useTheme,
+  Skeleton,
+} from "@mui/material";
 import { useBlogTags } from "../../hooks";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface PostFilterBarProps {
   selectedTags: string[];
   onTagToggle: (tag: string) => void;
   onViewChange: (view: "grid" | "list") => void;
   currentView: "grid" | "list";
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
 export function PostFilterBar({
@@ -18,22 +30,43 @@ export function PostFilterBar({
   onTagToggle,
   onViewChange,
   currentView,
+  searchQuery,
+  onSearchChange,
 }: PostFilterBarProps) {
   const theme = useTheme();
   const { tags, isLoading } = useBlogTags();
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        justifyContent: "space-between",
-        alignItems: { xs: "flex-start", md: "center" },
-        mb: 4,
-        pb: 2,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-      }}
-    >
+    <Box sx={{ mb: 4 }}>
+      <TextField
+        value={searchQuery}
+        onChange={(event) => onSearchChange(event.target.value)}
+        placeholder="Search posts..."
+        fullWidth
+        size="small"
+        sx={{ mb: 3 }}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          },
+          htmlInput: { maxLength: 100 },
+        }}
+      />
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", md: "center" },
+          pb: 2,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        }}
+      >
       <Box sx={{ mb: { xs: 2, md: 0 } }}>
         <Typography
           variant="subtitle1"
@@ -101,28 +134,29 @@ export function PostFilterBar({
         </Box>
       </Box>
 
-      <Box sx={{ display: "flex", gap: 1, alignSelf: { xs: "flex-end", md: "auto" } }}>
-        <IconButton
-          onClick={() => onViewChange("grid")}
-          color={currentView === "grid" ? "primary" : "default"}
-          sx={{
-            color:
-              currentView === "grid" ? theme.palette.primary.main : theme.palette.text.secondary,
-          }}
-        >
-          <GridViewIcon />
-        </IconButton>
+        <Box sx={{ display: "flex", gap: 1, alignSelf: { xs: "flex-end", md: "auto" } }}>
+          <IconButton
+            onClick={() => onViewChange("grid")}
+            color={currentView === "grid" ? "primary" : "default"}
+            sx={{
+              color:
+                currentView === "grid" ? theme.palette.primary.main : theme.palette.text.secondary,
+            }}
+          >
+            <GridViewIcon />
+          </IconButton>
 
-        <IconButton
-          onClick={() => onViewChange("list")}
-          color={currentView === "list" ? "primary" : "default"}
-          sx={{
-            color:
-              currentView === "list" ? theme.palette.primary.main : theme.palette.text.secondary,
-          }}
-        >
-          <ViewListIcon />
-        </IconButton>
+          <IconButton
+            onClick={() => onViewChange("list")}
+            color={currentView === "list" ? "primary" : "default"}
+            sx={{
+              color:
+                currentView === "list" ? theme.palette.primary.main : theme.palette.text.secondary,
+            }}
+          >
+            <ViewListIcon />
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );

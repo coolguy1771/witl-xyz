@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getPostBySlug, getRelatedPosts } from "../../lib/fs-blog";
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
+import { JsonLd } from "../../components/JsonLd";
+import { buildBlogPostingJsonLd } from "../../lib/json-ld";
+import { SITE_URL } from "../../lib/site";
 
 // Generate metadata for the page
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
@@ -16,13 +19,32 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     return {
       title: `${post.title} | My Blog`,
       description: post.excerpt,
+      alternates: {
+        canonical: `${SITE_URL}/blog/${slug}`,
+      },
       openGraph: {
         title: post.title,
         description: post.excerpt,
         type: "article",
         publishedTime: post.date,
-        ...(post.coverImage && { images: [{ url: post.coverImage }] }),
+        images: [
+          post.coverImage
+            ? { url: post.coverImage, width: 1200, height: 630 }
+            : {
+                url: `${SITE_URL}/blog/${slug}/opengraph-image`,
+                width: 1200,
+                height: 630,
+              },
+        ],
         ...(post.author && { authors: [post.author.name] }),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: post.excerpt,
+        images: [
+          post.coverImage ?? `${SITE_URL}/blog/${slug}/opengraph-image`,
+        ],
       },
     };
   } catch (error) {
@@ -47,9 +69,12 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
     const relatedPosts = await getRelatedPosts(post, 2);
 
     return (
-      <Suspense fallback={<BlogListSkeleton />}>
-        <BlogPostView post={post} relatedPosts={relatedPosts} />
-      </Suspense>
+      <>
+        <JsonLd data={buildBlogPostingJsonLd(post)} />
+        <Suspense fallback={<BlogListSkeleton />}>
+          <BlogPostView post={post} relatedPosts={relatedPosts} />
+        </Suspense>
+      </>
     );
   } catch (error) {
     console.error(`Error loading post ${slug}:`, error);

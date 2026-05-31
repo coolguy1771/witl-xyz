@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { rateLimiter } from "@/app/api/rate-limiter";
+import { isRateLimited } from "@/app/api/rate-limiter";
 
 const PRODUCTION_ORIGIN = "https://witl.xyz";
 const DEV_ORIGIN = "http://localhost:3000";
@@ -11,11 +11,12 @@ function buildContentSecurityPolicy(nonce: string): string {
 
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${devScriptSrc}`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com${devScriptSrc}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://avatars.githubusercontent.com",
     "font-src 'self' data:",
-    "connect-src 'self' https://api.github.com",
+    "connect-src 'self' https://api.github.com https://challenges.cloudflare.com https://api.open-meteo.com",
+    "frame-src https://challenges.cloudflare.com",
     "frame-ancestors 'none'",
   ].join("; ");
 }
@@ -51,7 +52,10 @@ function applyCorsHeaders(headers: Headers, request: NextRequest): void {
   }
 
   headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, x-requested-with"
+  );
   headers.set("Access-Control-Max-Age", "86400");
 }
 
@@ -63,7 +67,7 @@ function getClientIp(request: NextRequest): string {
   );
 }
 
-function handleApiRequest(request: NextRequest): NextResponse {
+async function handleApiRequest(request: NextRequest): Promise<NextResponse> {
   if (request.method === "OPTIONS") {
     const response = new NextResponse(null, { status: 204 });
     applySecurityHeaders(response.headers);
@@ -72,7 +76,7 @@ function handleApiRequest(request: NextRequest): NextResponse {
   }
 
   const ip = getClientIp(request);
-  if (rateLimiter.check(ip)) {
+  if (await isRateLimited(ip)) {
     const response = NextResponse.json(
       { error: "Too many requests, please try again later" },
       {
@@ -116,7 +120,7 @@ function handlePageRequest(request: NextRequest): NextResponse {
   return response;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return handleApiRequest(request);
   }

@@ -63,6 +63,20 @@ export const Footer: React.FC = () => {
             </Box>
 
             <Link
+              href="/feed.xml"
+              sx={{
+                color: theme.palette.text.secondary,
+                transition: "color 0.2s ease",
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: "0.8rem",
+                textDecoration: "none",
+                "&:hover": { color: theme.palette.primary.main },
+              }}
+            >
+              RSS
+            </Link>
+
+            <Link
               href="https://github.com/coolguy1771"
               target="_blank"
               rel="noopener noreferrer"

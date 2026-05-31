@@ -340,6 +340,7 @@ export default function VisitorDashboard({ initialData }: Props) {
   const [loading, setLoading] = useState(false); // False initially as we already have basic data
   const [initialLoaded, setInitialLoaded] = useState(false); // Tracks if enhanced data has been loaded
   const [error, setError] = useState<string | null>(null); // For error messaging
+  const [localTime, setLocalTime] = useState<string | null>(null);
   const theme = useTheme();
 
   /**
@@ -437,6 +438,28 @@ export default function VisitorDashboard({ initialData }: Props) {
       }, 100);
     }
   }, [fetchVisitorData]);
+
+  useEffect(() => {
+    if (!data.timezone) {
+      setLocalTime(null);
+      return;
+    }
+
+    const updateClock = () => {
+      setLocalTime(
+        new Date().toLocaleTimeString("en-US", {
+          timeZone: data.timezone ?? undefined,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
+    };
+
+    updateClock();
+    const interval = window.setInterval(updateClock, 1000);
+    return () => window.clearInterval(interval);
+  }, [data.timezone]);
 
   if (loading) return <LoadingState />;
 
@@ -704,12 +727,13 @@ export default function VisitorDashboard({ initialData }: Props) {
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <InfoCard title="Time Information" icon={<Clock size={24} />}>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
-                    {new Date().toLocaleTimeString("en-US", {
-                      timeZone: data.timezone,
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                  <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2, fontFamily: "monospace" }}>
+                    {localTime ??
+                      new Date().toLocaleTimeString("en-US", {
+                        timeZone: data.timezone,
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                   </Typography>
 
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -776,7 +800,7 @@ export default function VisitorDashboard({ initialData }: Props) {
                     color="text.secondary"
                     sx={{ display: "block", fontStyle: "italic" }}
                   >
-                    Weather data based on your detected location
+                    Weather from Open-Meteo using approximate coordinates
                   </Typography>
                 </Box>
               </InfoCard>
@@ -902,7 +926,7 @@ export default function VisitorDashboard({ initialData }: Props) {
         </Grid>
 
         <Box
-          sx={{ textAlign: "center",
+          sx={{
             mt: { xs: 6, md: 8 },
             backgroundColor: alpha(theme.palette.primary.main, 0.03),
             borderRadius: 2,
@@ -910,12 +934,31 @@ export default function VisitorDashboard({ initialData }: Props) {
             border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-            This information is derived from Cloudflare&apos;s HTTP request headers
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+            What this page knows about you
           </Typography>
-          <Typography variant="caption" color="text.secondary" component="p">
-            All data is processed in your browser and is not stored or tracked
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.7 }}>
+            This demo reads request metadata that Cloudflare attaches to your connection. Nothing
+            here is stored in a database, written to cookies, or shared with ad networks.
           </Typography>
+          <Box component="ul" sx={{ m: 0, pl: 2.5, color: "text.secondary" }}>
+            <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+              Location fields (city, region, country) come from Cloudflare geo headers, typically
+              city-level accuracy.
+            </Typography>
+            <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+              IP address and ASN appear on this page from server-rendered headers; the visitor API
+              omits your IP.
+            </Typography>
+            <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+              Device type and connection hints use Cloudflare client signals, not browser
+              fingerprinting.
+            </Typography>
+            <Typography component="li" variant="body2">
+              Weather is fetched server-side from Open-Meteo using latitude and longitude headers.
+              Your browser never calls Open-Meteo directly.
+            </Typography>
+          </Box>
         </Box>
       </Container>
     </Box>

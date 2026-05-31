@@ -30,6 +30,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
+    "@mui/material-nextjs": "^9.0.1",
     "@octokit/rest": "^22.0.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
