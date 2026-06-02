@@ -157,7 +157,7 @@ export const HeroSection: React.FC = () => {
                   textAlign: "center",
                   fontSize: "0.75rem",
                   color: "#64748b",
-                  fontFamily: "'Geist Mono', monospace",
+                  fontFamily: CODE_FONT_FAMILY,
                   letterSpacing: "0.02em",
                 }}
               >
@@ -267,7 +267,7 @@ export const HeroSection: React.FC = () => {
                   py: 1.25,
                   px: 3.5,
                   fontSize: "0.95rem",
-                  fontFamily: "'Geist Mono', monospace",
+                  fontFamily: CODE_FONT_FAMILY,
                   borderRadius: "4px",
                   border: `1px solid ${theme.palette.primary.main}`,
                   boxShadow: isDark
@@ -297,7 +297,7 @@ export const HeroSection: React.FC = () => {
                   py: 1.25,
                   px: 3.5,
                   fontSize: "0.95rem",
-                  fontFamily: "'Geist Mono', monospace",
+                  fontFamily: CODE_FONT_FAMILY,
                   borderRadius: "4px",
                   borderColor: theme.palette.secondary.main,
                   "&:hover": {

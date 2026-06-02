@@ -60,26 +60,7 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Check for critical vulnerabilities
-        run: |
-          OUT="$(bun audit --json 2>/dev/null)"
-          RET=$?
-          if [ "$RET" -ne 0 ] || [ -z "$OUT" ] || ! echo "$OUT" | jq . >/dev/null 2>&1; then
-            AUDIT_RESULT="{}"
-          else
-            AUDIT_RESULT="$OUT"
-          fi
-          CRITICAL=$(echo "$AUDIT_RESULT" | jq '.metadata.vulnerabilities.critical // 0')
-          HIGH=$(echo "$AUDIT_RESULT" | jq '.metadata.vulnerabilities.high // 0')
-
-          if [ "$CRITICAL" -gt 0 ]; then
-            echo "Found $CRITICAL critical vulnerabilities"
-            exit 1
-          elif [ "$HIGH" -gt 0 ]; then
-            echo "Found $HIGH high severity vulnerabilities"
-            exit 1
-          else
-            echo "No critical or high severity vulnerabilities found"
-          fi
+        run: node scripts/check-bun-audit.mjs
 
   license-check:
     name: License Compliance

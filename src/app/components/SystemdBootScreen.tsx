@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getJobSpinnerTag, getOkTag, JOB_DONE_TAG, JOB_SPINNER_MS } from "./boot-animation";
 import { bootConsoleFontClassName } from "./boot-font";
-import { BOOT_STORAGE_KEY, CLIENT_IP_PLACEHOLDER, SYSTEMD_BOOT_LINES, type BootLine } from "./systemd-boot-lines";
+import { BOOT_STORAGE_KEY, CLIENT_IP_PLACEHOLDER, LAST_LOGIN_TIME_PLACEHOLDER, SYSTEMD_BOOT_LINES, type BootLine } from "./systemd-boot-lines";
 
 const DEFAULT_LINE_DELAY = 140;
 const FADE_OUT_MS = 180;
@@ -27,6 +27,23 @@ function getBootPace(): number {
 
 function getLineDelay(line: BootLine): number {
   return line.delayMs ?? DEFAULT_LINE_DELAY;
+}
+
+function resolveBootLineText(text: string, clientIp: string): string {
+  return text
+    .replaceAll(LAST_LOGIN_TIME_PLACEHOLDER, new Date().toLocaleString())
+    .replaceAll(CLIENT_IP_PLACEHOLDER, clientIp);
+}
+
+function withResolvedBootLineText(line: BootLine, clientIp: string): BootLine {
+  if (
+    !line.text.includes(CLIENT_IP_PLACEHOLDER) &&
+    !line.text.includes(LAST_LOGIN_TIME_PLACEHOLDER)
+  ) {
+    return line;
+  }
+
+  return { ...line, text: resolveBootLineText(line.text, clientIp) };
 }
 
 interface BootLineRowProps {
@@ -180,10 +197,10 @@ export function SystemdBootScreen() {
   const [fading, setFading] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const [jobSpinnerFrame, setJobSpinnerFrame] = useState(0);
-  const [clientIp, setClientIp] = useState(CLIENT_IP_PLACEHOLDER);
+  const [clientIp, setClientIp] = useState("unknown");
   const scrollRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
-  const bootPaceRef = useRef(BOOT_PACE);
+  const [bootPace, setBootPace] = useState(BOOT_PACE);
   const lineIndexRef = useRef(0);
   const revealTimeoutRef = useRef(0);
   const reduceMotionRef = useRef(false);
@@ -206,49 +223,53 @@ export function SystemdBootScreen() {
     window.setTimeout(() => setActive(false), FADE_OUT_MS);
   }, []);
 
-  const scheduleReveal = useCallback((delayMs: number) => {
-    window.clearTimeout(revealTimeoutRef.current);
-    revealTimeoutRef.current = window.setTimeout(() => {
-      revealTimeoutRef.current = 0;
-      revealNextRef.current();
-    }, delayMs);
-  }, []);
-
-  const revealNextRef = useRef<() => void>(() => {});
-
   const commitLine = useCallback((line: BootLine) => {
     lineIndexRef.current += 1;
     setVisibleLines((prev) => [...prev, line]);
   }, []);
 
-  const revealNext = useCallback(() => {
-    if (lineIndexRef.current >= SYSTEMD_BOOT_LINES.length) {
-      window.setTimeout(finishBoot, BOOT_FINISH_DELAY);
-      return;
-    }
+  const scheduleReveal = useCallback((delayMs: number, action: () => void) => {
+    window.clearTimeout(revealTimeoutRef.current);
+    revealTimeoutRef.current = window.setTimeout(() => {
+      revealTimeoutRef.current = 0;
+      action();
+    }, delayMs);
+  }, []);
 
-    const line = SYSTEMD_BOOT_LINES[lineIndexRef.current];
+  const revealNext = useMemo(() => {
+    const next = () => {
+      if (finishedRef.current) return;
 
-    if (line.reveal === "typewriter" || line.reveal === "prompt") {
-      setPendingLine(line);
-      return;
-    }
+      if (lineIndexRef.current >= SYSTEMD_BOOT_LINES.length) {
+        window.setTimeout(finishBoot, BOOT_FINISH_DELAY);
+        return;
+      }
 
-    commitLine(line);
-    scheduleReveal(getLineDelay(line) * bootPaceRef.current);
-  }, [commitLine, finishBoot, scheduleReveal]);
+      const line = SYSTEMD_BOOT_LINES[lineIndexRef.current];
 
-  revealNextRef.current = revealNext;
+      if (line.reveal === "typewriter" || line.reveal === "prompt") {
+        setPendingLine(line);
+        return;
+      }
+
+      commitLine(line);
+      scheduleReveal(getLineDelay(line) * bootPace, next);
+    };
+
+    return next;
+  }, [bootPace, commitLine, finishBoot, scheduleReveal]);
 
   const handlePendingComplete = useCallback(() => {
+    if (finishedRef.current) return;
+
     const line = pendingLineRef.current;
     if (!line) return;
 
     commitLine(line);
     setPendingLine(null);
     pendingLineRef.current = null;
-    scheduleReveal(getLineDelay(line) * bootPaceRef.current);
-  }, [commitLine, scheduleReveal]);
+    scheduleReveal(getLineDelay(line) * bootPace, revealNext);
+  }, [bootPace, commitLine, revealNext, scheduleReveal]);
 
   useEffect(() => {
     pendingLineRef.current = pendingLine;
@@ -268,7 +289,7 @@ export function SystemdBootScreen() {
     }
 
     setActive(true);
-    bootPaceRef.current = getBootPace();
+    setBootPace(getBootPace());
     document.body.classList.add("systemd-boot-active");
   }, []);
 
@@ -280,13 +301,19 @@ export function SystemdBootScreen() {
   }, []);
 
   useEffect(() => {
+    if (active !== true) return;
+
     let cancelled = false;
     fetch("/api/ip")
       .then((r) => r.json() as Promise<{ ip: string }>)
-      .then(({ ip }) => { if (!cancelled) setClientIp(ip); })
+      .then(({ ip }) => {
+        if (!cancelled && ip) setClientIp(ip);
+      })
       .catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [active]);
 
   useEffect(() => {
     if (active !== true) return;
@@ -294,12 +321,12 @@ export function SystemdBootScreen() {
     lineIndexRef.current = 0;
     setVisibleLines([]);
     setPendingLine(null);
-    scheduleReveal(BOOT_START_DELAY);
+    scheduleReveal(BOOT_START_DELAY, revealNext);
 
     return () => {
       window.clearTimeout(revealTimeoutRef.current);
     };
-  }, [active, scheduleReveal]);
+  }, [active, revealNext, scheduleReveal]);
 
   useEffect(() => {
     if (active !== true) return;
@@ -362,9 +389,9 @@ export function SystemdBootScreen() {
 
   const lastLine = visibleLines.at(-1);
   const activeJobIndex = visibleLines.findLastIndex((line) => line.kind === "job");
-  const typewriterDelay = TYPEWRITER_CHAR_MS * bootPaceRef.current;
-  const promptWait = PROMPT_WAIT_MS * bootPaceRef.current;
-  const cursorWait = PROMPT_CURSOR_WAIT_MS * bootPaceRef.current;
+  const typewriterDelay = TYPEWRITER_CHAR_MS * bootPace;
+  const promptWait = PROMPT_WAIT_MS * bootPace;
+  const cursorWait = PROMPT_CURSOR_WAIT_MS * bootPace;
 
   return (
     <div
@@ -380,7 +407,7 @@ export function SystemdBootScreen() {
           {visibleLines.map((line, index) => (
             <BootLineRow
               key={`${index}-${line.text}`}
-              line={line.text.includes(CLIENT_IP_PLACEHOLDER) ? { ...line, text: line.text.replace(CLIENT_IP_PLACEHOLDER, clientIp) } : line}
+              line={withResolvedBootLineText(line, clientIp)}
               isActiveJob={!pendingLine && index === activeJobIndex && lastLine?.kind === "job"}
               jobSpinnerFrame={jobSpinnerFrame}
             />

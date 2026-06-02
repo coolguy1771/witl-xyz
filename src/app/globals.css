@@ -330,7 +330,7 @@ body.systemd-boot-active {
   letter-spacing: 0;
   -webkit-font-smoothing: none;
   -moz-osx-font-smoothing: unset;
-  text-rendering: optimizeSpeed;
+  text-rendering: optimizespeed;
 }
 
 .systemd-boot-overlay-exit {
@@ -387,7 +387,7 @@ body.systemd-boot-active {
 .systemd-boot-line-kernel {
   color: #969696;
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .systemd-boot-line-banner {
@@ -398,7 +398,7 @@ body.systemd-boot-active {
 .systemd-boot-line-warn {
   color: #ffb300;
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: break-word;
   min-height: 1.125em;
 }
 
@@ -440,7 +440,7 @@ body.systemd-boot-active {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }

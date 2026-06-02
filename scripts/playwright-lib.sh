@@ -1,14 +1,18 @@
+# shellcheck shell=bash
+
 find_node() {
   if [[ -n "${PLAYWRIGHT_NODE:-}" && -x "${PLAYWRIGHT_NODE}" ]]; then
     echo "${PLAYWRIGHT_NODE}"
     return
   fi
 
-  local cursor_node candidate
-  cursor_node="$(
-    find "$HOME/.cursor-server/bin" -maxdepth 2 -name node -type f 2>/dev/null |
-      head -n 1 || true
-  )"
+  local cursor_node candidate home="${HOME:-}"
+  if [[ -n "$home" ]]; then
+    cursor_node="$(
+      find "$home/.cursor-server/bin" -maxdepth 2 -name node -type f 2>/dev/null |
+        head -n 1 || true
+    )"
+  fi
   if [[ -n "$cursor_node" && -x "$cursor_node" ]]; then
     echo "$cursor_node"
     return
@@ -48,7 +52,7 @@ maybe_reexec_outside_snap() {
   if ! command -v systemd-run >/dev/null 2>&1; then
     echo "Playwright cannot launch Chromium under snap confinement." >&2
     echo "Run: bash ${script_path} $*" >&2
-    echo "Or install Bun outside snap (~/.bun/bin)." >&2
+    echo "Or install Node outside snap (e.g., /usr/bin/node or set PLAYWRIGHT_NODE)." >&2
     exit 1
   fi
 
