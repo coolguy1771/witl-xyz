@@ -29,13 +29,13 @@ function getLineDelay(line: BootLine): number {
   return line.delayMs ?? DEFAULT_LINE_DELAY;
 }
 
-function resolveBootLineText(text: string, clientIp: string): string {
+function resolveBootLineText(text: string, clientIp: string, lastLoginTime: string): string {
   return text
-    .replaceAll(LAST_LOGIN_TIME_PLACEHOLDER, new Date().toLocaleString())
+    .replaceAll(LAST_LOGIN_TIME_PLACEHOLDER, lastLoginTime)
     .replaceAll(CLIENT_IP_PLACEHOLDER, clientIp);
 }
 
-function withResolvedBootLineText(line: BootLine, clientIp: string): BootLine {
+function withResolvedBootLineText(line: BootLine, clientIp: string, lastLoginTime: string): BootLine {
   if (
     !line.text.includes(CLIENT_IP_PLACEHOLDER) &&
     !line.text.includes(LAST_LOGIN_TIME_PLACEHOLDER)
@@ -43,7 +43,7 @@ function withResolvedBootLineText(line: BootLine, clientIp: string): BootLine {
     return line;
   }
 
-  return { ...line, text: resolveBootLineText(line.text, clientIp) };
+  return { ...line, text: resolveBootLineText(line.text, clientIp, lastLoginTime) };
 }
 
 interface BootLineRowProps {
@@ -198,6 +198,7 @@ export function SystemdBootScreen() {
   const [showCursor, setShowCursor] = useState(true);
   const [jobSpinnerFrame, setJobSpinnerFrame] = useState(0);
   const [clientIp, setClientIp] = useState("unknown");
+  const [lastLoginTime] = useState(() => new Date().toLocaleString());
   const scrollRef = useRef<HTMLDivElement>(null);
   const finishedRef = useRef(false);
   const [bootPace, setBootPace] = useState(BOOT_PACE);
@@ -407,7 +408,7 @@ export function SystemdBootScreen() {
           {visibleLines.map((line, index) => (
             <BootLineRow
               key={`${index}-${line.text}`}
-              line={withResolvedBootLineText(line, clientIp)}
+              line={withResolvedBootLineText(line, clientIp, lastLoginTime)}
               isActiveJob={!pendingLine && index === activeJobIndex && lastLine?.kind === "job"}
               jobSpinnerFrame={jobSpinnerFrame}
             />
