@@ -6,6 +6,7 @@ import { TableOfContents } from "../shared/TableOfContents";
 import { Post } from "@/app/types/blog";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface PostBodyProps {
   post: Post;
@@ -187,6 +188,7 @@ export function PostBody({ content }: PostBodyProps) {
               boxShadow: theme.shadows[1],
             },
             "& pre": {
+              fontFamily: CODE_FONT_FAMILY,
               backgroundColor: theme.palette.mode === "dark" ? "#282a36" : "#f5f5f5",
               p: { xs: 2, sm: 3 },
               pt: { xs: 3.5, sm: 4 },
@@ -238,7 +240,7 @@ export function PostBody({ content }: PostBodyProps) {
                 color:
                   theme.palette.mode === "dark" ? theme.palette.grey[400] : theme.palette.grey[600],
                 textTransform: "uppercase",
-                fontFamily: '"Fira Code", "Geist Mono", monospace',
+                fontFamily: CODE_FONT_FAMILY,
                 letterSpacing: "0.05em",
                 display: "inline-block",
                 background: theme.palette.mode === "dark" ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.1)",
@@ -248,7 +250,7 @@ export function PostBody({ content }: PostBodyProps) {
               },
             },
             "& code": {
-              fontFamily: '"Fira Code", "Geist Mono", monospace',
+              fontFamily: CODE_FONT_FAMILY,
               backgroundColor:
                 theme.palette.mode === "dark" ? "rgba(15, 15, 25, 0.6)" : "rgba(0, 0, 0, 0.05)",
               px: 1,
@@ -265,6 +267,7 @@ export function PostBody({ content }: PostBodyProps) {
             },
             // Highlight.js theme overrides
             "& .hljs": {
+              fontFamily: CODE_FONT_FAMILY,
               background: "transparent",
               padding: 0,
               color: theme.palette.mode === "dark" ? "#f8f8f2" : "#24292e",
