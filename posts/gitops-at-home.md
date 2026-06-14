@@ -4,7 +4,6 @@ date: "2026-06-14"
 author: "Tyler Witlin"
 tags:
   [
-    "GitOps",
     "Kubernetes",
     "Homelab",
     "flux",
