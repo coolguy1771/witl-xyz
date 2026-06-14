@@ -8,6 +8,7 @@ import { PostHeader } from "./post/PostHeader";
 import { PostBody } from "./post/PostBody";
 import { PostFooter } from "./post/PostFooter";
 import { BlogPost } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface BlogPostViewProps {
   post: BlogPost;
@@ -51,7 +52,7 @@ export function BlogPostView({ post, relatedPosts = [] }: BlogPostViewProps) {
                 onClick={() => router.back()}
                 sx={{
                   color: "primary.main",
-                  fontFamily: "'Geist Mono', monospace",
+                  fontFamily: CODE_FONT_FAMILY,
                   fontSize: "0.85rem",
                   position: "relative",
                   "&:hover": {

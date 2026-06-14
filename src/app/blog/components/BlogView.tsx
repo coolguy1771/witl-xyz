@@ -7,6 +7,7 @@ import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
 import { BlogPost } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface BlogViewProps {
   posts: BlogPost[];
@@ -84,7 +85,7 @@ export function BlogView({ posts, tags, initialSelectedTag }: BlogViewProps) {
           <Typography
             variant="body2"
             sx={{
-              fontFamily: "'Geist Mono', monospace",
+              fontFamily: CODE_FONT_FAMILY,
               color: theme.palette.text.secondary,
               fontSize: "0.85rem",
               mb: 1,

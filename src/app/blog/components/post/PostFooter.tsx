@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Box, Typography, Button, Divider, Chip, alpha, useTheme } from "@mui/material";
 import { TagIcon } from "lucide-react";
 import { Post } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 import { BlogCard } from "../listing/BlogCard";
 
 interface PostFooterProps {
@@ -74,7 +75,7 @@ export function PostFooter({ post, relatedPosts = [] }: PostFooterProps) {
             variant="outlined"
             color="primary"
             sx={{
-              fontFamily: "'Geist Mono', monospace",
+              fontFamily: CODE_FONT_FAMILY,
               "&:hover": {
                 backgroundColor: alpha(theme.palette.primary.main, 0.08),
               },

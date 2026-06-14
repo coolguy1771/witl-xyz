@@ -72,17 +72,27 @@ function stripHtml(text: string): string {
 
 function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
-  const matches = content.matchAll(/<h([2-3])[^>]*id="([^"]+)"[^>]*>(.*?)<\/h\1>/g);
+  const matches = content.matchAll(/<h([2-3])\b([^>]*)>([\s\S]*?)<\/h\1>/g);
 
   for (const match of matches) {
+    const idMatch = match[2].match(/\bid="([^"]+)"/);
+    if (!idMatch) continue;
+
     headings.push({
       level: parseInt(match[1], 10),
-      id: match[2],
+      id: idMatch[1],
       text: stripHtml(match[3]),
     });
   }
 
   return headings;
+}
+
+function validatePostDate(slug: string, date: string): void {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid date in post "${slug}": ${date}`);
+  }
 }
 
 async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
@@ -96,6 +106,7 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
   if (!frontMatter.date) {
     throw new Error(`Missing date in post: ${slug}`);
   }
+  validatePostDate(slug, frontMatter.date);
 
   const result = await markdownProcessor.process(markdown);
   const contentHtml = addCodeBlockMetadata(result.toString());
@@ -104,7 +115,7 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
   const readingTime = `${Math.ceil(wordCount / WORDS_PER_MINUTE)} min read`;
   const excerpt =
     frontMatter.excerpt ||
-    `${markdown.slice(0, EXCERPT_LENGTH).replace(/[#*`]/g, "")}...`;
+    `${[...markdown].slice(0, EXCERPT_LENGTH).join("").replace(/[#*`]/g, "")}...`;
 
   return {
     slug,

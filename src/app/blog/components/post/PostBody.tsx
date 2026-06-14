@@ -41,7 +41,6 @@ export function PostBody({ post, content }: PostBodyProps) {
       });
 
       pre.appendChild(copyButton);
-      pre.style.position = "relative";
     });
   }, [content]);
 
@@ -105,7 +104,7 @@ export function PostBody({ post, content }: PostBodyProps) {
                 fontWeight: 500,
                 color: theme.palette.secondary.main,
                 textTransform: "uppercase",
-                fontFamily: "'Geist Mono', monospace",
+                fontFamily: CODE_FONT_FAMILY,
                 letterSpacing: "0.05em",
               },
               "& .code-copy-button": {
@@ -222,7 +221,7 @@ export function PostBody({ post, content }: PostBodyProps) {
               fontWeight: 600,
               mb: 2,
               color: "text.primary",
-              fontFamily: "'Geist Mono', monospace",
+              fontFamily: CODE_FONT_FAMILY,
               fontSize: "0.85rem",
             }}
           >

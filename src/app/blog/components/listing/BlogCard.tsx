@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import { Post } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 import { scaleUp, cardHover } from "@/app/lib/animations";
 
 /** Fixed content zones so every card is the same height in the grid. */
@@ -99,7 +100,7 @@ export function BlogCard({ post, index = 0 }: BlogCardProps) {
               alignItems: "center",
               mb: 2,
               flexWrap: "wrap",
-              fontFamily: "'Geist Mono', monospace",
+              fontFamily: CODE_FONT_FAMILY,
               fontSize: "0.75rem",
               color: theme.palette.text.secondary,
             }}
@@ -148,7 +149,7 @@ export function BlogCard({ post, index = 0 }: BlogCardProps) {
                   backgroundColor: theme.palette.background.paper,
                   color: theme.palette.text.secondary,
                   border: `1px solid ${theme.palette.divider}`,
-                  fontFamily: "'Geist Mono', monospace",
+                  fontFamily: CODE_FONT_FAMILY,
                   fontSize: "0.75rem",
                   borderRadius: "4px",
                   "&:hover": {

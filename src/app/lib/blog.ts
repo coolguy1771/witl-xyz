@@ -3,7 +3,7 @@
  */
 
 import { blogPosts, blogSlugs, blogTags } from "../generated/blog-data";
-import { BlogPost, Heading } from "../types/blog";
+import { BlogPost } from "../types/blog";
 
 const SAFE_SLUG_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
 
@@ -27,9 +27,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
-  return [...blogPosts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  return [...blogPosts];
 }
 
 export async function getPostSlugs(): Promise<string[]> {
@@ -82,31 +80,6 @@ export async function getRelatedPosts(
     })
     .map((item) => item.post)
     .slice(0, limit);
-}
-
-function stripHtml(text: string): string {
-  let cleaned = text;
-  let previous = "";
-  while (cleaned !== previous) {
-    previous = cleaned;
-    cleaned = cleaned.replace(/<[^>]*>/g, "");
-  }
-  return cleaned;
-}
-
-export function extractHeadingsFromContent(content: string): Heading[] {
-  const headings: Heading[] = [];
-  const matches = content.matchAll(/<h([2-3])[^>]*id="([^"]+)"[^>]*>(.*?)<\/h\1>/g);
-
-  for (const match of matches) {
-    headings.push({
-      level: parseInt(match[1], 10),
-      id: match[2],
-      text: stripHtml(match[3]),
-    });
-  }
-
-  return headings;
 }
 
 export function clearPostCache(): void {
