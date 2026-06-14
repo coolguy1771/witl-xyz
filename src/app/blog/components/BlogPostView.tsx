@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Container, Box, Button, useTheme } from "@mui/material";
+import { Container, Box, Button, useTheme, alpha } from "@mui/material";
 import { motion } from "framer-motion";
 import { PostHeader } from "./post/PostHeader";
 import { PostBody } from "./post/PostBody";
@@ -28,46 +28,59 @@ export function BlogPostView({ post, relatedPosts = [] }: BlogPostViewProps) {
       }}
       style={{ backgroundColor: theme.palette.background.default }}
     >
-      <Container maxWidth="lg" sx={{ pt: { xs: 2, md: 0 }, pb: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
-        <Box
-          sx={{
-            mb: 3,
-            py: 2,
-            backgroundColor: theme.palette.background.default,
-          }}
-        >
-          <motion.div whileHover={{ x: -5 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              onClick={() => router.back()}
-              sx={{
-                color: "primary.main",
-                position: "relative",
-                "&:hover": {
-                  backgroundColor: "rgba(59, 130, 246, 0.1)",
-                },
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  width: "10px",
-                  height: "10px",
-                  borderLeft: `2px solid ${theme.palette.primary.main}`,
-                  borderBottom: `2px solid ${theme.palette.primary.main}`,
-                  transform: "rotate(45deg)",
-                  left: "6px",
-                  top: "calc(50% - 5px)",
-                },
-                pl: 4,
-              }}
-            >
-              Back to posts
-            </Button>
-          </motion.div>
-        </Box>
+      <Box
+        sx={{
+          position: "relative",
+          py: { xs: 6, md: 8 },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 200,
+            background: `radial-gradient(ellipse at 50% 0%, ${alpha(theme.palette.primary.main, 0.06)}, transparent 70%)`,
+            pointerEvents: "none",
+          },
+        }}
+      >
+        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
+          <Box sx={{ mb: 3, py: 2, position: "relative" }}>
+            <motion.div whileHover={{ x: -5 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => router.back()}
+                sx={{
+                  color: "primary.main",
+                  fontFamily: "'Geist Mono', monospace",
+                  fontSize: "0.85rem",
+                  position: "relative",
+                  "&:hover": {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  },
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    width: "10px",
+                    height: "10px",
+                    borderLeft: `2px solid ${theme.palette.primary.main}`,
+                    borderBottom: `2px solid ${theme.palette.primary.main}`,
+                    transform: "rotate(45deg)",
+                    left: "6px",
+                    top: "calc(50% - 5px)",
+                  },
+                  pl: 4,
+                }}
+              >
+                cd ../blog
+              </Button>
+            </motion.div>
+          </Box>
 
-        <PostHeader post={post} />
-        <PostBody post={post} content={post.content} />
-        <PostFooter post={post} relatedPosts={relatedPosts} />
-      </Container>
+          <PostHeader post={post} />
+          <PostBody post={post} content={post.content} />
+          <PostFooter post={post} relatedPosts={relatedPosts} />
+        </Container>
+      </Box>
     </motion.div>
   );
 }

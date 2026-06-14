@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllPosts, getPostsByTags, getFeaturedPosts } from "@/app/lib/fs-blog";
+import { getAllPosts, getPostsByTags, getFeaturedPosts } from "@/app/lib/blog";
 
 export const revalidate = 3600;
 

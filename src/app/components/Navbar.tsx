@@ -37,7 +37,7 @@ export default function Navbar() {
   const [navVisible, setNavVisible] = useState(true);
   const [hash, setHash] = useState("");
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
   const lenis = useLenis();
 
   useEffect(() => {

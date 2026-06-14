@@ -13,7 +13,7 @@ interface PostHeaderProps {
 
 export function PostHeader({ post }: PostHeaderProps) {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   const formattedDate = format(new Date(post.date), "MMMM d, yyyy");
 

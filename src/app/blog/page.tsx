@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAllPosts } from "../lib/fs-blog";
+import { getAllPosts, getAllTags } from "../lib/blog";
 import { BlogView } from "./components";
 import { BlogListSkeleton } from "./components/shared/BlogListSkeleton";
 import { Post } from "../types/blog";
@@ -33,7 +33,11 @@ export default async function BlogPage(props: { searchParams: Promise<{ tag?: st
 
   return (
     <Suspense fallback={<BlogListSkeleton />}>
-      <BlogView posts={allPosts} initialSelectedTag={searchParams.tag} />
+      <BlogView
+        posts={allPosts}
+        tags={await getAllTags()}
+        initialSelectedTag={searchParams.tag}
+      />
     </Suspense>
   );
 }
