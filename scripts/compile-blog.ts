@@ -1,0 +1,180 @@
+/**
+ * Build-time blog compiler: reads posts/*.md and writes bundled blog-data.ts
+ */
+
+import fs from "fs/promises";
+import path from "path";
+import matter from "gray-matter";
+import { unified } from "unified";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
+import rehypeStringify from "rehype-stringify";
+import type { BlogPost, BlogPostFrontMatter, Heading } from "../src/app/types/blog";
+
+const POSTS_DIR = path.resolve(process.cwd(), "posts");
+const OUTPUT_DIR = path.resolve(process.cwd(), "src/app/generated");
+const OUTPUT_FILE = path.join(OUTPUT_DIR, "blog-data.ts");
+
+const WORDS_PER_MINUTE = 200;
+const EXCERPT_LENGTH = 150;
+const SAFE_SLUG_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
+
+const markdownProcessor = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeSlug)
+  .use(rehypeHighlight, { detect: true, ignoreMissing: true })
+  .use(rehypeStringify);
+
+function normalizeSlug(filename: string): string {
+  const slug = filename.replace(/\.md$/, "");
+  if (!slug || !SAFE_SLUG_PATTERN.test(slug)) {
+    throw new Error(`Invalid post slug: ${filename}`);
+  }
+  return slug;
+}
+
+function normalizeAuthor(
+  author: BlogPostFrontMatter["author"] | string | undefined
+): BlogPost["author"] {
+  if (!author) return undefined;
+  if (typeof author === "string") return { name: author };
+  if (typeof author === "object" && "name" in author) return author;
+  return undefined;
+}
+
+function addCodeBlockMetadata(html: string): string {
+  let result = html.replace(
+    /<pre><code class="language-([^"]+)">/g,
+    '<pre class="language-$1" data-language="$1"><code class="language-$1 hljs">'
+  );
+  result = result.replace(
+    /<pre><code class="hljs language-([^"]+)">/g,
+    '<pre class="language-$1" data-language="$1"><code class="language-$1 hljs">'
+  );
+  result = result.replace(/<pre><code>/g, '<pre data-language=""><code class="hljs">');
+  return result;
+}
+
+function stripHtml(text: string): string {
+  let cleaned = text;
+  let previous = "";
+  while (cleaned !== previous) {
+    previous = cleaned;
+    cleaned = cleaned.replace(/<[^>]*>/g, "");
+  }
+  return cleaned;
+}
+
+function extractHeadings(content: string): Heading[] {
+  const headings: Heading[] = [];
+  const matches = content.matchAll(/<h([2-3])\b([^>]*)>([\s\S]*?)<\/h\1>/g);
+
+  for (const match of matches) {
+    const idMatch = match[2].match(/\bid="([^"]+)"/);
+    if (!idMatch) continue;
+
+    headings.push({
+      level: parseInt(match[1], 10),
+      id: idMatch[1],
+      text: stripHtml(match[3]),
+    });
+  }
+
+  return headings;
+}
+
+function validatePostDate(slug: string, date: string): void {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid date in post "${slug}": ${date}`);
+  }
+}
+
+async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
+  const raw = await fs.readFile(filePath, "utf8");
+  const { data, content: markdown } = matter(raw);
+  const frontMatter = data as BlogPostFrontMatter & { author?: string };
+
+  if (!frontMatter.title) {
+    throw new Error(`Missing title in post: ${slug}`);
+  }
+  if (!frontMatter.date) {
+    throw new Error(`Missing date in post: ${slug}`);
+  }
+  validatePostDate(slug, frontMatter.date);
+
+  const result = await markdownProcessor.process(markdown);
+  const contentHtml = addCodeBlockMetadata(result.toString());
+
+  const wordCount = markdown.split(/\s+/g).filter(Boolean).length;
+  const readingTime = `${Math.ceil(wordCount / WORDS_PER_MINUTE)} min read`;
+  const excerpt =
+    frontMatter.excerpt ||
+    `${[...markdown].slice(0, EXCERPT_LENGTH).join("").replace(/[#*`]/g, "")}...`;
+
+  return {
+    slug,
+    title: frontMatter.title,
+    date: frontMatter.date,
+    content: contentHtml,
+    excerpt,
+    readingTime,
+    tags: frontMatter.tags || [],
+    coverImage: frontMatter.coverImage,
+    featured: frontMatter.featured,
+    author: normalizeAuthor(frontMatter.author),
+    headings: extractHeadings(contentHtml),
+  };
+}
+
+async function main(): Promise<void> {
+  await fs.mkdir(OUTPUT_DIR, { recursive: true });
+
+  let filenames: string[];
+  try {
+    filenames = await fs.readdir(POSTS_DIR);
+  } catch {
+    console.warn(`Posts directory not found: ${POSTS_DIR}`);
+    filenames = [];
+  }
+
+  const mdFiles = filenames.filter((f) => f.endsWith(".md"));
+  const posts = await Promise.all(
+    mdFiles.map(async (filename) => {
+      const slug = normalizeSlug(filename);
+      return compilePost(slug, path.join(POSTS_DIR, filename));
+    })
+  );
+
+  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const slugs = posts.map((p) => p.slug);
+  const tagSet = new Set<string>();
+  for (const post of posts) {
+    for (const tag of post.tags) tagSet.add(tag);
+  }
+  const tags = [...tagSet].sort();
+
+  const fileContents = `// Auto-generated by scripts/compile-blog.ts — do not edit
+import type { BlogPost } from "@/app/types/blog";
+
+export const blogPosts: BlogPost[] = ${JSON.stringify(posts, null, 2)};
+
+export const blogSlugs: string[] = ${JSON.stringify(slugs, null, 2)};
+
+export const blogTags: string[] = ${JSON.stringify(tags, null, 2)};
+`;
+
+  await fs.writeFile(OUTPUT_FILE, fileContents, "utf8");
+  console.log(`Compiled ${posts.length} blog post(s) → ${OUTPUT_FILE}`);
+}
+
+main().catch((error) => {
+  console.error("Blog compilation failed:", error);
+  process.exit(1);
+});

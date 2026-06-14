@@ -82,14 +82,14 @@ body {
 
 /* Scroll margin for anchor links to account for fixed navbar */
 :target {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 104px;
 }
 
 /* Anchor sections */
 section[id],
 div[id],
 h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 104px;
 }
 
 /* Links */
@@ -122,7 +122,7 @@ h6 { font-size: 1rem; }
     font-size: 0.85rem;
   }
 
-  pre .code-copy-button {
+  .blog-prose pre .code-copy-button {
     opacity: 1 !important;
   }
 }
@@ -133,7 +133,7 @@ p {
   margin-bottom: 1rem;
 }
 
-/* Code Blocks */
+/* Code Blocks — scoped outside blog-prose (blog uses MUI sx) */
 code,
 pre,
 pre code,
@@ -142,7 +142,7 @@ pre code,
   font-variant-ligatures: normal;
 }
 
-code {
+:not(.blog-prose) code {
   background-color: rgba(15, 15, 25, 0.6);
   color: var(--mui-palette-primary-light);
   padding: 4px 8px;
@@ -152,7 +152,7 @@ code {
   font-weight: 500;
 }
 
-pre {
+:not(.blog-prose) pre {
   background-color: #111118;
   padding: 1.5rem;
   border-radius: 8px;
@@ -163,7 +163,7 @@ pre {
   position: relative;
 }
 
-pre code {
+:not(.blog-prose) pre code {
   background-color: transparent;
   padding: 0;
   border: none;
@@ -171,8 +171,46 @@ pre code {
   font-weight: 400;
 }
 
-/* Buttons */
-button {
+/* Blog copy buttons — exclude from global button styles */
+.blog-prose ul,
+.blog-prose ol {
+  padding-left: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  list-style-position: outside;
+}
+
+.blog-prose ul {
+  list-style-type: disc;
+}
+
+.blog-prose ol {
+  list-style-type: decimal;
+}
+
+.blog-prose li {
+  margin-bottom: 0.5rem;
+  display: list-item;
+}
+
+.blog-prose li > ul,
+.blog-prose li > ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-prose .code-copy-button {
+  background-color: transparent;
+  padding: 6px;
+  font-weight: 400;
+}
+
+.blog-prose .code-copy-button:hover {
+  background-color: transparent;
+}
+
+/* Buttons — exclude blog copy buttons */
+button:not(.code-copy-button) {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-text-primary);
   border: none;

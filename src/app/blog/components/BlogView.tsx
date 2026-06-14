@@ -7,15 +7,17 @@ import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
 import { BlogPost } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface BlogViewProps {
   posts: BlogPost[];
+  tags: string[];
   initialSelectedTag?: string;
 }
 
-export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
+export function BlogView({ posts, tags, initialSelectedTag }: BlogViewProps) {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initialSelectedTag ? [initialSelectedTag] : []
@@ -23,7 +25,6 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts);
 
-  // Handle tag selection/deselection
   const handleTagToggle = (tag: string) => {
     if (tag === "all") {
       setSelectedTags([]);
@@ -37,7 +38,6 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
     }
   };
 
-  // Filter posts when selected tags change
   useEffect(() => {
     if (selectedTags.length === 0) {
       setFilteredPosts(posts);
@@ -59,27 +59,23 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
         minHeight: "100vh",
         width: "100%",
         overflowX: "clip",
-        pt: { xs: 10, md: 14 },
-        pb: { xs: 8, md: 12 },
+        py: { xs: 6, md: 12 },
       }}
     >
       <Container maxWidth="lg">
-        {/* Blog Header - Made this more prominent and header-like */}
         <Box
           component="header"
           sx={{
-            textAlign: "center",
-            mb: { xs: 6, md: 8 },
+            mb: { xs: 4, md: 6 },
             position: "relative",
-            overflow: "hidden",
             "&::before": {
               content: '""',
               position: "absolute",
-              top: -120,
+              top: -80,
               left: "50%",
               transform: "translateX(-50%)",
               width: "min(100vw, 900px)",
-              height: 300,
+              height: 260,
               background: `radial-gradient(circle at 30% 50%, ${alpha(theme.palette.primary.main, 0.08)}, transparent 70%)`,
               zIndex: 0,
               pointerEvents: "none",
@@ -87,39 +83,38 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
           }}
         >
           <Typography
-            variant={isSmallScreen ? "h3" : "h1"}
+            variant="body2"
+            sx={{
+              fontFamily: CODE_FONT_FAMILY,
+              color: theme.palette.text.secondary,
+              fontSize: "0.85rem",
+              mb: 1,
+              position: "relative",
+            }}
+          >
+            $ ls ~/blog
+          </Typography>
+
+          <Typography
+            variant={isSmallScreen ? "h3" : "h2"}
             component="h1"
             sx={{
-              fontWeight: 800,
-              color: theme.palette.text.primary,
-              mb: 3,
+              fontWeight: 700,
+              color: theme.palette.primary.main,
+              letterSpacing: "-0.02em",
+              mb: 2,
               position: "relative",
-              display: "inline-block",
-              fontSize: { xs: "2.5rem", md: "3.5rem" },
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                width: "60%",
-                height: "5px",
-                borderRadius: "4px",
-                bottom: "-12px",
-                left: "20%",
-                background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              },
             }}
           >
             Blog
           </Typography>
 
           <Typography
-            variant="h6"
+            variant="body1"
             sx={{
               color: theme.palette.text.secondary,
               maxWidth: "650px",
-              mx: "auto",
-              mt: 4,
-              fontSize: { xs: "1rem", sm: "1.15rem" },
-              fontWeight: 400,
+              fontSize: { xs: "1rem", sm: "1.1rem" },
               lineHeight: 1.6,
               position: "relative",
             }}
@@ -130,15 +125,15 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
 
         <Box
           sx={{
-            backgroundColor: alpha(theme.palette.background.paper, 0.6),
-            borderRadius: 2,
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: "6px",
+            border: `1px solid ${theme.palette.divider}`,
             p: { xs: 2, md: 4 },
             mb: 4,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
-            backdropFilter: "blur(8px)",
           }}
         >
           <PostFilterBar
+            tags={tags}
             selectedTags={selectedTags}
             onTagToggle={handleTagToggle}
             onViewChange={setViewMode}

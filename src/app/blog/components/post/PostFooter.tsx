@@ -2,9 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
-import { Box, Typography, Button, Divider, Card, CardContent, Chip } from "@mui/material";
+import { Box, Typography, Button, Divider, Chip, alpha, useTheme } from "@mui/material";
 import { TagIcon } from "lucide-react";
 import { Post } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
+import { BlogCard } from "../listing/BlogCard";
 
 interface PostFooterProps {
   post: Post;
@@ -12,6 +14,8 @@ interface PostFooterProps {
 }
 
 export function PostFooter({ post, relatedPosts = [] }: PostFooterProps) {
+  const theme = useTheme();
+
   return (
     <Box component="footer" sx={{ mt: 6 }}>
       {post.tags && post.tags.length > 0 && (
@@ -46,53 +50,17 @@ export function PostFooter({ post, relatedPosts = [] }: PostFooterProps) {
             Related Posts
           </Typography>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 3 }}>
-            {relatedPosts.map((relatedPost) => (
-              <Link
-                key={relatedPost.slug}
-                href={`/blog/${relatedPost.slug}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Card
-                  sx={(theme) => ({
-                    height: "100%",
-                    backgroundColor: theme.palette.background.paper,
-                    borderColor: theme.palette.divider,
-                    borderWidth: 1,
-                    borderStyle: "solid",
-                    transition: theme.transitions.create(["transform", "box-shadow"]),
-                    "&:hover": {
-                      boxShadow:
-                        theme.palette.mode === "dark"
-                          ? "0 8px 24px rgba(0,0,0,0.25)"
-                          : "0 8px 24px rgba(0,0,0,0.12)",
-                      transform: "translateY(-4px)",
-                    },
-                  })}
-                >
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      component="h3"
-                      sx={{
-                        fontWeight: 600,
-                        color: "text.primary",
-                        mb: 1,
-                      }}
-                    >
-                      {relatedPost.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "text.secondary",
-                      }}
-                    >
-                      {relatedPost.excerpt}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Link>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gap: 3,
+            }}
+          >
+            {relatedPosts.map((relatedPost, index) => (
+              <Box key={relatedPost.slug} sx={{ display: "flex" }}>
+                <BlogCard post={relatedPost} index={index} />
+              </Box>
             ))}
           </Box>
         </Box>
@@ -107,8 +75,9 @@ export function PostFooter({ post, relatedPosts = [] }: PostFooterProps) {
             variant="outlined"
             color="primary"
             sx={{
+              fontFamily: CODE_FONT_FAMILY,
               "&:hover": {
-                backgroundColor: "rgba(59, 130, 246, 0.08)",
+                backgroundColor: alpha(theme.palette.primary.main, 0.08),
               },
             }}
           >

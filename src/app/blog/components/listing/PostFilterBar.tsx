@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { Box, Chip, Typography, IconButton, useTheme, Skeleton } from "@mui/material";
-import { useBlogTags } from "../../hooks";
+import { Box, Chip, Typography, IconButton, useTheme } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 
 interface PostFilterBarProps {
+  tags: string[];
   selectedTags: string[];
   onTagToggle: (tag: string) => void;
   onViewChange: (view: "grid" | "list") => void;
@@ -14,13 +14,13 @@ interface PostFilterBarProps {
 }
 
 export function PostFilterBar({
+  tags,
   selectedTags,
   onTagToggle,
   onViewChange,
   currentView,
 }: PostFilterBarProps) {
   const theme = useTheme();
-  const { tags, isLoading } = useBlogTags();
 
   return (
     <Box
@@ -40,64 +40,58 @@ export function PostFilterBar({
           sx={{
             mb: 1,
             fontWeight: 600,
-            color: theme.palette.text.primary,
+            fontFamily: "'Geist Mono', monospace",
+            fontSize: "0.85rem",
+            color: theme.palette.text.secondary,
           }}
         >
-          Filter by tags:
+          {"// filter by tag"}
         </Typography>
 
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} variant="rounded" width={80} height={32} />
-            ))
-          ) : (
-            <>
-              <Chip
-                label="All Posts"
-                onClick={() => selectedTags.forEach((tag) => onTagToggle(tag))}
-                color={selectedTags.length === 0 ? "primary" : "default"}
-                sx={{
-                  backgroundColor:
-                    selectedTags.length === 0
-                      ? theme.palette.primary.main
-                      : theme.palette.action.selected,
-                  color:
-                    selectedTags.length === 0
-                      ? theme.palette.primary.contrastText
-                      : theme.palette.text.primary,
-                  "&:hover": {
-                    backgroundColor:
-                      selectedTags.length === 0
-                        ? theme.palette.primary.dark
-                        : theme.palette.action.hover,
-                  },
-                }}
-              />
+          <Chip
+            label="All Posts"
+            onClick={() => selectedTags.forEach((tag) => onTagToggle(tag))}
+            color={selectedTags.length === 0 ? "primary" : "default"}
+            sx={{
+              backgroundColor:
+                selectedTags.length === 0
+                  ? theme.palette.primary.main
+                  : theme.palette.action.selected,
+              color:
+                selectedTags.length === 0
+                  ? theme.palette.primary.contrastText
+                  : theme.palette.text.primary,
+              "&:hover": {
+                backgroundColor:
+                  selectedTags.length === 0
+                    ? theme.palette.primary.dark
+                    : theme.palette.action.hover,
+              },
+            }}
+          />
 
-              {tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  onClick={() => onTagToggle(tag)}
-                  color={selectedTags.includes(tag) ? "primary" : "default"}
-                  sx={{
-                    backgroundColor: selectedTags.includes(tag)
-                      ? theme.palette.primary.main
-                      : theme.palette.action.selected,
-                    color: selectedTags.includes(tag)
-                      ? theme.palette.primary.contrastText
-                      : theme.palette.text.primary,
-                    "&:hover": {
-                      backgroundColor: selectedTags.includes(tag)
-                        ? theme.palette.primary.dark
-                        : theme.palette.action.hover,
-                    },
-                  }}
-                />
-              ))}
-            </>
-          )}
+          {tags.map((tag) => (
+            <Chip
+              key={tag}
+              label={tag}
+              onClick={() => onTagToggle(tag)}
+              color={selectedTags.includes(tag) ? "primary" : "default"}
+              sx={{
+                backgroundColor: selectedTags.includes(tag)
+                  ? theme.palette.primary.main
+                  : theme.palette.action.selected,
+                color: selectedTags.includes(tag)
+                  ? theme.palette.primary.contrastText
+                  : theme.palette.text.primary,
+                "&:hover": {
+                  backgroundColor: selectedTags.includes(tag)
+                    ? theme.palette.primary.dark
+                    : theme.palette.action.hover,
+                },
+              }}
+            />
+          ))}
         </Box>
       </Box>
 
