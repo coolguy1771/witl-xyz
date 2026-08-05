@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Typography, Box, useTheme, useMediaQuery, alpha, Button, Tooltip } from "@mui/material";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Rss as RssIcon } from "lucide-react";
 import { PostGrid } from "./listing/PostGrid";
@@ -19,37 +20,64 @@ interface BlogViewProps {
 export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Derive selected tag from URL; fall back to server-provided initialSelectedTag on mount
+  const urlTag = searchParams.get("tag") || "";
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    initialSelectedTag ? [initialSelectedTag] : []
+    () => (initialSelectedTag ? [initialSelectedTag] : [])
   );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts);
 
-  // Handle tag selection/deselection
-  const handleTagToggle = (tag: string) => {
-    if (tag === "all") {
-      setSelectedTags([]);
-      return;
-    }
+  // Keep local state synced with URL changes (e.g. direct navigation to ?tag=X)
+  useEffect(() => {
+    setSelectedTags(urlTag ? [urlTag] : []);
+  }, [urlTag]);
 
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
+  const updateUrlTag = useCallback(
+    (tag: string | null) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (tag) {
+        params.set("tag", tag);
+      } else {
+        params.delete("tag");
+      }
+      const query = params.toString();
+      router.replace(`/blog${query ? `?${query}` : ""}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
+  // Handle tag selection/deselection — single tag mode via URL
+  const handleTagToggle = useCallback(
+    (tag: string) => {
+      if (!tag) return;
+
+      // Toggle: if already selected, clear it
+      if (selectedTags.includes(tag)) {
+        setSelectedTags([]);
+        updateUrlTag(null);
+      } else {
+        // Select new tag — only one at a time via URL
+        setSelectedTags([tag]);
+        updateUrlTag(tag);
+      }
+    },
+    [selectedTags, updateUrlTag]
+  );
+
+  // Clear filter / go back to all posts
+  const handleClearFilter = useCallback(() => {
+    setSelectedTags([]);
+    updateUrlTag(null);
+  }, [updateUrlTag]);
 
   // Filter posts when selected tags change
-  useEffect(() => {
-    if (selectedTags.length === 0) {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(
-        posts.filter((post) => post.tags?.some((tag) => selectedTags.includes(tag)))
-      );
-    }
-  }, [selectedTags, posts]);
+  const filteredPosts = React.useMemo(() => {
+    if (selectedTags.length === 0) return posts;
+    return posts.filter((post) => post.tags?.some((tag) => selectedTags.includes(tag)));
+  }, [posts, selectedTags]);
 
   return (
     <Box
@@ -164,8 +192,10 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
           }}
         >
           <PostFilterBar
+            posts={posts}
             selectedTags={selectedTags}
             onTagToggle={handleTagToggle}
+            onClearFilter={handleClearFilter}
             onViewChange={setViewMode}
             currentView={viewMode}
           />
