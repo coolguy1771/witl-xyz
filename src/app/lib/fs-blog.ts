@@ -14,7 +14,17 @@ import {
 } from "./blog-path";
 import { remark } from "remark";
 import html from "remark-html";
+import sanitize from "rehype-sanitize";
 import { BlogPost, BlogPostFrontMatter, Heading } from "../types/blog";
+
+/** Slugifies a string for use as an HTML id attribute. */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/<[^>]*>/g, "") // Remove HTML tags
+    .replace(/[\W_]+/g, "-") // Replace non-word chars and underscores with hyphens
+    .replace(/^-+|-+$/g, ""); // Trim leading/trailing hyphens
+}
 
 // Blog configuration
 const WORDS_PER_MINUTE = 200;
@@ -67,25 +77,24 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     throw new Error(`Missing date in post: ${realSlug}`);
   }
 
-  // Convert markdown to HTML
-  const processedContent = await remark().use(html, { sanitize: false }).process(content);
+  // Convert markdown to HTML with sanitization
+  const processedContent = await remark()
+    .use(html)
+    .use(sanitize)
+    .process(content);
 
   let contentHtml = processedContent.toString();
 
   // Add language classes to code blocks for syntax highlighting
   contentHtml = contentHtml.replace(
-    /<pre><code class="language-([^"]+)">/g,
+    /<pre><code class="language-([^\"]+)">/g,
     '<pre class="language-$1"><code class="language-$1">'
   );
 
   // Add IDs to headings for table of contents linking
-  contentHtml = contentHtml.replace(/<h([2-3])>(.*?)<\/h\1>/g, (match, level, content) => {
-    const id = content
-      .toLowerCase()
-      .replace(/<[^>]*>/g, "") // Remove HTML tags
-      .replace(/[^\w\s-]/g, "") // Remove special chars
-      .replace(/\s+/g, "-"); // Replace spaces with hyphens
-    return `<h${level} id="${id}">${content}</h${level}>`;
+  contentHtml = contentHtml.replace(/<h([2-3])>(.*?)<\/h\1>/gs, (match, level, headingContent) => {
+    const id = slugify(headingContent);
+    return `<h${level} id="${id}">${headingContent}</h${level}>`;
   });
 
   // Calculate reading time
@@ -109,6 +118,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     readingTime,
     tags: frontMatter.tags || [],
     coverImage: frontMatter.coverImage,
+    featured: frontMatter.featured,
+    author: frontMatter.author,
     headings,
   };
 
@@ -253,27 +264,19 @@ export async function getRelatedPosts(
  */
 export function extractHeadingsFromContent(content: string): Heading[] {
   // Match h2 and h3 headings with IDs
-  const headingRegex = /<h([2-3])(?:[^>]*id="([^"]+)"[^>]*)?>(.*?)<\/h\1>/g;
+  const headingRegex = /<h([2-3])(?:[^>]*id="([^"]+)"[^>]*)?>(.*?)<\/h\1>/gs;
   const headings: Heading[] = [];
   let match;
 
   while ((match = headingRegex.exec(content)) !== null) {
-    // If the heading doesn't have an ID, generate one from the content
     const level = parseInt(match[1]);
-    let text = match[3];
-    let previous;
-    do {
-      previous = text;
-      text = text.replace(/<[^>]*>/g, ""); // Strip HTML tags inside heading
-    } while (text !== previous);
+    // Strip HTML tags inside heading text
+    const text = match[3].replace(/<[^>]*>/g, "");
     let id = match[2];
 
     // If no ID found, generate one from the text content
     if (!id) {
-      id = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, "") // Remove special chars
-        .replace(/\s+/g, "-"); // Replace spaces with hyphens
+      id = slugify(text);
     }
 
     headings.push({
