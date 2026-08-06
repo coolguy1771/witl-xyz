@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, useTheme, useMediaQuery, alpha, Button, Tooltip } from "@mui/material";
+import { Container, Typography, Box, useTheme, useMediaQuery, alpha, Button, Tooltip, TextField, InputAdornment } from "@mui/material";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Rss as RssIcon } from "lucide-react";
+import { Rss as RssIcon, Search as SearchIcon, X as XIcon } from "lucide-react";
 import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
@@ -16,6 +16,13 @@ interface BlogViewProps {
   showRssLink?: boolean;
 }
 
+/** Simple fuzzy matcher: each term must appear somewhere (case-insensitive). */
+function matchesSearch(text: string, query: string): boolean {
+  if (!query || !query.trim()) return true;
+  const terms = query.toLowerCase().trim().split(/\s+/);
+  return terms.every((term) => text.includes(term));
+}
+
 export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -24,7 +31,36 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
     initialSelectedTag ? [initialSelectedTag] : []
   );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Apply tag filter (OR) + search filter (AND), client-side from loaded posts.
+  const filteredPosts = React.useMemo(() => {
+    let result = posts;
+
+    if (selectedTags.length > 0) {
+      result = result.filter((p) => p.tags?.some((t) => selectedTags.includes(t)));
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((post) => {
+        const searchable = [
+          post.title || "",
+          post.excerpt || "",
+          ...(post.tags || []),
+          (post.content || "").replace(/<[^>]+>/g, " "),
+        ].join(" ");
+        return q.split(/\s+/).every((term) => term && searchable.includes(term));
+      });
+    }
+
+    return result;
+  }, [posts, selectedTags, searchQuery]);
+
+  const handleClearAll = () => {
+    setSelectedTags([]);
+    setSearchQuery("");
+  };
 
   // Handle tag selection/deselection
   const handleTagToggle = (tag: string) => {
@@ -163,6 +199,48 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
             backdropFilter: "blur(8px)",
           }}
         >
+          {/* Search input */}
+          <Box sx={{ display: "flex", gap: 2, mb: 3, alignItems: "center" }}>
+            <TextField
+              fullWidth
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="small"
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon size={16} color="#94a3b8" />
+                  </InputAdornment>
+                ),
+                endAdornment: searchQuery && (
+                  <InputAdornment position="end">
+                    <Button onClick={() => setSearchQuery("")} sx={{ minWidth: 24, p: 0.5 }} size="small">
+                      <XIcon size={16} color="#94a3b8" />
+                    </Button>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ "& .MuiOutlinedInput-root": { fontFamily: "'Geist Mono', monospace", fontSize: "0.85rem" } }}
+            />
+
+            {(selectedTags.length > 0 || searchQuery.trim()) && (
+              <Button onClick={handleClearAll} size="small" variant="outlined" sx={{ fontFamily: "'Geist Mono', monospace", borderRadius: "999px", px: 2 }}>
+                Clear all
+              </Button>
+            )}
+          </Box>
+
+          {/* Results count */}
+          {(searchQuery.trim() || selectedTags.length > 0) && (
+            <Typography variant="caption" sx={{ fontFamily: "'Geist Mono', monospace", color: theme.palette.text.secondary, mb: 2, display: "block" }}>
+              Showing {filteredPosts.length} of {posts.length} posts
+              {searchQuery.trim() && ` matching "${searchQuery}"`}
+              {selectedTags.length > 0 && ` with tags ${selectedTags.map((t) => `'${t}'`).join(", ")}`}
+            </Typography>
+          )}
+
           <PostFilterBar
             selectedTags={selectedTags}
             onTagToggle={handleTagToggle}
