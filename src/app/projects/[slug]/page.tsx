@@ -1,7 +1,10 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchGithubProjectBySlug } from "@/app/lib/github";
+import {
+  fetchGithubProjectBySlug,
+  type GithubProjectDetail,
+} from "@/app/lib/github";
 import { Box, Container, Typography, Button, Chip, Stack, Paper } from "@mui/material";
 import { Star, GitFork, Calendar, Code2, ExternalLink, ArrowLeft, Tag, Bug } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
@@ -18,10 +21,7 @@ export async function generateStaticParams() {
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(
-  props: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
   try {
     const params = await props.params;
     const slug = params?.slug;
@@ -36,7 +36,9 @@ export async function generateMetadata(
     return {
       title: `${project.name} - Tyler Witlin`,
       description,
-      keywords: [...project.topics, project.language].filter(Boolean),
+      keywords: [...project.topics, project.language].filter(
+        (value): value is string => Boolean(value),
+      ),
       openGraph: {
         title: `${project.name} - Project Detail`,
         description,
@@ -287,7 +289,11 @@ function StatPill({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
-function ReadmeSection({ project }: { project: Awaited<ReturnType<typeof fetchGithubProjectBySlug>> & { readmeHtml: string } }) {
+function ReadmeSection({
+  project,
+}: {
+  project: GithubProjectDetail & { readmeHtml: string };
+}) {
   return (
     <Paper
       elevation={1}

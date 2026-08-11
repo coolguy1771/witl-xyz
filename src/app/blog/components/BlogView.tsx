@@ -31,8 +31,9 @@ interface BlogViewProps {
 /** Simple fuzzy matcher: each term must appear somewhere (case-insensitive). */
 function matchesSearch(text: string, query: string): boolean {
   if (!query || !query.trim()) return true;
+  const haystack = text.toLowerCase();
   const terms = query.toLowerCase().trim().split(/\s+/);
-  return terms.every((term) => text.includes(term));
+  return terms.every((term) => haystack.includes(term));
 }
 
 export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
