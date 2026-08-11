@@ -78,8 +78,8 @@ export const AboutSection: React.FC = () => {
               >
                 Kubernetes
               </Box>{" "}
-              for a living. Right now that means CI/CD infrastructure at Cisco on OpenShift; before
-              that it was{" "}
+              for a living. Right now that means platform engineering at CentralReach; before that
+              it was CI/CD on OpenShift at Cisco, then{" "}
               <Box
                 component="span"
                 sx={{ color: theme.palette.primary.main, fontWeight: 600 }}

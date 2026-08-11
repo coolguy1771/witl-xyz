@@ -12,7 +12,7 @@ const TERMINAL_LINES = [
   { type: "output", text: "Tyler Witlin" },
   { type: "blank", text: "" },
   { type: "prompt", text: "cat role.txt" },
-  { type: "output-highlight", text: "DevOps Engineer @ Cisco Systems" },
+  { type: "output-highlight", text: "Platform Engineer @ CentralReach" },
   { type: "blank", text: "" },
   { type: "prompt", text: "kubectl get specialties --no-headers" },
   { type: "output-green", text: "openshift    argocd    helm    golang    air-gapped" },
