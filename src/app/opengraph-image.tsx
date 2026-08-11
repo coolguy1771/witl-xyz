@@ -51,7 +51,7 @@ export default async function DefaultOpenGraphImage() {
           </div>
           <div style={{ display: "flex", fontSize: 48, color: "#94a3b8" }}>Tyler Witlin</div>
           <div style={{ display: "flex", fontSize: 28, marginTop: 16, color: "#3dd68c" }}>
-            DevOps Engineer @ Cisco Systems
+            Platform Engineer @ CentralReach
           </div>
         </div>
       </div>

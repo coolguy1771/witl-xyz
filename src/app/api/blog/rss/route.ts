@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const SITE_URL = "https://witl.xyz";
 const FEED_TITLE = "Tyler Witlin - Blog";
-const FEED_DESC = "Blog posts by Tyler Witlin - DevOps Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure.";
+const FEED_DESC = "Blog posts by Tyler Witlin - Platform Engineer specializing in Kubernetes, GitOps, CI/CD pipelines, and cloud-native infrastructure.";
 
 export const revalidate = 3600; // ISR: regenerate every hour
 
