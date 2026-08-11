@@ -242,19 +242,21 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
               onChange={(e) => setSearchQuery(e.target.value)}
               size="small"
               variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon size={16} color="#94a3b8" />
-                  </InputAdornment>
-                ),
-                endAdornment: searchQuery && (
-                  <InputAdornment position="end">
-                    <Button onClick={() => setSearchQuery("")} sx={{ minWidth: 24, p: 0.5 }} size="small">
-                      <XIcon size={16} color="#94a3b8" />
-                    </Button>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon size={16} color="#94a3b8" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchQuery ? (
+                    <InputAdornment position="end">
+                      <Button onClick={() => setSearchQuery("")} sx={{ minWidth: 24, p: 0.5 }} size="small">
+                        <XIcon size={16} color="#94a3b8" />
+                      </Button>
+                    </InputAdornment>
+                  ) : undefined,
+                },
               }}
               sx={{ "& .MuiOutlinedInput-root": { fontFamily: "'Geist Mono', monospace", fontSize: "0.85rem" } }}
             />

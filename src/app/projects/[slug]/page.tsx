@@ -131,7 +131,7 @@ export default async function ProjectDetailPage(props: Props) {
               </Typography>
             </Box>
 
-            <Stack direction="row" spacing={1} flexShrink={0}>
+            <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
               <Button
                 component="a"
                 href={project.htmlUrl}
@@ -175,9 +175,7 @@ export default async function ProjectDetailPage(props: Props) {
           <Stack
             direction="row"
             spacing={2}
-            flexWrap="wrap"
-            alignItems="center"
-            sx={{ mb: 3 }}
+            sx={{ mb: 3, flexWrap: "wrap", alignItems: "center" }}
           >
             <StatPill icon={<Star size={14} />} label={`${formatNumber(project.stars)} stars`} />
             <StatPill icon={<GitFork size={14} />} label={`${formatNumber(project.forks)} forks`} />
@@ -219,7 +217,7 @@ export default async function ProjectDetailPage(props: Props) {
               }}
             >
               <Tag size={14} />
-              <Stack direction="row" spacing={0.5} flexWrap="wrap">
+              <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap" }}>
                 {project.topics.map((topic) => (
                   <Chip
                     key={topic}
@@ -318,7 +316,7 @@ function ReadmeSection({
         <Box component="span" sx={{ display: "inline-flex", color: "primary.main" }}>
           <Code2 size={16} />
         </Box>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>
           README
         </Typography>
       </Box>
