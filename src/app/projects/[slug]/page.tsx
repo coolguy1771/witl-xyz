@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchGithubProjectBySlug } from "@/app/lib/github";
-import { Box, Container, Typography, Button, Chip, Stack, Paper, useTheme } from "@mui/material";
+import { Box, Container, Typography, Button, Chip, Stack, Paper } from "@mui/material";
 import { Star, GitFork, Calendar, Code2, ExternalLink, ArrowLeft, Tag, Bug } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
@@ -187,10 +187,10 @@ export default async function ProjectDetailPage(props: Props) {
                 label={project.language}
                 size="small"
                 sx={{
+                  height: 28,
                   backgroundColor: (t) => t.palette.primary.main + "15",
                   color: (t) => t.palette.primary.main,
-                  border: `1px solid ${t.palette.primary.main}30`,
-                  height: 28,
+                  border: (t) => `1px solid ${t.palette.primary.main}30`,
                 }}
               />
             )}
@@ -207,8 +207,16 @@ export default async function ProjectDetailPage(props: Props) {
 
           {/* Topics */}
           {project.topics.length > 0 && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-              <Tag size={14} color={(theme) => theme.palette.text.secondary as string} />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                flexWrap: "wrap",
+                color: "text.secondary",
+              }}
+            >
+              <Tag size={14} />
               <Stack direction="row" spacing={0.5} flexWrap="wrap">
                 {project.topics.map((topic) => (
                   <Chip
@@ -220,7 +228,7 @@ export default async function ProjectDetailPage(props: Props) {
                       fontSize: "0.7rem",
                       backgroundColor: (t) => t.palette.secondary.main + "10",
                       color: (t) => t.palette.secondary.main,
-                      border: `1px solid ${t.palette.secondary.main}30`,
+                      border: (t) => `1px solid ${t.palette.secondary.main}30`,
                     }}
                   />
                 ))}
@@ -301,7 +309,9 @@ function ReadmeSection({ project }: { project: Awaited<ReturnType<typeof fetchGi
           gap: 1,
         }}
       >
-        <Code2 size={16} color={(t) => t.palette.primary.main as string} />
+        <Box component="span" sx={{ display: "inline-flex", color: "primary.main" }}>
+          <Code2 size={16} />
+        </Box>
         <Typography variant="body2" fontWeight={600}>
           README
         </Typography>
