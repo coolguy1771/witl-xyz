@@ -10,7 +10,15 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function DefaultOpenGraphImage() {
-  const fontPath = path.join(process.cwd(), "src", "app", "fonts", "GeistMonoVF.woff");
+  // Satori cannot parse GeistMonoVF.woff (variable WOFF). Use a static TTF.
+  const fontPath = path.join(
+    process.cwd(),
+    "src",
+    "app",
+    "fonts",
+    "boot",
+    "DejaVuSansMono-Bold.ttf",
+  );
   const fontData = await fs.readFile(fontPath);
 
   return new ImageResponse(
@@ -27,15 +35,22 @@ export default async function DefaultOpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          fontFamily: "'Geist Mono', monospace",
+          fontFamily: "'DejaVu Sans Mono'",
         }}
       >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 72, marginBottom: 16, color: "#00d4ff" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ display: "flex", fontSize: 72, marginBottom: 16, color: "#00d4ff" }}>
             witl@xyz:~$ whoami
           </div>
-          <div style={{ fontSize: 48, color: "#94a3b8" }}>Tyler Witlin</div>
-          <div style={{ fontSize: 28, marginTop: 16, color: "#3dd68c" }}>
+          <div style={{ display: "flex", fontSize: 48, color: "#94a3b8" }}>Tyler Witlin</div>
+          <div style={{ display: "flex", fontSize: 28, marginTop: 16, color: "#3dd68c" }}>
             DevOps Engineer @ Cisco Systems
           </div>
         </div>
@@ -45,7 +60,7 @@ export default async function DefaultOpenGraphImage() {
       ...size,
       fonts: [
         {
-          name: "Geist Mono",
+          name: "DejaVu Sans Mono",
           data: fontData,
           weight: 700,
         },
