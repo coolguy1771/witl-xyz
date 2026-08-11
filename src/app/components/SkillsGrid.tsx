@@ -9,7 +9,7 @@ import { MotionBox } from "./motion-ui";
 const SKILL_CATEGORIES = [
   {
     label: "// orchestration",
-    skills: ["Kubernetes", "OpenShift", "Helm", "Docker", "Kustomize"],
+    skills: ["Kubernetes", "Istio", "OpenShift", "Helm", "Docker", "Kustomize"],
   },
   {
     label: "// iac & config",
