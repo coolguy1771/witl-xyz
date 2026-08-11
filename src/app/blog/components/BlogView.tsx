@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, useTheme, useMediaQuery, alpha } from "@mui/material";
+import { Container, Typography, Box, useTheme, useMediaQuery, alpha, Button, Tooltip } from "@mui/material";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { Rss as RssIcon } from "lucide-react";
 import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
@@ -11,9 +13,10 @@ import { BlogPost } from "@/app/types/blog";
 interface BlogViewProps {
   posts: BlogPost[];
   initialSelectedTag?: string;
+  showRssLink?: boolean;
 }
 
-export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
+export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -126,6 +129,28 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
           >
             Thoughts, stories, and ideas about technology, development, and productivity.
           </Typography>
+
+          {showRssLink && (
+            <Box sx={{ mt: 3 }}>
+              <Tooltip title="Subscribe via RSS">
+                <Button
+                  component={Link}
+                  href="/api/blog/rss"
+                  startIcon={<RssIcon size={18} />}
+                  variant="outlined"
+                  size="small"
+                  target="_blank"
+                  sx={{
+                    fontFamily: "'Geist Mono', monospace",
+                    borderRadius: "999px",
+                    px: 2.5,
+                  }}
+                >
+                  RSS Feed
+                </Button>
+              </Tooltip>
+            </Box>
+          )}
         </Box>
 
         <Box

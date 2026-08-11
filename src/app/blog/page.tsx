@@ -26,6 +26,11 @@ async function getPosts(): Promise<Post[]> {
   }
 }
 
+export const metadata = {
+  title: "Blog | Tyler Witlin",
+  description: "DevOps, Kubernetes, GitOps, and cloud-native engineering.",
+};
+
 export default async function BlogPage(props: { searchParams: Promise<{ tag?: string }> }) {
   const searchParams = await props.searchParams;
   // Get posts data on the server
@@ -33,7 +38,7 @@ export default async function BlogPage(props: { searchParams: Promise<{ tag?: st
 
   return (
     <Suspense fallback={<BlogListSkeleton />}>
-      <BlogView posts={allPosts} initialSelectedTag={searchParams.tag} />
+      <BlogView posts={allPosts} initialSelectedTag={searchParams.tag} showRssLink />
     </Suspense>
   );
 }
