@@ -88,6 +88,9 @@ function rewriteRelativeUrls(
   const raw = `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/`;
   return markup.replace(/\b(href|src)="([^"]*)"/gi, (match, attr, url) => {
     if (!url || ABSOLUTE_OR_HASH.test(url)) return match;
+    if (url.startsWith("/")) {
+      return `${attr}="https://github.com${url}"`;
+    }
     const cleaned = url.replace(/^\.\//, "");
     const base = String(attr).toLowerCase() === "src" ? raw : blob;
     return `${attr}="${base}${cleaned}"`;
