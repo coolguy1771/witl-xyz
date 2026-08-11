@@ -38,12 +38,6 @@ export function PostFilterBar({
       .map(([tag, count]) => ({ tag, count }));
   }, [posts]);
 
-  // Show number of filtered results when active filter exists
-  const visibleCount = useMemo(() => {
-    if (selectedTags.length === 0) return posts.length;
-    return posts.filter((p) => p.tags?.some((t) => selectedTags.includes(t))).length;
-  }, [posts, selectedTags]);
-
   return (
     <Box
       sx={{
@@ -113,15 +107,6 @@ export function PostFilterBar({
             />
           ))}
         </Box>
-
-        {selectedTags.length > 0 && (
-          <Typography
-            variant="caption"
-            sx={{ mt: 1, color: theme.palette.text.secondary }}
-          >
-            Showing {visibleCount} of {posts.length} posts tagged "{selectedTags.join(", ")}"
-          </Typography>
-        )}
       </Box>
 
       <Box sx={{ display: "flex", gap: 1, alignSelf: { xs: "flex-end", md: "auto" } }}>
