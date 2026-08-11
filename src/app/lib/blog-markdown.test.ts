@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
+  applyHeadingIds,
+  HastNode,
   markdownToHtml,
   normalizeAuthor,
   slugify,
@@ -17,6 +19,46 @@ describe("markdownToHtml", () => {
     expect(html).toContain("Body");
     expect(html).not.toContain("<script");
     expect(html).not.toContain("alert(1)");
+  });
+
+  test("uses uniqueSlug for missing heading ids", async () => {
+    const html = await markdownToHtml("## Usage\n\n## Usage\n\n## Café\n\n## !!!");
+
+    expect(html).toContain('id="usage"');
+    expect(html).toContain('id="usage-2"');
+    expect(html).toContain('id="cafe"');
+    expect(html).toContain('id="section"');
+  });
+
+  test("preserves existing heading ids", () => {
+    const tree: HastNode = {
+      type: "root",
+      children: [
+        {
+          type: "element",
+          tagName: "h2",
+          properties: { id: "custom-id" },
+          children: [{ type: "text", value: "Hello" }],
+        },
+        {
+          type: "element",
+          tagName: "h2",
+          properties: {},
+          children: [{ type: "text", value: "Hello" }],
+        },
+      ],
+    };
+
+    applyHeadingIds(tree);
+
+    expect(tree.children?.[0].properties?.id).toBe("custom-id");
+    expect(tree.children?.[1].properties?.id).toBe("hello");
+  });
+
+  test("adds highlight.js classes to fenced code", async () => {
+    const html = await markdownToHtml("```js\nconst x = 1;\n```");
+
+    expect(html).toContain("hljs");
   });
 });
 

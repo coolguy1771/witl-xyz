@@ -24,6 +24,7 @@ import {
 import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import { useThemeMode } from "./ThemeRegistry";
 import { useLenis } from "lenis/react";
+import { CODE_FONT_FAMILY } from "../lib/code-font";
 
 /** Scroll-direction tracking hook. Hides navbar on scroll down, shows on scroll up. */
 function useNavbarVisibility(isOpen: boolean) {
@@ -112,7 +113,7 @@ function NavLink({
         color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
         textDecoration: "none",
         fontWeight: isActive ? 600 : 400,
-        fontFamily: "'Geist Mono', monospace",
+        fontFamily: CODE_FONT_FAMILY,
         fontSize: "0.85rem",
         transition: "color 0.2s ease",
         "&:hover": {
