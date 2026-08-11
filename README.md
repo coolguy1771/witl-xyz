@@ -47,13 +47,15 @@ Open [http://localhost:3000](http://localhost:3000) to see the result.
 ## Blog Posts
 
 Blog posts are written in Markdown and stored in the `posts` directory. Each
-Each post should include frontmatter with the following fields:
+post should include frontmatter with the following fields:
 
 ```markdown
 ---
 title: Your Post Title          # Required
 date: "2025-01-15"              # Required (ISO format or parseable)
-author: Your Name               # Optional
+author:                         # Optional
+  name: Your Name
+  # avatar: "/avatar.jpg"
 tags: ["nextjs", "react"]       # Optional array of tags
 excerpt: Custom excerpt         # Optional; auto-generated if omitted
 coverImage: "/image.jpg"        # Optional URL/path to cover image

@@ -12,19 +12,13 @@ import {
   POSTS_DIRECTORY,
   resolvePostFilePath,
 } from "./blog-path";
-import { remark } from "remark";
-import html from "remark-html";
-import sanitize from "rehype-sanitize";
 import { BlogPost, BlogPostFrontMatter, Heading } from "../types/blog";
-
-/** Slugifies a string for use as an HTML id attribute. */
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/<[^>]*>/g, "") // Remove HTML tags
-    .replace(/[\W_]+/g, "-") // Replace non-word chars and underscores with hyphens
-    .replace(/^-+|-+$/g, ""); // Trim leading/trailing hyphens
-}
+import {
+  markdownToHtml,
+  normalizeAuthor,
+  stripHtmlTags,
+  uniqueSlug,
+} from "./blog-markdown";
 
 // Blog configuration
 const WORDS_PER_MINUTE = 200;
@@ -77,25 +71,12 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     throw new Error(`Missing date in post: ${realSlug}`);
   }
 
-  // Convert markdown to HTML with sanitization
-  const processedContent = await remark()
-    .use(html)
-    .use(sanitize)
-    .process(content);
+  let contentHtml = await markdownToHtml(content);
 
-  let contentHtml = processedContent.toString();
-
-  // Add language classes to code blocks for syntax highlighting
   contentHtml = contentHtml.replace(
     /<pre><code class="language-([^\"]+)">/g,
     '<pre class="language-$1"><code class="language-$1">'
   );
-
-  // Add IDs to headings for table of contents linking
-  contentHtml = contentHtml.replace(/<h([2-3])>(.*?)<\/h\1>/gs, (match, level, headingContent) => {
-    const id = slugify(headingContent);
-    return `<h${level} id="${id}">${headingContent}</h${level}>`;
-  });
 
   // Calculate reading time
   const wordCount = content.split(/\s+/g).length;
@@ -119,7 +100,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
     tags: frontMatter.tags || [],
     coverImage: frontMatter.coverImage,
     featured: frontMatter.featured,
-    author: frontMatter.author,
+    author: normalizeAuthor(frontMatter.author),
     headings,
   };
 
@@ -266,17 +247,15 @@ export function extractHeadingsFromContent(content: string): Heading[] {
   // Match h2 and h3 headings with IDs
   const headingRegex = /<h([2-3])(?:[^>]*id="([^"]+)"[^>]*)?>(.*?)<\/h\1>/gs;
   const headings: Heading[] = [];
+  const usedIds = new Set<string>();
   let match;
 
   while ((match = headingRegex.exec(content)) !== null) {
-    const level = parseInt(match[1]);
-    // Strip HTML tags inside heading text
-    const text = match[3].replace(/<[^>]*>/g, "");
-    let id = match[2];
-
-    // If no ID found, generate one from the text content
-    if (!id) {
-      id = slugify(text);
+    const level = parseInt(match[1], 10);
+    const text = stripHtmlTags(match[3]);
+    const id = match[2] || uniqueSlug(text, usedIds);
+    if (match[2]) {
+      usedIds.add(match[2]);
     }
 
     headings.push({

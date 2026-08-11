@@ -3,7 +3,24 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AppBar, Container, Toolbar, Box, Typography, IconButton, useTheme, Theme, useMediaQuery, Drawer, Button, Fab, Tooltip, alpha, Zoom } from "@mui/material";
+import {
+  AppBar,
+  Container,
+  Toolbar,
+  Box,
+  Typography,
+  IconButton,
+  useTheme,
+  Theme,
+  useMediaQuery,
+  Drawer,
+  Button,
+  Fab,
+  Tooltip,
+  alpha,
+  Zoom,
+  SxProps,
+} from "@mui/material";
 import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import { useThemeMode } from "./ThemeRegistry";
 import { useLenis } from "lenis/react";
@@ -12,7 +29,9 @@ import { useLenis } from "lenis/react";
 function useNavbarVisibility(isOpen: boolean) {
   const [scrolled, setScrolled] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
-  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"));
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"), {
+    noSsr: true,
+  });
 
   useLenis((instance) => {
     setScrolled(instance.scroll > 60);
@@ -48,7 +67,7 @@ function useHash() {
     };
   }, [pathname]);
 
-  return hash;
+  return { hash, setHash };
 }
 
 const NAV_ITEMS = [
@@ -62,10 +81,19 @@ const NAV_ITEMS = [
 ] as const;
 
 /** Desktop/mobile navigation link with underline and active-state logic. */
-function NavLink({ item, hash }: { item: typeof NAV_ITEMS[number]; hash: string }) {
+function NavLink({
+  item,
+  hash,
+  onNavigate,
+  onHashChange,
+}: {
+  item: (typeof NAV_ITEMS)[number];
+  hash: string;
+  onNavigate?: () => void;
+  onHashChange: (nextHash: string) => void;
+}) {
   const pathname = usePathname();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const linkHash = item.href.includes("#")
     ? item.href.slice(item.href.indexOf("#"))
@@ -104,7 +132,10 @@ function NavLink({ item, hash }: { item: typeof NAV_ITEMS[number]; hash: string 
           transition: "width 0.2s ease",
         },
       }}
-      onClick={() => isMobile && window.history.back()} // drawer close handled outside
+      onClick={() => {
+        onHashChange(linkHash);
+        onNavigate?.();
+      }}
     >
       {item.label}
     </Box>
@@ -112,18 +143,16 @@ function NavLink({ item, hash }: { item: typeof NAV_ITEMS[number]; hash: string 
 }
 
 /** Theme toggle button used in desktop navbar and mobile drawer. */
-function ThemeToggleButton({ onToggle }: { onToggle: () => void }) {
-  const theme = useTheme();
-  const { mode } = useThemeMode();
+function ThemeToggleButton() {
+  const { mode, toggleTheme } = useThemeMode();
   const icon = mode === "dark" ? <Sun size={18} /> : <Moon size={18} />;
+  const nextMode = mode === "dark" ? "light" : "dark";
 
   return (
-    <Tooltip
-      title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
-      arrow
-    >
+    <Tooltip title={`Switch to ${nextMode} mode`} arrow>
       <IconButton
-        onClick={onToggle}
+        onClick={toggleTheme}
+        aria-label={`Switch to ${nextMode} mode`}
         sx={{
           ml: 1,
           bgcolor: (t) => alpha(t.palette.primary.main, 0.1),
@@ -147,10 +176,12 @@ function MobileNavDrawer({
   open,
   onClose,
   hash,
+  onHashChange,
 }: {
   open: boolean;
   onClose: () => void;
   hash: string;
+  onHashChange: (nextHash: string) => void;
 }) {
   const theme = useTheme();
   const { mode, toggleTheme } = useThemeMode();
@@ -187,7 +218,13 @@ function MobileNavDrawer({
         }}
       >
         {NAV_ITEMS.map((item) => (
-          <NavLink key={item.href} item={item} hash={hash} />
+          <NavLink
+            key={item.href}
+            item={item}
+            hash={hash}
+            onNavigate={onClose}
+            onHashChange={onHashChange}
+          />
         ))}
 
         {/* Theme toggle in mobile menu */}
@@ -226,27 +263,30 @@ function MobileNavDrawer({
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const hash = useHash();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  const { hash, setHash } = useHash();
   const lenis = useLenis();
-  const { toggleTheme } = useThemeMode();
 
-  // Use extracted visibility logic; pass isOpen so it's aware of drawer state.
   const { scrolled, navVisible } = useNavbarVisibility(isOpen);
+
+  const drawerOpen = isOpen && isMobile;
+
+  useEffect(() => {
+    if (!isMobile) {
+      setIsOpen(false);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     if (!lenis) return;
-    if (isOpen) {
+    if (drawerOpen) {
       lenis.stop();
     } else {
       lenis.start();
     }
-  }, [isOpen, lenis]);
+  }, [drawerOpen, lenis]);
 
-  // AppBar styling
-  const appBarSx: ThemePropsFn<Theme> = () => ({
-    position: "static" as const,
-    elevation: scrolled ? 4 : 0,
+  const appBarSx: SxProps<Theme> = {
     backgroundColor: theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
     borderBottom: `1px solid ${theme.palette.divider}`,
     backdropFilter: "none",
@@ -258,8 +298,7 @@ export default function Navbar() {
     width: "100%",
     left: 0,
     right: 0,
-    boxShadow: "none",
-  });
+  };
 
   return (
     <>
@@ -275,7 +314,7 @@ export default function Navbar() {
           transition: "transform 0.3s ease",
         }}
       >
-        <AppBar sx={appBarSx}>
+        <AppBar position="static" elevation={scrolled ? 4 : 0} sx={appBarSx}>
           <Container maxWidth="lg">
             <Toolbar
               disableGutters
@@ -310,10 +349,15 @@ export default function Navbar() {
               {/* Desktop Navigation */}
               <Box sx={{ display: { xs: "none", md: "flex" }, gap: 4, alignItems: "center" }}>
                 {NAV_ITEMS.map((item) => (
-                  <NavLink key={item.href} item={item} hash={hash} />
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    hash={hash}
+                    onHashChange={setHash}
+                  />
                 ))}
 
-                <ThemeToggleButton onToggle={toggleTheme} />
+                <ThemeToggleButton />
               </Box>
 
               {/* Mobile Menu Button */}
@@ -327,16 +371,21 @@ export default function Navbar() {
                 }}
                 onClick={() => setIsOpen((v) => !v)}
                 edge="end"
-                aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-                aria-expanded={isOpen}
+                aria-label={drawerOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={drawerOpen}
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                {drawerOpen ? <X size={24} /> : <Menu size={24} />}
               </IconButton>
             </Toolbar>
           </Container>
 
           {/* Mobile Navigation */}
-          <MobileNavDrawer open={isOpen && isMobile} onClose={() => setIsOpen(false)} hash={hash} />
+          <MobileNavDrawer
+            open={drawerOpen}
+            onClose={() => setIsOpen(false)}
+            hash={hash}
+            onHashChange={setHash}
+          />
         </AppBar>
       </Box>
 

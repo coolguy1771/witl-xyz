@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <Box
       sx={{
-        minHeight: { xs: "calc(100dvh - 180px)", md: "100vh" },
+        minHeight: { xs: "calc(100dvh - 180px)", md: "calc(100dvh - 72px)" },
         background: (theme) =>
           theme.palette.mode === "dark"
             ? `radial-gradient(circle at 25% 25%, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
