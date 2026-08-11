@@ -5,6 +5,7 @@ import {
   fetchGithubProjectBySlug,
   type GithubProjectDetail,
 } from "@/app/lib/github";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 import { Box, Container, Typography, Button, Chip, Stack, Paper } from "@mui/material";
 import { Star, GitFork, Calendar, Code2, ExternalLink, ArrowLeft, Tag, Bug } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
@@ -31,7 +32,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     if (!project) return {};
 
     const description =
-      `${project.description}` || `GitHub repository: ${project.full_name}`;
+      project.description?.trim() || `GitHub repository: ${project.full_name}`;
 
     return {
       title: `${project.name} - Tyler Witlin`,
@@ -126,7 +127,7 @@ export default async function ProjectDetailPage(props: Props) {
                 {project.name}
               </Typography>
 
-              <Typography variant="body2" color="text.secondary" sx={{ fontFamily: "'Geist Mono', monospace" }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontFamily: CODE_FONT_FAMILY }}>
                 {project.full_name}
               </Typography>
             </Box>
@@ -331,7 +332,7 @@ function ReadmeSection({
             mb: 1.5,
           },
           "& code": {
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: CODE_FONT_FAMILY,
             backgroundColor: (t) => t.palette.mode === "dark" ? "#1e1e2e" : "#f0f0f0",
             padding: "0.15em 0.35em",
             borderRadius: "4px",

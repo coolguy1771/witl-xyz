@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { Octokit } from "@octokit/rest";
 import { remark } from "remark";
 import html from "remark-html";
@@ -53,6 +54,46 @@ export function isValidRepoSlug(slug: string): boolean {
   return REPO_SLUG.test(slug);
 }
 
+function isHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function safeHomepage(url: string | null): string | null {
+  if (!url) return null;
+  return isHttpUrl(url) ? url : null;
+}
+
+function isNotFoundError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    (error as { status: unknown }).status === 404
+  );
+}
+
+const ABSOLUTE_OR_HASH = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
+
+function rewriteRelativeUrls(
+  markup: string,
+  owner: string,
+  repo: string,
+): string {
+  const blob = `https://github.com/${owner}/${repo}/blob/HEAD/`;
+  const raw = `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/`;
+  return markup.replace(/\b(href|src)="([^"]*)"/gi, (match, attr, url) => {
+    if (!url || ABSOLUTE_OR_HASH.test(url)) return match;
+    const cleaned = url.replace(/^\.\//, "");
+    const base = String(attr).toLowerCase() === "src" ? raw : blob;
+    return `${attr}="${base}${cleaned}"`;
+  });
+}
+
 function mapRepoToDetail(
   repo: RepoPayload,
   readmeHtml: string,
@@ -64,7 +105,7 @@ function mapRepoToDetail(
     topics: repo.topics ?? [],
     language: repo.language,
     htmlUrl: repo.html_url,
-    homepage: repo.homepage,
+    homepage: safeHomepage(repo.homepage),
     stars: repo.stargazers_count ?? 0,
     forks: repo.forks_count ?? 0,
     openIssues: repo.open_issues_count ?? 0,
@@ -86,7 +127,7 @@ async function fetchSanitizedReadme(
     if (!("content" in data) || !data.content) return "";
     const markdown = Buffer.from(data.content, "base64").toString("utf8");
     const result = await remark().use(html).process(markdown);
-    return String(result);
+    return rewriteRelativeUrls(String(result), owner, repo);
   } catch {
     return "";
   }
@@ -127,19 +168,22 @@ export async function fetchGithubProjects(
   }
 }
 
-export async function fetchGithubProjectBySlug(
-  slug: string,
-  owner: string = DEFAULT_GITHUB_OWNER,
-): Promise<GithubProjectDetail | null> {
-  if (!isValidRepoSlug(slug)) return null;
-  try {
-    const octokit = createOctokit();
-    const { data } = await octokit.repos.get({ owner, repo: slug });
-    if (data.private) return null;
-    const readmeHtml = await fetchSanitizedReadme(octokit, owner, slug);
-    return mapRepoToDetail(data, readmeHtml);
-  } catch (error) {
-    console.error("Error fetching GitHub project:", error);
-    return null;
-  }
-}
+export const fetchGithubProjectBySlug = cache(
+  async (
+    slug: string,
+    owner: string = DEFAULT_GITHUB_OWNER,
+  ): Promise<GithubProjectDetail | null> => {
+    if (!isValidRepoSlug(slug)) return null;
+    try {
+      const octokit = createOctokit();
+      const { data } = await octokit.repos.get({ owner, repo: slug });
+      if (data.private) return null;
+      const readmeHtml = await fetchSanitizedReadme(octokit, owner, slug);
+      return mapRepoToDetail(data, readmeHtml);
+    } catch (error) {
+      if (isNotFoundError(error)) return null;
+      console.error("Error fetching GitHub project:", error);
+      throw error;
+    }
+  },
+);

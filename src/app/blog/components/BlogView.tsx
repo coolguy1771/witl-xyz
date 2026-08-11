@@ -21,6 +21,7 @@ import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
 import { BlogPost } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface BlogViewProps {
   posts: BlogPost[];
@@ -28,12 +29,9 @@ interface BlogViewProps {
   showRssLink?: boolean;
 }
 
-/** Simple fuzzy matcher: each term must appear somewhere (case-insensitive). */
-function matchesSearch(text: string, query: string): boolean {
-  if (!query || !query.trim()) return true;
-  const haystack = text.toLowerCase();
-  const terms = query.toLowerCase().trim().split(/\s+/);
-  return terms.every((term) => haystack.includes(term));
+/** Each whitespace-separated term must appear in already-normalized text. */
+function matchesSearch(text: string, terms: string[]): boolean {
+  return terms.every((term) => text.includes(term));
 }
 
 export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
@@ -98,28 +96,35 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
     updateUrlTag(null);
   }, [updateUrlTag]);
 
-  const filteredPosts = React.useMemo(() => {
-    let result = posts;
-    if (selectedTags.length > 0) {
-      result = result.filter((post) =>
-        post.tags?.some((tag) => selectedTags.includes(tag)),
-      );
-    }
-    if (searchQuery.trim()) {
-      result = result.filter((post) => {
-        const searchable = [
+  const searchablePosts = React.useMemo(
+    () =>
+      posts.map((post) => ({
+        post,
+        text: [
           post.title || "",
           post.excerpt || "",
           ...(post.tags || []),
           (post.content || "").replace(/<[^>]+>/g, " "),
         ]
           .join(" ")
-          .toLowerCase();
-        return matchesSearch(searchable, searchQuery);
-      });
+          .toLowerCase(),
+      })),
+    [posts],
+  );
+
+  const filteredPosts = React.useMemo(() => {
+    let indexed = searchablePosts;
+    if (selectedTags.length > 0) {
+      indexed = indexed.filter(({ post }) =>
+        post.tags?.some((tag) => selectedTags.includes(tag)),
+      );
     }
-    return result;
-  }, [posts, selectedTags, searchQuery]);
+    if (searchQuery.trim()) {
+      const terms = searchQuery.toLowerCase().trim().split(/\s+/);
+      indexed = indexed.filter(({ text }) => matchesSearch(text, terms));
+    }
+    return indexed.map(({ post }) => post);
+  }, [searchablePosts, selectedTags, searchQuery]);
 
   return (
     <Box
@@ -243,6 +248,7 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
               size="small"
               variant="outlined"
               slotProps={{
+                htmlInput: { "aria-label": "Search posts" },
                 input: {
                   startAdornment: (
                     <InputAdornment position="start">
@@ -251,18 +257,23 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
                   ),
                   endAdornment: searchQuery ? (
                     <InputAdornment position="end">
-                      <Button onClick={() => setSearchQuery("")} sx={{ minWidth: 24, p: 0.5 }} size="small">
+                      <Button
+                        aria-label="Clear search"
+                        onClick={() => setSearchQuery("")}
+                        sx={{ minWidth: 24, p: 0.5 }}
+                        size="small"
+                      >
                         <XIcon size={16} color="#94a3b8" />
                       </Button>
                     </InputAdornment>
                   ) : undefined,
                 },
               }}
-              sx={{ "& .MuiOutlinedInput-root": { fontFamily: "'Geist Mono', monospace", fontSize: "0.85rem" } }}
+              sx={{ "& .MuiOutlinedInput-root": { fontFamily: CODE_FONT_FAMILY, fontSize: "0.85rem" } }}
             />
 
             {(selectedTags.length > 0 || searchQuery.trim()) && (
-              <Button onClick={handleClearAll} size="small" variant="outlined" sx={{ fontFamily: "'Geist Mono', monospace", borderRadius: "999px", px: 2 }}>
+              <Button onClick={handleClearAll} size="small" variant="outlined" sx={{ fontFamily: CODE_FONT_FAMILY, borderRadius: "999px", px: 2 }}>
                 Clear all
               </Button>
             )}
@@ -270,7 +281,7 @@ export function BlogView({ posts, initialSelectedTag, showRssLink = false }: Blo
 
           {/* Results count */}
           {(searchQuery.trim() || selectedTags.length > 0) && (
-            <Typography variant="caption" sx={{ fontFamily: "'Geist Mono', monospace", color: theme.palette.text.secondary, mb: 2, display: "block" }}>
+            <Typography variant="caption" sx={{ fontFamily: CODE_FONT_FAMILY, color: theme.palette.text.secondary, mb: 2, display: "block" }}>
               Showing {filteredPosts.length} of {posts.length} posts
               {searchQuery.trim() && ` matching "${searchQuery}"`}
               {selectedTags.length > 0 && ` with tags ${selectedTags.map((t) => `'${t}'`).join(", ")}`}

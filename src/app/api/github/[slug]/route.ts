@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchGithubProjectBySlug } from "@/app/lib/github";
+import { fetchGithubProjectBySlug, isValidRepoSlug } from "@/app/lib/github";
 
 export const revalidate = 3600;
 
@@ -13,6 +13,10 @@ export async function GET(
 
     if (!slug) {
       return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+    }
+
+    if (!isValidRepoSlug(slug)) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
     const project = await fetchGithubProjectBySlug(slug);
