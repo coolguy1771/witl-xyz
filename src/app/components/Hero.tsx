@@ -12,13 +12,13 @@ const TERMINAL_LINES = [
   { type: "output", text: "Tyler Witlin" },
   { type: "blank", text: "" },
   { type: "prompt", text: "cat role.txt" },
-  { type: "output-highlight", text: "Platform Engineer @ CentralReach" },
+  { type: "output-highlight", text: "DevOps Engineer @ CentralReach" },
   { type: "blank", text: "" },
   { type: "prompt", text: "kubectl get specialties --no-headers" },
-  { type: "output-green", text: "openshift    argocd    helm    golang    air-gapped" },
+  { type: "output-green", text: "istio    aws    argocd    terraform    kubernetes" },
   { type: "blank", text: "" },
   { type: "prompt", text: "git log --oneline -1" },
-  { type: "output", text: "built ci/cd on openshift for a lot of engineers" },
+  { type: "output", text: "developing a microservices platform for developers" },
 ];
 
 const CHAR_DELAY = 35;

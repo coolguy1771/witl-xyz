@@ -3,15 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AppBar } from "@mui/material";
-import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import {
+  AppBar,
   Container,
   Toolbar,
   Box,
   Typography,
   IconButton,
   useTheme,
+  Theme,
   useMediaQuery,
   Drawer,
   Button,
@@ -19,26 +19,43 @@ import {
   Tooltip,
   alpha,
   Zoom,
+  SxProps,
 } from "@mui/material";
+import { Menu, X, Sun, Moon, ArrowUp } from "lucide-react";
 import { useThemeMode } from "./ThemeRegistry";
 import { useLenis } from "lenis/react";
+import { CODE_FONT_FAMILY } from "../lib/code-font";
 
-/**
- * Top navigation bar component with responsive links, theme toggle, mobile drawer, and a scroll-to-top control.
- *
- * The component synchronizes a local `hash` state with window.location.hash, tracks page scroll to adjust elevation and reveal a scroll-to-top FAB, and renders desktop and mobile navigation (including anchor links) with active styling.
- *
- * @returns The rendered navbar React element
- */
-export default function Navbar() {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+/** Scroll-direction tracking hook. Hides navbar on scroll down, shows on scroll up. */
+function useNavbarVisibility(isOpen: boolean) {
   const [scrolled, setScrolled] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("md"), {
+    noSsr: true,
+  });
+
+  useLenis((instance) => {
+    setScrolled(instance.scroll > 60);
+
+    if (isOpen || isMobile || instance.scroll <= 0) {
+      setNavVisible(true);
+      return;
+    }
+
+    if (instance.direction === 1) {
+      setNavVisible(false);
+    } else if (instance.direction === -1) {
+      setNavVisible(true);
+    }
+  });
+
+  return { scrolled, navVisible };
+}
+
+/** Hash sync hook: keeps local hash in line with window.location.hash. */
+function useHash() {
+  const pathname = usePathname();
   const [hash, setHash] = useState("");
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const lenis = useLenis();
 
   useEffect(() => {
     const syncHash = () => setHash(window.location.hash);
@@ -51,91 +68,238 @@ export default function Navbar() {
     };
   }, [pathname]);
 
-  useLenis((instance) => {
-    setScrolled(instance.scroll > 60);
+  return { hash, setHash };
+}
 
-    if (isMobile || instance.scroll <= 0) {
-      setNavVisible(true);
-      return;
-    }
+const NAV_ITEMS = [
+  { label: "~/", href: "/" },
+  { label: "skills", href: "/#skills" },
+  { label: "certs", href: "/#certs" },
+  { label: "projects", href: "/#projects" },
+  { label: "blog", href: "/blog" },
+  { label: "about", href: "/#about" },
+  { label: "contact", href: "/#contact" },
+] as const;
 
-    if (instance.direction === 1) {
-      setNavVisible(false);
-    } else if (instance.direction === -1) {
-      setNavVisible(true);
-    }
-  });
+/** Desktop/mobile navigation link with underline and active-state logic. */
+function NavLink({
+  item,
+  hash,
+  onNavigate,
+  onHashChange,
+}: {
+  item: (typeof NAV_ITEMS)[number];
+  hash: string;
+  onNavigate?: () => void;
+  onHashChange: (nextHash: string) => void;
+}) {
+  const pathname = usePathname();
+  const theme = useTheme();
+
+  const linkHash = item.href.includes("#")
+    ? item.href.slice(item.href.indexOf("#"))
+    : "";
+  const isActive =
+    (item.href === "/" && pathname === "/" && !hash) ||
+    (pathname === "/" && linkHash !== "" && hash === linkHash) ||
+    (item.href === "/blog" && pathname.startsWith("/blog"));
+
+  return (
+    <Box
+      component={Link}
+      href={item.href}
+      sx={{
+        position: "relative",
+        color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
+        textDecoration: "none",
+        fontWeight: isActive ? 600 : 400,
+        fontFamily: CODE_FONT_FAMILY,
+        fontSize: "0.85rem",
+        transition: "color 0.2s ease",
+        "&:hover": {
+          color: theme.palette.primary.main,
+          "&::after": {
+            width: "100%",
+          },
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          bottom: -4,
+          left: 0,
+          width: isActive ? "100%" : 0,
+          height: "1px",
+          backgroundColor: theme.palette.primary.main,
+          transition: "width 0.2s ease",
+        },
+      }}
+      onClick={() => {
+        onHashChange(linkHash);
+        onNavigate?.();
+      }}
+    >
+      {item.label}
+    </Box>
+  );
+}
+
+/** Theme toggle button used in desktop navbar and mobile drawer. */
+function ThemeToggleButton() {
+  const { mode, toggleTheme } = useThemeMode();
+  const icon = mode === "dark" ? <Sun size={18} /> : <Moon size={18} />;
+  const nextMode = mode === "dark" ? "light" : "dark";
+
+  return (
+    <Tooltip title={`Switch to ${nextMode} mode`} arrow>
+      <IconButton
+        onClick={toggleTheme}
+        aria-label={`Switch to ${nextMode} mode`}
+        sx={{
+          ml: 1,
+          bgcolor: (t) => alpha(t.palette.primary.main, 0.1),
+          color: "primary.main",
+          "&:hover": {
+            bgcolor: (t) => alpha(t.palette.primary.main, 0.2),
+            transform: "rotate(12deg)",
+          },
+          height: 36,
+          width: 36,
+        }}
+      >
+        {icon}
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+/** Mobile drawer with nav links and theme toggle. */
+function MobileNavDrawer({
+  open,
+  onClose,
+  hash,
+  onHashChange,
+}: {
+  open: boolean;
+  onClose: () => void;
+  hash: string;
+  onHashChange: (nextHash: string) => void;
+}) {
+  const theme = useTheme();
+  const { mode, toggleTheme } = useThemeMode();
+
+  return (
+    <Drawer
+      anchor="top"
+      open={open}
+      onClose={onClose}
+      transitionDuration={200}
+      slotProps={{
+        backdrop: {
+          sx: {
+            backdropFilter: "blur(8px)",
+            backgroundColor: theme.palette.background.default + "A6",
+          },
+        },
+        paper: {
+          sx: {
+            mt: { xs: "64px", md: "72px" },
+            boxShadow: "none",
+            backgroundColor: theme.palette.background.paper,
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          py: 4,
+          px: 2,
+        }}
+      >
+        {NAV_ITEMS.map((item) => (
+          <NavLink
+            key={item.href}
+            item={item}
+            hash={hash}
+            onNavigate={onClose}
+            onHashChange={onHashChange}
+          />
+        ))}
+
+        {/* Theme toggle in mobile menu */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mt: 2,
+            pt: 2,
+            borderTop: 1,
+            borderColor: "divider",
+          }}
+        >
+          <Button
+            onClick={() => {
+              toggleTheme();
+              onClose();
+            }}
+            startIcon={mode === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Switch to {mode === "dark" ? "light" : "dark"} mode
+          </Button>
+        </Box>
+      </Box>
+    </Drawer>
+  );
+}
+
+/**
+ * Top navigation bar component with responsive links, theme toggle, mobile drawer, and a scroll-to-top control.
+ */
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
+  const { hash, setHash } = useHash();
+  const lenis = useLenis();
+
+  const { scrolled, navVisible } = useNavbarVisibility(isOpen);
+
+  const drawerOpen = isOpen && isMobile;
 
   useEffect(() => {
-    if (!lenis) {
-      return;
+    if (!isMobile) {
+      setIsOpen(false);
     }
+  }, [isMobile]);
 
-    if (isOpen) {
+  useEffect(() => {
+    if (!lenis) return;
+    if (drawerOpen) {
       lenis.stop();
-      return;
+    } else {
+      lenis.start();
     }
+  }, [drawerOpen, lenis]);
 
-    lenis.start();
-  }, [isOpen, lenis]);
-
-  const navItems = [
-    { label: "~/", href: "/" },
-    { label: "skills", href: "/#skills" },
-    { label: "certs", href: "/#certs" },
-    { label: "projects", href: "/#projects" },
-    { label: "blog", href: "/blog" },
-    { label: "about", href: "/#about" },
-    { label: "contact", href: "/#contact" },
-  ];
-
-  const NavLink = ({ item }: { item: { label: string; href: string } }) => {
-    const linkHash = item.href.includes("#")
-      ? item.href.slice(item.href.indexOf("#"))
-      : "";
-    const isActive =
-      (item.href === "/" && pathname === "/" && !hash) ||
-      (pathname === "/" && linkHash !== "" && hash === linkHash) ||
-      (item.href === "/blog" && pathname.startsWith("/blog"));
-
-    return (
-      <Box
-        component={Link}
-        href={item.href}
-        sx={{
-          position: "relative",
-          color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
-          textDecoration: "none",
-          fontWeight: isActive ? 600 : 400,
-          fontFamily: "'Geist Mono', monospace",
-          fontSize: "0.85rem",
-          transition: "color 0.2s ease",
-          "&:hover": {
-            color: theme.palette.primary.main,
-            "&::after": {
-              width: "100%",
-            },
-          },
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            bottom: -4,
-            left: 0,
-            width: isActive ? "100%" : 0,
-            height: "1px",
-            backgroundColor: theme.palette.primary.main,
-            transition: "width 0.2s ease",
-          },
-        }}
-        onClick={() => isMobile && setIsOpen(false)}
-      >
-        {item.label}
-      </Box>
-    );
+  const appBarSx: SxProps<Theme> = {
+    backgroundColor: theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backdropFilter: "none",
+    transition: "all 0.3s ease",
+    zIndex: theme.zIndex.drawer + 1,
+    height: { xs: "64px", md: "72px" },
+    borderRadius: 0,
+    boxSizing: "border-box",
+    width: "100%",
+    left: 0,
+    right: 0,
   };
-
-  // Import theme context to allow theme toggling
-  const { mode, toggleTheme } = useThemeMode();
 
   return (
     <>
@@ -151,281 +315,79 @@ export default function Navbar() {
           transition: "transform 0.3s ease",
         }}
       >
-          <AppBar
-            position="static"
-            elevation={scrolled ? 4 : 0}
-            sx={(theme) => ({
-              backgroundColor:
-                theme.palette.mode === "dark" ? "#0a0e14" : "#f0f4f8",
-              borderBottom: `1px solid ${theme.palette.divider}`,
-              backdropFilter: "none",
-              transition: "all 0.3s ease",
-              zIndex: theme.zIndex.drawer + 1,
-              height: { xs: "64px", md: "72px" },
-              borderRadius: 0,
-              boxSizing: "border-box",
-              width: "100%",
-              left: 0,
-              right: 0,
-              boxShadow: "none",
-            })}
-          >
-            <Container maxWidth="lg">
-              <Toolbar
-                disableGutters
-                sx={{
-                  px: { xs: 2, sm: 3 },
-                  py: { xs: 1.5, md: 2 },
-                  minHeight: { xs: "64px", md: "72px" },
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {/* Logo */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography
-                    component={Link}
-                    href="/"
-                    variant="h6"
-                    sx={(theme) => ({
-                      color: theme.palette.secondary.main,
-                      textDecoration: "none",
-                      transition: "color 0.2s ease",
-                      fontSize: { xs: "1rem", md: "1.1rem" },
-                      letterSpacing: "0.01em",
-                      fontFamily: "'Geist Mono', monospace",
-                      fontWeight: "bold",
-                      "&:hover": {
-                        color: theme.palette.primary.main,
-                      },
-                    })}
-                  >
-                    witl@xyz:~$
-                  </Typography>
-                </Box>
-
-                {/* Desktop Navigation */}
-                <Box
-                  sx={{
-                    display: { xs: "none", md: "flex" },
-                    gap: 4,
-                    alignItems: "center",
-                  }}
-                >
-                  {navItems.map((item) => (
-                    <NavLink key={item.href} item={item} />
-                  ))}
-
-                  {/* Theme toggle button with animation */}
-                  <Tooltip
-                    title={
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                        <span>Switch to {mode === "dark" ? "light" : "dark"} mode</span>
-                        {mode === "dark" ? (
-                          <Sun size={14} style={{ animation: "spin 1.5s ease infinite" }} />
-                        ) : (
-                          <Moon size={14} style={{ animation: "pulse 1.5s ease infinite" }} />
-                        )}
-                      </Box>
-                    }
-                    arrow
-                  >
-                    <IconButton
-                      onClick={toggleTheme}
-                      sx={{
-                        ml: 1,
-                        bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-                        color: "primary.main",
-                        "&:hover": {
-                          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
-                          transform: "rotate(12deg)",
-                        },
-                        height: 36,
-                        width: 36,
-                        transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)", // Bouncy transition
-                        position: "relative",
-                        overflow: "hidden",
-                        "&::before": {
-                          content: '""',
-                          position: "absolute",
-                          width: "100%",
-                          height: "100%",
-                          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.1),
-                          borderRadius: "50%",
-                          top: 0,
-                          left: 0,
-                          transform: "scale(0)",
-                          transition: "transform 0.4s ease",
-                        },
-                        "&:active::before": {
-                          transform: "scale(2)",
-                          opacity: 0,
-                          transition: "transform 0.3s ease, opacity 0.3s ease",
-                        },
-                      }}
-                    >
-                      {mode === "dark" ? (
-                        <Sun
-                          size={18}
-                          style={{
-                            animation: "fadeIn 0.3s ease",
-                          }}
-                        />
-                      ) : (
-                        <Moon
-                          size={18}
-                          style={{
-                            animation: "fadeIn 0.3s ease",
-                          }}
-                        />
-                      )}
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-
-                {/* Mobile Menu Button */}
-                <IconButton
-                  sx={{
-                    ml: "auto",
-                    display: { md: "none" },
-                    color: theme.palette.text.primary,
-                    width: 44,
-                    height: 44,
-                  }}
-                  onClick={() => setIsOpen(!isOpen)}
-                  edge="end"
-                  aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-                  aria-expanded={isOpen}
-                >
-                  {isOpen ? <X size={24} /> : <Menu size={24} />}
-                </IconButton>
-              </Toolbar>
-            </Container>
-
-            {/* Mobile Navigation */}
-            <Drawer
-              anchor="top"
-              open={isOpen && isMobile}
-              onClose={() => setIsOpen(false)}
-              transitionDuration={200}
-              slotProps={{
-                backdrop: {
-                  sx: {
-                    backdropFilter: "blur(8px)",
-                    backgroundColor: theme.palette.background.default + "A6",
-                  },
-                },
-                paper: {
-                  sx: {
-                    mt: { xs: "64px", md: "72px" },
-                    boxShadow: "none",
-                    backgroundColor: theme.palette.background.paper,
-                    transition: "background-color 0.3s ease",
-                  },
-                },
+        <AppBar position="static" elevation={scrolled ? 4 : 0} sx={appBarSx}>
+          <Container maxWidth="lg">
+            <Toolbar
+              disableGutters
+              sx={{
+                px: { xs: 2, sm: 3 },
+                py: { xs: 1.5, md: 2 },
+                minHeight: { xs: "64px", md: "72px" },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
-                  py: 4,
-                  px: 2,
-                }}
+              {/* Logo */}
+              <Typography
+                component={Link}
+                href="/"
+                variant="h6"
+                sx={(theme) => ({
+                  color: theme.palette.secondary.main,
+                  textDecoration: "none",
+                  transition: "color 0.2s ease",
+                  fontSize: { xs: "1rem", md: "1.1rem" },
+                  letterSpacing: "0.01em",
+                  fontFamily: "'Geist Mono', monospace",
+                  fontWeight: "bold",
+                  "&:hover": { color: theme.palette.primary.main },
+                })}
               >
-                {navItems.map((item) => (
-                  <NavLink key={item.href} item={item} />
+                witl@xyz:~$
+              </Typography>
+
+              {/* Desktop Navigation */}
+              <Box sx={{ display: { xs: "none", md: "flex" }, gap: 4, alignItems: "center" }}>
+                {NAV_ITEMS.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    hash={hash}
+                    onHashChange={setHash}
+                  />
                 ))}
 
-                {/* Theme toggle in mobile menu */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mt: 2,
-                    pt: 2,
-                    borderTop: 1,
-                    borderColor: "divider",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      toggleTheme();
-                      setIsOpen(false);
-                    }}
-                    startIcon={
-                      mode === "dark" ? (
-                        <Sun
-                          size={16}
-                          style={{
-                            animation: "fadeIn 0.3s ease",
-                            transform: "rotate(0deg)",
-                            transformOrigin: "center",
-                          }}
-                        />
-                      ) : (
-                        <Moon
-                          size={16}
-                          style={{
-                            animation: "fadeIn 0.3s ease",
-                            transform: "rotate(0deg)",
-                            transformOrigin: "center",
-                          }}
-                        />
-                      )
-                    }
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    sx={{
-                      mt: 1,
-                      position: "relative",
-                      overflow: "hidden",
-                      transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                      "&:hover": {
-                        transform: "translateY(-3px)",
-                        boxShadow: (theme) =>
-                          `0 4px 8px ${alpha(theme.palette.primary.main, 0.25)}`,
-                      },
-                      "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        width: "100%",
-                        height: "100%",
-                        background: (theme) => `linear-gradient(90deg,
-                        ${alpha(theme.palette.primary.main, 0)},
-                        ${alpha(theme.palette.primary.main, 0.1)},
-                        ${alpha(theme.palette.primary.main, 0)})`,
-                        top: 0,
-                        left: "-100%",
-                        transition: "left 0.5s ease",
-                      },
-                      "&:hover::after": {
-                        left: "100%",
-                      },
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "inline-block",
-                        animation: "fadeIn 0.5s ease",
-                      }}
-                    >
-                      Switch to {mode === "dark" ? "light" : "dark"} mode
-                    </span>
-                  </Button>
-                </Box>
+                <ThemeToggleButton />
               </Box>
-            </Drawer>
-          </AppBar>
+
+              {/* Mobile Menu Button */}
+              <IconButton
+                sx={{
+                  ml: "auto",
+                  display: { md: "none" },
+                  color: theme.palette.text.primary,
+                  width: 44,
+                  height: 44,
+                }}
+                onClick={() => setIsOpen((v) => !v)}
+                edge="end"
+                aria-label={drawerOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={drawerOpen}
+              >
+                {drawerOpen ? <X size={24} /> : <Menu size={24} />}
+              </IconButton>
+            </Toolbar>
+          </Container>
+
+          {/* Mobile Navigation */}
+          <MobileNavDrawer
+            open={drawerOpen}
+            onClose={() => setIsOpen(false)}
+            hash={hash}
+            onHashChange={setHash}
+          />
+        </AppBar>
       </Box>
 
       {/* Scroll to top button */}

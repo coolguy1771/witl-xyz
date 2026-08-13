@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <Box
       sx={{
-        minHeight: "calc(100vh - 180px)",
+        minHeight: { xs: "calc(100dvh - 180px)", md: "calc(100dvh - 72px)" },
         background: (theme) =>
           theme.palette.mode === "dark"
             ? `radial-gradient(circle at 25% 25%, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
@@ -25,7 +25,7 @@ export default function NotFound() {
       }}
     >
       {/* Animated background elements */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <Box
           component={motion.div}
           key={i}

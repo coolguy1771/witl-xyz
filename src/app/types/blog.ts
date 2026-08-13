@@ -20,11 +20,13 @@ export interface BlogPostFrontMatter {
   /** Optional boolean to feature this post */
   featured?: boolean;
 
-  /** Optional author information */
-  author?: {
-    name: string;
-    avatar?: string;
-  };
+  /** Optional author name string or `{ name, avatar? }` object */
+  author?:
+    | string
+    | {
+        name: string;
+        avatar?: string;
+      };
 }
 
 /**

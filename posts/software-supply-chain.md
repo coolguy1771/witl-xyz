@@ -3,7 +3,8 @@ title:
   "The Hidden Threat: Software Supply Chain Vulnerabilities in Critical
   Infrastructure"
 date: "2025-03-08"
-author: "Tyler Witlin"
+author:
+  name: Tyler Witlin
 categories: ["Cybersecurity", "Critical Infrastructure", "Software Development"]
 tags: ["supply chain", "vulnerabilities", "security"]
 summary:
