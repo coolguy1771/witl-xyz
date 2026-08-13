@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllPosts, getPostsByTags, getFeaturedPosts } from "@/app/lib/fs-blog";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -34,7 +34,11 @@ export async function GET(request: NextRequest) {
       posts = posts.slice(0, limit);
     }
 
-    return NextResponse.json(posts);
+    return NextResponse.json(posts, {
+      headers: {
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     console.error("Error in /api/blog/posts:", error);
     return NextResponse.json({ error: "Failed to fetch blog posts" }, { status: 500 });

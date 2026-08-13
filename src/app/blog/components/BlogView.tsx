@@ -1,52 +1,130 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, useTheme, useMediaQuery, alpha } from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  useTheme,
+  useMediaQuery,
+  alpha,
+  Button,
+  Tooltip,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { Rss as RssIcon, Search as SearchIcon, X as XIcon } from "lucide-react";
 import { PostGrid } from "./listing/PostGrid";
 import { PostList } from "./listing/PostList";
 import { PostFilterBar } from "./listing/PostFilterBar";
 import { BlogPost } from "@/app/types/blog";
+import { CODE_FONT_FAMILY } from "@/app/lib/code-font";
 
 interface BlogViewProps {
   posts: BlogPost[];
   initialSelectedTag?: string;
+  showRssLink?: boolean;
 }
 
-export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
+/** Each whitespace-separated term must appear in already-normalized text. */
+function matchesSearch(text: string, terms: string[]): boolean {
+  return terms.every((term) => text.includes(term));
+}
+
+export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Derive selected tag from URL; fall back to server-provided initialSelectedTag on mount
+  const urlTag = searchParams.get("tag") || "";
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    initialSelectedTag ? [initialSelectedTag] : []
+    () => (initialSelectedTag ? [initialSelectedTag] : [])
   );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Handle tag selection/deselection
-  const handleTagToggle = (tag: string) => {
-    if (tag === "all") {
-      setSelectedTags([]);
-      return;
-    }
-
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  // Filter posts when selected tags change
+  // Keep local state synced with URL changes (e.g. direct navigation to ?tag=X)
   useEffect(() => {
-    if (selectedTags.length === 0) {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(
-        posts.filter((post) => post.tags?.some((tag) => selectedTags.includes(tag)))
+    setSelectedTags(urlTag ? [urlTag] : []);
+  }, [urlTag]);
+
+  const updateUrlTag = useCallback(
+    (tag: string | null) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (tag) {
+        params.set("tag", tag);
+      } else {
+        params.delete("tag");
+      }
+      const query = params.toString();
+      router.replace(`/blog${query ? `?${query}` : ""}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
+  // Handle tag selection/deselection — single tag mode via URL
+  const handleTagToggle = useCallback(
+    (tag: string) => {
+      if (!tag) return;
+
+      // Toggle: if already selected, clear it
+      if (selectedTags.includes(tag)) {
+        setSelectedTags([]);
+        updateUrlTag(null);
+      } else {
+        // Select new tag — only one at a time via URL
+        setSelectedTags([tag]);
+        updateUrlTag(tag);
+      }
+    },
+    [selectedTags, updateUrlTag]
+  );
+
+  const handleClearFilter = useCallback(() => {
+    setSelectedTags([]);
+    updateUrlTag(null);
+  }, [updateUrlTag]);
+
+  const handleClearAll = useCallback(() => {
+    setSelectedTags([]);
+    setSearchQuery("");
+    updateUrlTag(null);
+  }, [updateUrlTag]);
+
+  const searchablePosts = React.useMemo(
+    () =>
+      posts.map((post) => ({
+        post,
+        text: [
+          post.title || "",
+          post.excerpt || "",
+          ...(post.tags || []),
+          (post.content || "").replace(/<[^>]+>/g, " "),
+        ]
+          .join(" ")
+          .toLowerCase(),
+      })),
+    [posts],
+  );
+
+  const filteredPosts = React.useMemo(() => {
+    let indexed = searchablePosts;
+    if (selectedTags.length > 0) {
+      indexed = indexed.filter(({ post }) =>
+        post.tags?.some((tag) => selectedTags.includes(tag)),
       );
     }
-  }, [selectedTags, posts]);
+    if (searchQuery.trim()) {
+      const terms = searchQuery.toLowerCase().trim().split(/\s+/);
+      indexed = indexed.filter(({ text }) => matchesSearch(text, terms));
+    }
+    return indexed.map(({ post }) => post);
+  }, [searchablePosts, selectedTags, searchQuery]);
 
   return (
     <Box
@@ -126,6 +204,28 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
           >
             Thoughts, stories, and ideas about technology, development, and productivity.
           </Typography>
+
+          {showRssLink && (
+            <Box sx={{ mt: 3 }}>
+              <Tooltip title="Subscribe via RSS">
+                <Button
+                  component={Link}
+                  href="/api/blog/rss"
+                  startIcon={<RssIcon size={18} />}
+                  variant="outlined"
+                  size="small"
+                  target="_blank"
+                  sx={{
+                    fontFamily: "'Geist Mono', monospace",
+                    borderRadius: "999px",
+                    px: 2.5,
+                  }}
+                >
+                  RSS Feed
+                </Button>
+              </Tooltip>
+            </Box>
+          )}
         </Box>
 
         <Box
@@ -138,9 +238,61 @@ export function BlogView({ posts, initialSelectedTag }: BlogViewProps) {
             backdropFilter: "blur(8px)",
           }}
         >
+          {/* Search input */}
+          <Box sx={{ display: "flex", gap: 2, mb: 3, alignItems: "center" }}>
+            <TextField
+              fullWidth
+              placeholder="Search posts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="small"
+              variant="outlined"
+              slotProps={{
+                htmlInput: { "aria-label": "Search posts" },
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon size={16} color="#94a3b8" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchQuery ? (
+                    <InputAdornment position="end">
+                      <Button
+                        aria-label="Clear search"
+                        onClick={() => setSearchQuery("")}
+                        sx={{ minWidth: 24, p: 0.5 }}
+                        size="small"
+                      >
+                        <XIcon size={16} color="#94a3b8" />
+                      </Button>
+                    </InputAdornment>
+                  ) : undefined,
+                },
+              }}
+              sx={{ "& .MuiOutlinedInput-root": { fontFamily: CODE_FONT_FAMILY, fontSize: "0.85rem" } }}
+            />
+
+            {(selectedTags.length > 0 || searchQuery.trim()) && (
+              <Button onClick={handleClearAll} size="small" variant="outlined" sx={{ fontFamily: CODE_FONT_FAMILY, borderRadius: "999px", px: 2 }}>
+                Clear all
+              </Button>
+            )}
+          </Box>
+
+          {/* Results count */}
+          {(searchQuery.trim() || selectedTags.length > 0) && (
+            <Typography variant="caption" sx={{ fontFamily: CODE_FONT_FAMILY, color: theme.palette.text.secondary, mb: 2, display: "block" }}>
+              Showing {filteredPosts.length} of {posts.length} posts
+              {searchQuery.trim() && ` matching "${searchQuery}"`}
+              {selectedTags.length > 0 && ` with tags ${selectedTags.map((t) => `'${t}'`).join(", ")}`}
+            </Typography>
+          )}
+
           <PostFilterBar
+            posts={posts}
             selectedTags={selectedTags}
             onTagToggle={handleTagToggle}
+            onClearFilter={handleClearFilter}
             onViewChange={setViewMode}
             currentView={viewMode}
           />

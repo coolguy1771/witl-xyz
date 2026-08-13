@@ -21,7 +21,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tyler Witlin - DevOps Engineer",
+  title: "Tyler Witlin - Platform Engineer",
   description:
     "DevOps Engineer at CentralReach building a developer microservices platform with Istio, AWS, ArgoCD, and Terraform. CKA certified.",
 };
