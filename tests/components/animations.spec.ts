@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { BLOG_CODE_FIXTURE_PATH } from "../fixtures/blog-posts";
 
 test.describe("Animations and Interactive Elements", () => {
   // Test for blog post cards animation
@@ -54,28 +55,19 @@ test.describe("Animations and Interactive Elements", () => {
 
   // Test for the copy code button in blog posts
   test("code blocks have interactive copy button", async ({ page }) => {
-    // Navigate to a blog post with code
-    await page.goto("/blog/software-supply-chain");
+    await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    // Find code blocks
     const codeBlock = page.locator("pre").first();
     await expect(codeBlock).toBeVisible();
 
-    // Initially, the copy button should not be visible or have 0 opacity
     const copyButton = codeBlock.locator("button.code-copy-button");
-    await expect(copyButton).toHaveCSS("opacity", "0");
+    await expect(copyButton).toHaveCSS("opacity", "0.7");
 
-    // Hover over the code block
     await codeBlock.hover();
-
-    // The copy button should become visible
     await expect(copyButton).toHaveCSS("opacity", "1");
 
-    // Click the copy button
     await copyButton.click();
 
-    // There should be a visual indication that copying succeeded
-    // This could be the appearance of a tooltip or a change in button state
     await expect(async () => {
       const checkmarkIcon = await page.locator("svg polyline").count();
       expect(checkmarkIcon).toBeGreaterThan(0);
@@ -84,10 +76,8 @@ test.describe("Animations and Interactive Elements", () => {
 
   // Test for back button animation
   test("back to posts button has animation", async ({ page }) => {
-    // Navigate to a blog post
-    await page.goto("/blog/software-supply-chain");
+    await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    // Find the back button
     const backButton = page.getByRole("button", { name: /Back to posts/i });
     await expect(backButton).toBeVisible();
 

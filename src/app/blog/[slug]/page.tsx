@@ -1,8 +1,14 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getRelatedPosts } from "../../lib/fs-blog";
+import { getPostBySlug, getRelatedPosts, getPostSlugs } from "../../lib/blog";
 import { BlogPostView } from "../components";
 import { BlogListSkeleton } from "../components/shared/BlogListSkeleton";
+
+// Generate static params for all blog posts at build time
+export async function generateStaticParams() {
+  const slugs = await getPostSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
 
 // Generate metadata for the page
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {

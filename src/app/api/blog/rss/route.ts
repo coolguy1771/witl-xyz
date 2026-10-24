@@ -1,5 +1,6 @@
-import { getAllPosts } from "@/app/lib/fs-blog";
+import { getAllPosts } from "@/app/lib/blog";
 import { NextResponse } from "next/server";
+import type { BlogPost } from "@/app/types/blog";
 
 const SITE_URL = "https://witl.xyz";
 const FEED_TITLE = "Tyler Witlin - Blog";
@@ -7,7 +8,7 @@ const FEED_DESC = "Blog posts by Tyler Witlin - Platform Engineer specializing i
 
 export const revalidate = 3600; // ISR: regenerate every hour
 
-async function rssItem(post: any) {
+async function rssItem(post: BlogPost) {
   const link = `${SITE_URL}/blog/${post.slug}`;
   const title = post.title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const description = post.excerpt.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -22,7 +23,7 @@ async function rssItem(post: any) {
     </item>`;
 }
 
-async function rssFeed(posts: any[]) {
+async function rssFeed(posts: BlogPost[]) {
   const items = await Promise.all(posts.map(rssItem));
 
   return `<?xml version="1.0" encoding="UTF-8"?>

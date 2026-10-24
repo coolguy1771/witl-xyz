@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllTags } from "@/app/lib/fs-blog";
+import { getAllTags } from "@/app/lib/blog";
 
 export const revalidate = 3600;
 

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import localFont from "next/font/local";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { firaCode } from "./lib/code-font";
 import { BootScreenGate } from "./components/BootScreenGate";
 import { ThemeRegistry } from "./components/ThemeRegistry";
@@ -38,12 +39,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} antialiased`}>
-        <ThemeRegistry>
-          <BootScreenGate />
-          <SmoothScroll />
-          <Navbar />
-          <main className="pt-[64px] md:pt-[72px]">{children}</main>
-        </ThemeRegistry>
+        <AppRouterCacheProvider>
+          <ThemeRegistry>
+            <BootScreenGate />
+            <SmoothScroll />
+            <Navbar />
+            <main className="pt-[64px] md:pt-[72px]">{children}</main>
+          </ThemeRegistry>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

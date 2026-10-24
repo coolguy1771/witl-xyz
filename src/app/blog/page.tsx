@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAllPosts } from "../lib/fs-blog";
+import { getAllPosts } from "../lib/blog";
 import { BlogView } from "./components";
 import { BlogListSkeleton } from "./components/shared/BlogListSkeleton";
 import { Post } from "../types/blog";

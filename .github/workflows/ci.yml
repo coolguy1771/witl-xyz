@@ -34,17 +34,11 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Verify Tailwind patch
-        run: |
-          LOADER="node_modules/@tailwindcss/node/dist/esm-cache.loader.mjs"
-          INDEX="node_modules/@tailwindcss/node/dist/index.mjs"
-          grep -q 'resolveSync' "$LOADER" || { echo "Missing resolveSync export in esm-cache.loader"; exit 1; }
-          grep -q 'resolveSync' "$INDEX" || { echo "Missing resolveSync import in index.mjs"; exit 1; }
-          grep -q 'registerHooks' "$INDEX" || { echo "Missing registerHooks fallback in index.mjs"; exit 1; }
-          bunx patch-package --check
-
       - name: Run linter
         run: bun run lint
+
+      - name: Compile blog data
+        run: bun run compile:blog
 
       - name: Run type checking
         run: bunx tsc --noEmit

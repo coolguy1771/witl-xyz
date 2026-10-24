@@ -65,6 +65,7 @@ function ClientThemeRegistry({ children }: { children: ReactNode }) {
   return (
     <ThemeContext.Provider value={themeContextValue}>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         {children}
         <style jsx global>{`
           /* Global transition effects */
@@ -143,16 +144,6 @@ function ClientThemeRegistry({ children }: { children: ReactNode }) {
   );
 }
 
-// Main ThemeRegistry component
 export function ThemeRegistry({ children }: { children: ReactNode }) {
-  // Use static theme for server rendering
-  const serverTheme = createAppTheme("dark");
-
-  // For server-side rendering or during hydration
-  return (
-    <ThemeProvider theme={serverTheme}>
-      <CssBaseline />
-      <ClientThemeRegistry>{children}</ClientThemeRegistry>
-    </ThemeProvider>
-  );
+  return <ClientThemeRegistry>{children}</ClientThemeRegistry>;
 }

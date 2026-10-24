@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPostBySlug } from "@/app/lib/fs-blog";
+import { getPostBySlug } from "@/app/lib/blog";
 
 export const revalidate = 3600;
 
