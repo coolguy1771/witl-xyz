@@ -17,6 +17,9 @@ import rehypeStringify from "rehype-stringify";
 import type { BlogPost, BlogPostFrontMatter, Heading } from "../src/app/types/blog";
 
 const POSTS_DIR = path.resolve(process.cwd(), "posts");
+// Test-only posts, compiled only when INCLUDE_BLOG_FIXTURES=1 so they never ship to production
+const FIXTURE_POSTS_DIR = path.resolve(process.cwd(), "tests/fixtures/posts");
+const INCLUDE_FIXTURES = process.env.INCLUDE_BLOG_FIXTURES === "1";
 const OUTPUT_DIR = path.resolve(process.cwd(), "src/app/generated");
 const OUTPUT_FILE = path.join(OUTPUT_DIR, "blog-data.ts");
 
@@ -175,20 +178,23 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
 async function compileAll(): Promise<void> {
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
-  let filenames: string[];
-  try {
-    filenames = await fs.readdir(POSTS_DIR);
-  } catch {
-    console.warn(`Posts directory not found: ${POSTS_DIR}`);
-    filenames = [];
-  }
+  const sourceDirs = INCLUDE_FIXTURES ? [POSTS_DIR, FIXTURE_POSTS_DIR] : [POSTS_DIR];
+  const files = (
+    await Promise.all(
+      sourceDirs.map(async (dir) => {
+        try {
+          const filenames = await fs.readdir(dir);
+          return filenames.filter((f) => f.endsWith(".md")).map((f) => ({ filename: f, dir }));
+        } catch {
+          console.warn(`Posts directory not found: ${dir}`);
+          return [];
+        }
+      })
+    )
+  ).flat();
 
-  const mdFiles = filenames.filter((f) => f.endsWith(".md"));
   const posts = await Promise.all(
-    mdFiles.map(async (filename) => {
-      const slug = normalizeSlug(filename);
-      return compilePost(slug, path.join(POSTS_DIR, filename));
-    })
+    files.map(({ filename, dir }) => compilePost(normalizeSlug(filename), path.join(dir, filename)))
   );
 
   posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -217,13 +223,15 @@ export const blogTags: string[] = ${JSON.stringify(tags, null, 2)};
 /** Recompile whenever a post changes (used by `bun run dev`). */
 function watchPosts(): void {
   let timer: ReturnType<typeof setTimeout> | undefined;
-  fsWatch(POSTS_DIR, () => {
+  const dirs = INCLUDE_FIXTURES ? [POSTS_DIR, FIXTURE_POSTS_DIR] : [POSTS_DIR];
+  const onChange = () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       compileAll().catch((error) => console.error("Blog compilation failed:", error));
     }, 100);
-  });
-  console.log(`Watching ${POSTS_DIR} for changes`);
+  };
+  for (const dir of dirs) fsWatch(dir, onChange);
+  console.log(`Watching ${dirs.join(", ")} for changes`);
 }
 
 compileAll()

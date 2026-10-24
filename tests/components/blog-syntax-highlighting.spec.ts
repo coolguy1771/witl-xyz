@@ -2,15 +2,19 @@ import { test, expect } from "@playwright/test";
 import {
   BLOG_CODE_FIXTURE_PATH,
   BLOG_CODE_FIXTURE_TITLE,
+  stubClipboard,
 } from "../fixtures/blog-posts";
 
 test.describe("Blog Post Syntax Highlighting", () => {
   test("code blocks are properly highlighted", async ({ page }) => {
+    await stubClipboard(page);
     await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    await expect(page.getByRole("heading", { name: BLOG_CODE_FIXTURE_TITLE })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: BLOG_CODE_FIXTURE_TITLE })
+    ).toBeVisible();
 
-    const codeBlocks = page.locator("pre");
+    const codeBlocks = page.locator(".blog-prose pre");
     const count = await codeBlocks.count();
     expect(count).toBeGreaterThan(0);
 

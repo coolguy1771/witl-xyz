@@ -35,6 +35,7 @@ export function BlogCard({ post, index = 0 }: BlogCardProps) {
   return (
     <Card
       component={motion.div}
+      data-testid="blog-card"
       custom={index}
       initial="initial"
       animate="animate"

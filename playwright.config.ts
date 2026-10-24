@@ -39,5 +39,6 @@ export default defineConfig({
     command: "bun run dev",
     port: 3000,
     reuseExistingServer: !process.env.CI,
+    env: { INCLUDE_BLOG_FIXTURES: "1" },
   },
 });

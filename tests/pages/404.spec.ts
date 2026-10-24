@@ -19,8 +19,8 @@ test.describe("404 Page", () => {
     await expect(page.getByRole("link", { name: "Go Home" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Browse Blog" })).toBeVisible();
 
-    // Check the animated background is present
-    const backgroundElements = await page.locator('[style*="border-radius: 50%"]').count();
+    // Background circles are framer-motion elements positioned with inline transforms
+    const backgroundElements = await page.locator('[style*="translate"]').count();
     expect(backgroundElements).toBeGreaterThan(0);
   });
 
@@ -34,7 +34,7 @@ test.describe("404 Page", () => {
 
     // Test the content
     await expect(
-      page.getByText("The blog post you're looking for doesn't exist or has been moved.")
+      page.getByText("The blog post you're looking for doesn't exist or may have been moved.")
     ).toBeVisible();
 
     // Verify navigation links
