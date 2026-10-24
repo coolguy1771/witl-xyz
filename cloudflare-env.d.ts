@@ -10,6 +10,12 @@ declare namespace Cloudflare {
 		RATE_LIMIT_WINDOW: "60";
 		RATE_LIMIT_MAX_REQUESTS: "20";
 		ASSETS: Fetcher;
+		NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
+		MEDIA: R2Bucket;
+		ANALYTICS: AnalyticsEngineDataset;
+		API_RATE_LIMITER: RateLimit;
+		WORKER_SELF_REFERENCE: Fetcher /* witl-xyz */;
+		IMAGES: ImagesBinding;
 	}
 }
 interface CloudflareEnv extends Cloudflare.Env {}

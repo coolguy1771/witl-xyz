@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "witl-xyz",
-  "main": ".open-next/worker.js",
+  "main": "worker.ts",
   "compatibility_date": "2026-05-30",
   "compatibility_flags": ["nodejs_compat"],
   "minify": true,
@@ -20,18 +20,49 @@
       "destinations": ["witl-xyz-grafana-traces"]
     }
   },
-  "placement": { "mode": "smart" },
-  "kv_namespaces": [
-    {
-      "binding": "NEXT_INC_CACHE_KV",
-      "id": "353ed2f9d9aa431e8a0affea838aeb28"
-    }
-  ],
   "vars": {
     "ENVIRONMENT": "production",
     "NODE_ENV": "production",
     "LOG_LEVEL": "info",
     "RATE_LIMIT_WINDOW": "60",
     "RATE_LIMIT_MAX_REQUESTS": "20"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "witl-xyz"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "API_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
+    }
+  ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "ANALYTICS",
+      "dataset": "witl_xyz"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "witl-xyz-cache"
+    },
+    {
+      "binding": "MEDIA",
+      "bucket_name": "witl-xyz-media"
+    }
+  ],
+  "triggers": {
+    "crons": ["17 * * * *"]
   }
 }
