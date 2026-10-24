@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAllPosts, getAllTags } from "../lib/blog";
+import { getAllPosts } from "../lib/blog";
 import { BlogView } from "./components";
 import { BlogListSkeleton } from "./components/shared/BlogListSkeleton";
 import { Post } from "../types/blog";
@@ -26,6 +26,11 @@ async function getPosts(): Promise<Post[]> {
   }
 }
 
+export const metadata = {
+  title: "Blog | Tyler Witlin",
+  description: "DevOps, Kubernetes, GitOps, and cloud-native engineering.",
+};
+
 export default async function BlogPage(props: { searchParams: Promise<{ tag?: string }> }) {
   const searchParams = await props.searchParams;
   // Get posts data on the server
@@ -33,11 +38,7 @@ export default async function BlogPage(props: { searchParams: Promise<{ tag?: st
 
   return (
     <Suspense fallback={<BlogListSkeleton />}>
-      <BlogView
-        posts={allPosts}
-        tags={await getAllTags()}
-        initialSelectedTag={searchParams.tag}
-      />
+      <BlogView posts={allPosts} initialSelectedTag={searchParams.tag} showRssLink />
     </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGithubProjects } from "@/app/lib/github";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const DEFAULT_USERNAME = "coolguy1771";
 const MAX_LIMIT = 20;

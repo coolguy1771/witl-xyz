@@ -90,8 +90,8 @@ export const ContactSection: React.FC = () => {
               lineHeight: 1.7,
             }}
           >
-            Open to DevOps and SRE roles. I&apos;ve spent most of my career in air-gapped
-            environments and I&apos;m not scared off by compliance requirements.
+            I&apos;m a Platform Engineer at CentralReach. I&apos;ve spent most of my career in
+            air-gapped environments and I&apos;m not scared off by compliance requirements.
           </Typography>
 
           <MotionBox variants={popIn}>

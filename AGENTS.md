@@ -1,5 +1,7 @@
 # Learned User Preferences
 
+- Current role: DevOps Engineer at CentralReach, building a developer microservices platform with Istio, AWS, ArgoCD, and Terraform. Previously Cisco (OpenShift CI/CD) and General Dynamics (air-gapped Kubernetes).
+
 - Use Bun for package management, scripts, and CI instead of npm, yarn, or pnpm.
 - Prefer minimal, surgical changes; verify review or audit findings against current code before fixing.
 - When addressing review feedback, fix only still-valid issues and skip the rest with a brief reason.

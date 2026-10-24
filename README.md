@@ -51,11 +51,15 @@ post should include frontmatter with the following fields:
 
 ```markdown
 ---
-title: Your Post Title
-date: "2025-01-15"
-author: Your Name
-tags: ["nextjs", "react", "typescript"]
-excerpt: Optional custom excerpt for your post
+title: Your Post Title          # Required
+date: "2025-01-15"              # Required (ISO format or parseable)
+author:                         # Optional
+  name: Your Name
+  # avatar: "/avatar.jpg"
+tags: ["nextjs", "react"]       # Optional array of tags
+excerpt: Custom excerpt         # Optional; auto-generated if omitted
+coverImage: "/image.jpg"        # Optional URL/path to cover image
+featured: true                  # Optional boolean; featured posts show up in curated sections
 ---
 
 Your content here...

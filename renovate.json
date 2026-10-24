@@ -49,6 +49,12 @@
       "groupName": "nextjs"
     },
     {
+      "description": "Hold ESLint on 9.x until eslint-plugin-react (via eslint-config-next) supports 10",
+      "matchManagers": ["bun"],
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10"
+    },
+    {
       "description": "Group Cloudflare deployment tooling",
       "matchManagers": ["bun"],
       "matchPackageNames": ["wrangler", "@opennextjs/cloudflare"],
