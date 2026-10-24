@@ -49,12 +49,6 @@ const rulesets = [
           'starts_with(http.request.uri.path, "/api/") and not http.request.method in {"GET" "HEAD" "OPTIONS"}',
         action: "block",
       },
-      {
-        description: "Managed challenge for likely bots hitting API",
-        expression:
-          'starts_with(http.request.uri.path, "/api/") and cf.bot_management.score lt 30 and not cf.bot_management.verified_bot',
-        action: "managed_challenge",
-      },
     ],
   },
 ];
@@ -72,7 +66,8 @@ for (const { phase, rules } of rulesets) {
       body: JSON.stringify({ rules }),
     }
   );
-  console.log(res.ok ? "applied" : `FAILED ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new Error(`${phase} FAILED ${res.status}: ${await res.text()}`);
+  console.log("applied");
 }
 
 if (!apply) console.log("\nDry run. Re-run with --apply to push.");

@@ -18,8 +18,13 @@ export async function cachedJson<T>(
   // Cache API keys must be URLs; the host is arbitrary and never fetched.
   const cacheKey = new Request(`https://edge-cache.witl.xyz/${encodeURIComponent(key)}`);
 
-  const hit = await cache.match(cacheKey);
-  if (hit) return (await hit.json()) as T;
+  // An optional cache must never stop the caller from loading real data.
+  try {
+    const hit = await cache.match(cacheKey);
+    if (hit) return (await hit.json()) as T;
+  } catch {
+    // treat as a miss
+  }
 
   const value = await load();
   if (!shouldCache(value)) return value;

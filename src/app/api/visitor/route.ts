@@ -48,8 +48,11 @@ export async function GET(request: NextRequest) {
     };
 
     // Coordinates are used transiently (rounded) to look up weather, never returned.
-    const latitude = Number(cf?.latitude);
-    const longitude = Number(cf?.longitude);
+    // Number(null) is 0, so check for missing values before converting.
+    const rawLat = cf?.latitude;
+    const rawLon = cf?.longitude;
+    const latitude = rawLat == null ? NaN : Number(rawLat);
+    const longitude = rawLon == null ? NaN : Number(rawLon);
     const weather =
       Number.isFinite(latitude) && Number.isFinite(longitude)
         ? await getWeather(latitude, longitude)

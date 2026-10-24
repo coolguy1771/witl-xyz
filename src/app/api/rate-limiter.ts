@@ -61,7 +61,7 @@ class RateLimiter {
 
 const fallbackLimiter = new RateLimiter();
 
-/** Resolves true when the caller is over the limit. Fails open on binding errors. */
+/** Resolves true when the caller is over the limit. Degrades to the local limiter if the binding errors. */
 export async function isRateLimited(key: string): Promise<boolean> {
   const binding = getCfEnv()?.API_RATE_LIMITER;
   if (!binding) {
@@ -72,6 +72,6 @@ export async function isRateLimited(key: string): Promise<boolean> {
     const { success } = await binding.limit({ key });
     return !success;
   } catch {
-    return false;
+    return fallbackLimiter.check(key);
   }
 }
