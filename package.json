@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "compile:blog": "bun scripts/compile-blog.ts",
-    "predev": "bun run compile:blog",
-    "dev": "next dev --turbopack",
+    "dev": "bun scripts/dev.ts",
     "build": "next build",
     "prebuild": "bun run compile:blog",
     "start": "next start",

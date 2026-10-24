@@ -36,7 +36,7 @@ function matchesSearch(text: string, terms: string[]): boolean {
 
 export function BlogView({ posts, initialSelectedTag, showRssLink = false }: BlogViewProps) {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
   const searchParams = useSearchParams();
 

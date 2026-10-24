@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Typography, Box, Chip, useTheme, useMediaQuery } from "@mui/material";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import { Post } from "@/app/types/blog";
@@ -15,7 +15,7 @@ export function PostHeader({ post }: PostHeaderProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
-  const formattedDate = format(new Date(post.date), "MMMM d, yyyy");
+  const formattedDate = format(parseISO(post.date), "MMMM d, yyyy");
 
   return (
     <Box sx={{ mb: 4 }}>

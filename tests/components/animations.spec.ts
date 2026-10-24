@@ -78,7 +78,7 @@ test.describe("Animations and Interactive Elements", () => {
   test("back to posts button has animation", async ({ page }) => {
     await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    const backButton = page.getByRole("button", { name: /cd \.\.\/blog/i });
+    const backButton = page.getByRole("button", { name: /Back to posts/i });
     await expect(backButton).toBeVisible();
 
     // Get initial transform

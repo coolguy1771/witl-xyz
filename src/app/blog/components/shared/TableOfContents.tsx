@@ -123,6 +123,7 @@ export function TableOfContents({ headings, isMobile = false }: TableOfContentsP
   return (
     <Box
       component="nav"
+      aria-label="Table of contents"
       sx={{
         position: "sticky",
         top: BLOG_SCROLL_OFFSET + 10,

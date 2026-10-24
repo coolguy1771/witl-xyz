@@ -142,7 +142,7 @@ pre code,
   font-variant-ligatures: normal;
 }
 
-:not(.blog-prose) code {
+code:not(.blog-prose code) {
   background-color: rgba(15, 15, 25, 0.6);
   color: var(--mui-palette-primary-light);
   padding: 4px 8px;
@@ -152,7 +152,7 @@ pre code,
   font-weight: 500;
 }
 
-:not(.blog-prose) pre {
+pre:not(.blog-prose pre) {
   background-color: #111118;
   padding: 1.5rem;
   border-radius: 8px;
@@ -163,7 +163,7 @@ pre code,
   position: relative;
 }
 
-:not(.blog-prose) pre code {
+pre:not(.blog-prose pre) code {
   background-color: transparent;
   padding: 0;
   border: none;

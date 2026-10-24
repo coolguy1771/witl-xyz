@@ -11,6 +11,9 @@ export interface BlogPostFrontMatter {
   /** Optional short summary of the post - will be auto-generated if not provided */
   excerpt?: string;
 
+  /** Alias for `excerpt` */
+  summary?: string;
+
   /** Optional array of tags/categories for the post */
   tags?: string[];
 

@@ -49,6 +49,7 @@ export function BlogPostView({ post, relatedPosts = [] }: BlogPostViewProps) {
           <Box sx={{ mb: 3, py: 2, position: "relative" }}>
             <motion.div whileHover={{ x: -5 }} whileTap={{ scale: 0.95 }}>
               <Button
+                aria-label="Back to posts"
                 onClick={() => router.back()}
                 sx={{
                   color: "primary.main",

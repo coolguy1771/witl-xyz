@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -30,7 +30,7 @@ interface BlogCardProps {
 
 export function BlogCard({ post, index = 0 }: BlogCardProps) {
   const theme = useTheme();
-  const formattedDate = format(new Date(post.date), "MMM d, yyyy");
+  const formattedDate = format(parseISO(post.date), "MMM d, yyyy");
 
   return (
     <Card

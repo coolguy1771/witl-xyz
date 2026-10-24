@@ -2,6 +2,7 @@
  * Build-time blog compiler: reads posts/*.md and writes bundled blog-data.ts
  */
 
+import { watch as fsWatch } from "fs";
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
@@ -9,6 +10,7 @@ import { unified } from "unified";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
@@ -25,7 +27,9 @@ const SAFE_SLUG_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
 const markdownProcessor = unified()
   .use(remarkParse)
   .use(remarkGfm)
-  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(remarkRehype)
+  // Sanitize before slug/highlight so only trusted plugins add ids and classes
+  .use(rehypeSanitize)
   .use(rehypeSlug)
   .use(rehypeHighlight, { detect: true, ignoreMissing: true })
   .use(rehypeStringify);
@@ -70,6 +74,28 @@ function stripHtml(text: string): string {
   return cleaned;
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: "\u00a0",
+};
+
+/** Decode the entities rehype-stringify emits so heading text renders as plain text. */
+function decodeEntities(text: string): string {
+  return text.replace(/&(?:#x([0-9a-f]+)|#(\d+)|([a-z]+));/gi, (match, hex, dec, name) => {
+    if (hex || dec) {
+      const code = hex ? parseInt(hex, 16) : parseInt(dec, 10);
+      return Number.isInteger(code) && code >= 0 && code <= 0x10ffff
+        ? String.fromCodePoint(code)
+        : match;
+    }
+    return NAMED_ENTITIES[name.toLowerCase()] ?? match;
+  });
+}
+
 function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
   const matches = content.matchAll(/<h([2-3])\b([^>]*)>([\s\S]*?)<\/h\1>/g);
@@ -81,18 +107,31 @@ function extractHeadings(content: string): Heading[] {
     headings.push({
       level: parseInt(match[1], 10),
       id: idMatch[1],
-      text: stripHtml(match[3]),
+      text: decodeEntities(stripHtml(match[3])),
     });
   }
 
   return headings;
 }
 
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
 function validatePostDate(slug: string, date: string): void {
-  const parsed = new Date(date);
-  if (Number.isNaN(parsed.getTime())) {
+  if (!ISO_DATE_PATTERN.test(date)) {
+    throw new Error(`Invalid date format in post "${slug}": ${date} (expected YYYY-MM-DD)`);
+  }
+  const parsed = new Date(`${date}T00:00:00.000Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date) {
     throw new Error(`Invalid date in post "${slug}": ${date}`);
   }
+}
+
+function normalizeTags(tags: unknown): string[] {
+  const list = Array.isArray(tags) ? tags : typeof tags === "string" ? [tags] : [];
+  return list
+    .filter((tag): tag is string => typeof tag === "string")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 }
 
 async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
@@ -115,6 +154,7 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
   const readingTime = `${Math.ceil(wordCount / WORDS_PER_MINUTE)} min read`;
   const excerpt =
     frontMatter.excerpt ||
+    frontMatter.summary ||
     `${[...markdown].slice(0, EXCERPT_LENGTH).join("").replace(/[#*`]/g, "")}...`;
 
   return {
@@ -124,7 +164,7 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
     content: contentHtml,
     excerpt,
     readingTime,
-    tags: frontMatter.tags || [],
+    tags: normalizeTags(frontMatter.tags),
     coverImage: frontMatter.coverImage,
     featured: frontMatter.featured,
     author: normalizeAuthor(frontMatter.author),
@@ -132,7 +172,7 @@ async function compilePost(slug: string, filePath: string): Promise<BlogPost> {
   };
 }
 
-async function main(): Promise<void> {
+async function compileAll(): Promise<void> {
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
   let filenames: string[];
@@ -174,7 +214,23 @@ export const blogTags: string[] = ${JSON.stringify(tags, null, 2)};
   console.log(`Compiled ${posts.length} blog post(s) → ${OUTPUT_FILE}`);
 }
 
-main().catch((error) => {
-  console.error("Blog compilation failed:", error);
-  process.exit(1);
-});
+/** Recompile whenever a post changes (used by `bun run dev`). */
+function watchPosts(): void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  fsWatch(POSTS_DIR, () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      compileAll().catch((error) => console.error("Blog compilation failed:", error));
+    }, 100);
+  });
+  console.log(`Watching ${POSTS_DIR} for changes`);
+}
+
+compileAll()
+  .then(() => {
+    if (process.argv.includes("--watch")) watchPosts();
+  })
+  .catch((error) => {
+    console.error("Blog compilation failed:", error);
+    process.exit(1);
+  });
