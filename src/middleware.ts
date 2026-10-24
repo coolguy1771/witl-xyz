@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { isRateLimited } from "@/app/api/rate-limiter";
-import { trackEvent } from "@/app/lib/analytics";
+import { routeLabel, trackEvent } from "@/app/lib/analytics";
 
 const PRODUCTION_ORIGIN = "https://witl.xyz";
 const DEV_ORIGIN = "http://localhost:3000";
@@ -86,7 +86,10 @@ async function handleApiRequest(
   }
 
   const ip = getClientIp(request);
-  if (await isRateLimited(ip)) {
+  // Scope the counter per route so one busy endpoint doesn't exhaust the
+  // budget for all of them. routeLabel collapses slugs, so varying them
+  // can't mint fresh counters.
+  if (await isRateLimited(`${ip}:${routeLabel(request.nextUrl.pathname)}`)) {
     trackEvent("rate_limited", request.nextUrl.pathname);
     const response = NextResponse.json(
       { error: "Too many requests, please try again later" },

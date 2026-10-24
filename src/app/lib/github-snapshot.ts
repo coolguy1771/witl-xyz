@@ -11,6 +11,7 @@ function isProject(value: unknown): value is Project {
     typeof p.title === "string" &&
     typeof p.description === "string" &&
     Array.isArray(p.tech) &&
+    p.tech.every((entry) => typeof entry === "string") &&
     typeof p.link === "string" &&
     typeof p.stars === "number" &&
     typeof p.updatedAt === "string"

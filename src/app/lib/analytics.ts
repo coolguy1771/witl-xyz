@@ -4,7 +4,7 @@ type AnalyticsEvent = "page_api" | "rate_limited" | "visitor_lookup";
 
 // Collapse dynamic segments so the stored label has bounded cardinality and
 // can never carry user-supplied path text.
-function routeLabel(path: string): string {
+export function routeLabel(path: string): string {
   if (/^\/api\/(visitor|ip|github\/projects|blog\/(posts|tags|rss))$/.test(path)) return path;
   if (path.startsWith("/api/blog/posts/")) return "/api/blog/posts/:slug";
   if (path.startsWith("/api/github/")) return "/api/github/:slug";

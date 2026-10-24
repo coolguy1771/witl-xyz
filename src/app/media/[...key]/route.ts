@@ -12,9 +12,10 @@ function etagList(header: string | null): string[] {
 /** True when If-Match / If-Unmodified-Since reject the stored object (412). */
 function failsWritePrecondition(request: NextRequest, object: R2Object): boolean {
   const ifMatch = request.headers.get("if-match");
-  if (ifMatch && ifMatch.trim() !== "*") {
+  if (ifMatch) {
+    // RFC 9110 13.2.2: If-Unmodified-Since is ignored when If-Match is present.
     const stored = object.httpEtag.replace(/^W\//, "");
-    if (!etagList(ifMatch).includes(stored)) return true;
+    return ifMatch.trim() !== "*" && !etagList(ifMatch).includes(stored);
   }
 
   const unmodifiedSince = Date.parse(request.headers.get("if-unmodified-since") ?? "");
