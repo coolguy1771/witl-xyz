@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { rateLimiter } from "@/app/api/rate-limiter";
+import { isRateLimited } from "@/app/api/rate-limiter";
+import { trackEvent } from "@/app/lib/analytics";
 
 const PRODUCTION_ORIGIN = "https://witl.xyz";
 const DEV_ORIGIN = "http://localhost:3000";
@@ -63,7 +64,20 @@ function getClientIp(request: NextRequest): string {
   );
 }
 
-function handleApiRequest(request: NextRequest): NextResponse {
+const CACHEABLE_API_PREFIXES = ["/api/blog/", "/api/github/"];
+
+function isCacheableApiRead(request: NextRequest): boolean {
+  return (
+    request.method === "GET" &&
+    CACHEABLE_API_PREFIXES.some((prefix) =>
+      request.nextUrl.pathname.startsWith(prefix)
+    )
+  );
+}
+
+async function handleApiRequest(
+  request: NextRequest
+): Promise<NextResponse> {
   if (request.method === "OPTIONS") {
     const response = new NextResponse(null, { status: 204 });
     applySecurityHeaders(response.headers);
@@ -72,7 +86,8 @@ function handleApiRequest(request: NextRequest): NextResponse {
   }
 
   const ip = getClientIp(request);
-  if (rateLimiter.check(ip)) {
+  if (await isRateLimited(ip)) {
+    trackEvent("rate_limited", request.nextUrl.pathname);
     const response = NextResponse.json(
       { error: "Too many requests, please try again later" },
       {
@@ -93,7 +108,10 @@ function handleApiRequest(request: NextRequest): NextResponse {
   const response = NextResponse.next();
   applySecurityHeaders(response.headers);
   applyCorsHeaders(response.headers, request);
-  response.headers.set("Cache-Control", "no-store");
+  // Public read-only routes set their own s-maxage; don't override it.
+  if (!isCacheableApiRead(request)) {
+    response.headers.set("Cache-Control", "no-store");
+  }
   response.headers.set("X-Robots-Tag", "noindex, nofollow");
   return response;
 }
@@ -116,7 +134,7 @@ function handlePageRequest(request: NextRequest): NextResponse {
   return response;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return handleApiRequest(request);
   }

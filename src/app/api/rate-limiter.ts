@@ -1,6 +1,10 @@
+import { getCfEnv } from "@/app/lib/cloudflare";
+
 /**
- * Best-effort per-isolate rate limiter for API routes.
- * For strict global limits, add Cloudflare Rate Limiting or KV at the edge.
+ * Rate limiter for API routes. Uses the Workers Rate Limiting binding when
+ * available (counters shared per Cloudflare location, across isolates) and
+ * falls back to a best-effort per-isolate map for local dev and tests.
+ * Limit and period are configured on the binding in wrangler.json.
  */
 
 interface RequestRecord {
@@ -55,4 +59,19 @@ class RateLimiter {
   }
 }
 
-export const rateLimiter = new RateLimiter();
+const fallbackLimiter = new RateLimiter();
+
+/** Resolves true when the caller is over the limit. Fails open on binding errors. */
+export async function isRateLimited(key: string): Promise<boolean> {
+  const binding = getCfEnv()?.API_RATE_LIMITER;
+  if (!binding) {
+    return fallbackLimiter.check(key);
+  }
+
+  try {
+    const { success } = await binding.limit({ key });
+    return !success;
+  } catch {
+    return false;
+  }
+}
