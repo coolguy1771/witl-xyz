@@ -10,7 +10,7 @@ if (initial.status !== 0) process.exit(initial.status ?? 1);
 
 const children = [
   spawn("bun", ["scripts/compile-blog.ts", "--watch"], { stdio: "inherit" }),
-  spawn("next", ["dev", "--turbopack"], { stdio: "inherit" }),
+  spawn("next", ["dev", "--turbopack", ...process.argv.slice(2)], { stdio: "inherit" }),
 ];
 
 function shutdown(code: number): void {

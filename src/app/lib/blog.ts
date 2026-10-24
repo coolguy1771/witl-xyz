@@ -26,8 +26,11 @@ export async function getPostBySlug(slug: string): Promise<BlogPost> {
   return post;
 }
 
+/** Internal e2e fixtures are routable by slug but never listed. */
+const FIXTURE_TAG = "e2e-fixture";
+
 export async function getAllPosts(): Promise<BlogPost[]> {
-  return [...blogPosts];
+  return blogPosts.filter((post) => !post.tags?.includes(FIXTURE_TAG));
 }
 
 export async function getPostSlugs(): Promise<string[]> {
@@ -48,7 +51,7 @@ export async function getFeaturedPosts(limit?: number): Promise<BlogPost[]> {
 }
 
 export async function getAllTags(): Promise<string[]> {
-  return [...blogTags];
+  return blogTags.filter((tag) => tag !== FIXTURE_TAG);
 }
 
 export async function getRelatedPosts(

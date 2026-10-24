@@ -9,6 +9,9 @@ export default function NotFound() {
   const theme = useTheme();
 
   return (
+    <>
+      {/* Client components cannot export metadata; React 19 hoists <title> into <head> */}
+      <title>Page Not Found | Tyler Witlin</title>
     <Box
       sx={{
         minHeight: { xs: "calc(100dvh - 180px)", md: "calc(100dvh - 72px)" },
@@ -183,5 +186,6 @@ export default function NotFound() {
         </Paper>
       </Container>
     </Box>
+    </>
   );
 }

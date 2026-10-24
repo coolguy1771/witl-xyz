@@ -12,7 +12,9 @@ test.describe("Table of Contents", () => {
   test("TOC lists all headings from the blog post", async ({ page }) => {
     await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    await expect(page.getByRole("heading", { name: BLOG_CODE_FIXTURE_TITLE })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: BLOG_CODE_FIXTURE_TITLE })
+    ).toBeVisible();
 
     const tocContainer = tocNav(page);
     await expect(tocContainer).toBeVisible();
@@ -21,10 +23,10 @@ test.describe("Table of Contents", () => {
     const linkCount = await tocLinks.count();
     expect(linkCount).toBeGreaterThan(0);
 
-    const h2Count = await page.locator("h2").count();
+    const h2Count = await page.locator(".blog-prose h2").count();
     expect(linkCount).toBeGreaterThanOrEqual(h2Count);
 
-    const firstHeadingText = await page.locator("h2").first().innerText();
+    const firstHeadingText = await page.locator(".blog-prose h2").first().innerText();
     const firstTocLinkText = await tocLinks.first().innerText();
     expect(firstTocLinkText).toEqual(firstHeadingText);
   });
@@ -48,13 +50,16 @@ test.describe("Table of Contents", () => {
   test("TOC active state changes when scrolling", async ({ page }) => {
     await page.goto(BLOG_CODE_FIXTURE_PATH);
 
-    await expect(page.getByRole("heading", { name: BLOG_CODE_FIXTURE_TITLE })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: BLOG_CODE_FIXTURE_TITLE })
+    ).toBeVisible();
 
     const tocContainer = tocNav(page);
     await expect(tocContainer).toBeVisible();
 
-    const thirdHeading = page.locator("h2").nth(2);
-    await thirdHeading.scrollIntoViewIfNeeded();
+    const thirdHeading = page.locator(".blog-prose h2").nth(2);
+    // The TOC observer only reports headings in a band at the top of the viewport
+    await thirdHeading.evaluate((el) => el.scrollIntoView({ block: "start" }));
     await page.waitForTimeout(500);
 
     await expect(async () => {

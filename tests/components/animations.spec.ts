@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { BLOG_CODE_FIXTURE_PATH } from "../fixtures/blog-posts";
+import { BLOG_CODE_FIXTURE_PATH, stubClipboard } from "../fixtures/blog-posts";
 
 test.describe("Animations and Interactive Elements", () => {
   // Test for blog post cards animation
@@ -10,10 +10,8 @@ test.describe("Animations and Interactive Elements", () => {
     // Wait for the page to load
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    // Find blog post cards (they are wrapped in motion.div in our implementation)
-    const blogCards = page
-      .locator('a[href^="/blog/"]')
-      .filter({ hasText: /^(?!Table of Contents).+/ });
+    // Cards are motion.div elements, so the transform style lives on the card itself
+    const blogCards = page.getByTestId("blog-card");
 
     // There should be at least one blog post
     const cardCount = await blogCards.count();
@@ -34,7 +32,7 @@ test.describe("Animations and Interactive Elements", () => {
     await page.goto("/blog");
 
     // Find a blog post card
-    const blogCard = page.locator('a[href^="/blog/"]').first();
+    const blogCard = page.getByTestId("blog-card").first();
     await expect(blogCard).toBeVisible();
 
     // Get initial transform value
@@ -55,6 +53,7 @@ test.describe("Animations and Interactive Elements", () => {
 
   // Test for the copy code button in blog posts
   test("code blocks have interactive copy button", async ({ page }) => {
+    await stubClipboard(page);
     await page.goto(BLOG_CODE_FIXTURE_PATH);
 
     const codeBlock = page.locator("pre").first();
@@ -81,17 +80,14 @@ test.describe("Animations and Interactive Elements", () => {
     const backButton = page.getByRole("button", { name: /Back to posts/i });
     await expect(backButton).toBeVisible();
 
-    // Get initial transform
-    const initialTransform = await backButton.getAttribute("style");
+    // The hover transform is applied by the motion.div wrapping the button
+    const motionWrapper = backButton.locator("xpath=..");
+    const initialTransform = await motionWrapper.getAttribute("style");
 
-    // Hover over the button
     await backButton.hover();
-
-    // Wait for hover animation
     await page.waitForTimeout(200);
 
-    // Get hover transform
-    const hoverTransform = await backButton.getAttribute("style");
+    const hoverTransform = await motionWrapper.getAttribute("style");
 
     // Transform should change
     expect(initialTransform).not.toEqual(hoverTransform);
