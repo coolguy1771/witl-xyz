@@ -37,6 +37,9 @@ jobs:
       - name: Run linter
         run: bun run lint
 
+      - name: Compile blog data
+        run: bun run compile:blog
+
       - name: Run type checking
         run: bunx tsc --noEmit
 
