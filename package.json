@@ -75,7 +75,7 @@
     "tailwindcss": "4.3.3",
     "ts-node": "10.9.2",
     "typescript": "7.0.2",
-    "wrangler": "4.152.0"
+    "wrangler": "4.154.0"
   },
   "packageManager": "bun@1.4.4",
   "//overrides": "postcss pinned for compatibility with Tailwind CSS v4 and @tailwindcss/postcss; the rest force patched versions of vulnerable transitive deps (see bun audit)",
